@@ -16,10 +16,17 @@ export default class Home extends Component {
 class Header extends Component{
   render(){
     return (
-      <div class="header-wrapper">
-        <div class="header">
-          <div class="header-content">
-            This is the content od Header
+      <div className="header-wrapper">
+        <div className="header">
+          <div className="header-content">
+            <div className="logo">
+              <div className="logp-image">
+                <img src="" alt="logo"></img>
+              </div>
+              <div className="logo-name">
+                <h1>Scooter Ask</h1>
+              </div>
+            </div>
           </div>
         </div>
       </div>
