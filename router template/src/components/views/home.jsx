@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { browserHistory } from 'react-router';
+import logo from './icon70x70.png';
 
 export default class Home extends Component {
   componentDidMount() {
@@ -21,7 +22,7 @@ class Header extends Component{
           <div className="header-content">
             <div className="logo">
               <div className="logp-image">
-                <img src="" alt="logo"></img>
+                {logo}
               </div>
               <div className="logo-name">
                 <h1>Scooter Ask</h1>
