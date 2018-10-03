@@ -7,7 +7,7 @@ import App from './components/App';
 export default (
   <Route basename={process.env.PUBLIC_URL} path={'/'} component={App}>
     <IndexRoute component={Home} />
-    <Route path={'channel'} component={Channel} />
+    <Route path={'/channel'} component={Channel} />
     <Route path={'*'} component={Home} />
   </Route>
 );
