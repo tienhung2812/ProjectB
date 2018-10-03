@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import Header from './components/Header.js';
-import Main from './components/Main.js';
-import Sidebar from './components/Sidebar.js';
-import './App.css';
+import Header from './app-components/Header';
+import Sidebar from './app-components/Sidebar';
+import './stylesheet/App.css';
 
 class App extends Component {
   render() {
@@ -15,8 +14,8 @@ class App extends Component {
         </div>
         <div className="body">
           <div className="content">
-            <div className="main">
-              <Main/>
+            <div id="main" className="main">
+              {this.props.children}
             </div>
             <div className="sidebar">
               <Sidebar/>

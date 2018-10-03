@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import {Link as ReactLink} from 'react-router';
 import SearchBar from './header-components/SearchBar';
 import Account from './header-components/AccountDropdown';
 import '../stylesheet/Header.css';
-import logo from '../logo.png';
+import logo from '../../logo.png';
 class Header extends Component {
   constructor(props){
     super(props);
     this.logo = 
+    <ReactLink to={'/'}>
       <div className="logo btn btn-light">
           <div className="logo-img">
             <img src={logo} alt="logo"></img>
@@ -15,6 +17,8 @@ class Header extends Component {
             <h1>Scooter Ask</h1>
           </div>
         </div>
+    </ReactLink>
+      
 
 
   }
