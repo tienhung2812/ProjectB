@@ -5,6 +5,6 @@ import { Router, browserHistory } from 'react-router';
 import routes from './Routes';
 
 
-ReactDOM.render(<Router history={browserHistory} routes={routes} basename={process.env.PUBLIC_URL}/>,
+ReactDOM.render(<Router history={browserHistory} routes={routes}/>,
     document.querySelector('#app'));
 
