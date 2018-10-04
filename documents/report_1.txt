@@ -1,0 +1,39 @@
+RideHub Web
+
+Basic Functions:
+	1. Sign up
+	2. Sign in/out
+	3. Grant Privillage
+ 	4. Delete users
+ 	5. Create/ modify/ delete a new post
+	 6. Create/ modify/ delete a new comment
+	 7. Create/ modify/ delete a new channel
+	 8. Search 
+
+Users:
+	- Admin
+ 	- Mod
+ 	- User
+	- Non-user
+
+Tasks:
+	- Front-end: Hung + Vinh
+ 	- Back-end: Dung + Phat
+ 	- Document/Content/Tester/Project management: Thu
+
+Milestone:
+	- 6/10
+	- 10/10	
+	- 13/10
+	- 17/10
+	- 21/10
+
+Version control: Github
+
+Project management: Trello
+
+Deployment: Heroku
+
+Future plan: 
+	- rating posts/comments
+
