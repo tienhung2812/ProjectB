@@ -18,9 +18,6 @@ class Header extends Component {
           </div>
         </div>
     </ReactLink>
-      
-
-
   }
 
   render() {
