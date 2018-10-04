@@ -26,24 +26,15 @@
     background-color: #f3f3f3 !important;
     
 }
-
+/* 
 .header-container .logo .logo-img{
-    height: 32px;
     border-radius: 50px;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+ 
     
-}
+} */
 
-.header-container .logo .logo-name{
-    padding: 0 10px ;
-    line-height: 0px;
-    
-
-}
-
-.header-container .logo .logo-name h1{
-    font-size: 1.7rem;
-    margin: 0;
+.header-container .logo .logo-img img{
+    height:40px;
 }
 
 .header-container .search{

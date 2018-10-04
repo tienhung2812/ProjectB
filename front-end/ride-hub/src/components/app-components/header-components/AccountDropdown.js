@@ -12,8 +12,8 @@ class AccountDropDown extends Component {
   render() {
 
     return (
-        <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div className="btn-group">
+            <button type="button" className="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div className="avatar"></div>
                 <div className="content">
                     <div className="username">Username</div>
@@ -21,10 +21,10 @@ class AccountDropDown extends Component {
                 </div>
                 
             </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button">Action</button>
-                <button class="dropdown-item" type="button">Another action</button>
-                <button class="dropdown-item" type="button">Something else here</button>
+            <div className="dropdown-menu dropdown-menu-right">
+                <button className="dropdown-item" type="button">Action</button>
+                <button className="dropdown-item" type="button">Another action</button>
+                <button className="dropdown-item" type="button">Something else here</button>
             </div>
         </div>
     );

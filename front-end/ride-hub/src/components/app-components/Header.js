@@ -13,9 +13,6 @@ class Header extends Component {
           <div className="logo-img">
             <img src={logo} alt="logo"></img>
           </div>
-          <div className="logo-name">
-            <h1>Scooter Ask</h1>
-          </div>
         </div>
     </ReactLink>
   }
@@ -29,10 +26,10 @@ class Header extends Component {
         </div>
         <div className="functionButtons">
           <div className="add-post-button">
-            <i class="fas fa-plus"></i>
+            <i className="fas fa-plus"></i>
           </div>
           <div className="notification-button">
-            <i class="fas fa-bell"></i>
+            <i className="fas fa-bell"></i>
           </div>
         </div>
         <div className="account">
