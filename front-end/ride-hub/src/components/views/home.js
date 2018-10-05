@@ -11,10 +11,10 @@ export default class Home extends Component {
     
     //Generate number of thread
     this.content = <div className="subforum-main">
-                    <SubForum id={0} display="short" url="home"/>
-                    <SubForum id={1} display="short" url="home"/>
-                    <SubForum id={2} display="short" url="home"/>
-                    <SubForum id={3} display="short" url="home"/>
+                    <SubForum id={1} url="home" parent_id={0}/>
+                    <SubForum id={2} url="home" parent_id={0}/>
+                    <SubForum id={3} url="home" parent_id={0}/>
+                    <SubForum id={4} url="home" parent_id={0}/>
                   </div>;
     
   }
