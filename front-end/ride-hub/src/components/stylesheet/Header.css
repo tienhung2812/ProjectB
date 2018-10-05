@@ -1,0 +1,219 @@
+.header-container{
+    padding: 0 10px;
+    width: 100%;
+    height:100%;
+    margin: auto;
+    display: flex;
+    font-family: 'Roboto Slab', serif;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+}
+
+.header-container a{
+    text-decoration:none !important;
+}
+
+.header-container .logo{
+    padding: 0 50px;
+    display: flex;
+    padding: 10px 15px;
+    background-color: white !important;
+    border: none;
+}
+
+.header-container .logo:hover{
+    background-color: #f3f3f3 !important;
+    
+}
+/* 
+.header-container .logo .logo-img{
+    border-radius: 50px;
+ 
+    
+} */
+
+.header-container .logo .logo-img img{
+    height:40px;
+}
+
+.header-container .search{
+    padding: 10px 50px 10px 20px;
+    width: 100%;
+}
+
+.header-container .search .input-group{
+    width:100%;
+    height:100%;
+    padding: 0px 40px 0px 25px;
+}
+.header-container .search .input-group form{
+    width: 100% !important;
+    position: flex;
+}
+
+.header-container .search .input-group form input{
+    background-color: #EDEDED;
+    border-radius: 8px;
+    border: none;
+    padding: 0 0 0 20px;
+    font-size: 0.9rem;
+    font-family: 'Roboto Slab', serif;
+
+}
+
+.header-container .search .input-group input:focus{
+    box-shadow:  none;
+}
+
+.header-container .search .input-group .search-clear{
+    border:1px solid transparent;
+	background-color: transparent;
+	display: inline-block;
+	vertical-align: middle;
+    outline: 0;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.header-container .search .input-group .search-clear.cleared{
+    display: none;
+}
+
+.header-container .search .input-group .search-clear:after{
+    content: "X";
+	display: block;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	background-color: rgb(109, 109, 109);
+	z-index:1;
+	right: 50px;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	padding: 2px;
+	border-radius: 50%;
+	text-align: center;
+	color: white;
+	font-weight: normal;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.header-container .functionButtons{
+    display: inherit;
+    padding: 20px;
+}
+
+.header-container .functionButtons div{
+    
+    padding: 0px 10px;
+    opacity: 0.38;
+}
+
+.header-container .functionButtons div:hover{
+    opacity: 1 !important;
+}
+
+.header-container .account{
+    padding: 10px 20px;
+    
+}
+
+.header-container .account .btn-group button{
+    background: none;
+    color: black;
+    border:none;
+    display: flex;
+}
+
+
+.header-container .account .btn-group .btn:focus,.header-container .account .btn-group .btn:active{
+    border:none !important;
+    box-shadow: none;
+    
+}
+
+.header-container .account .btn-group .btn[aria-expanded="true"]{
+    background-color:#dedede;
+}
+
+.header-container .account .avatar{
+    width: 30px;
+    height:30px;
+    background:rgb(28, 196, 50);
+    border-radius:4px;
+}
+
+.header-container .account .content{
+    display: inline-block;
+    padding-left: 10px;
+    text-align:left;
+}
+
+.header-container .account .content .username{
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.header-container .account .content .point{
+    font-size: 0.8rem;
+    color: #8A8888;
+}
+
+.header-container .account .btn-group .dropdown-toggle::after {
+    margin-top:.9em;
+    margin-left:.9em;
+    color:#797979;
+}
+
+@media only screen and (max-width: 1024px) {
+  
+
+    .header-container .search{
+        padding: 10px;
+    }
+
+    .header-container .search .input-group{
+        padding:0 ;
+    }
+  }
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    .header-container .logo .logo-name{
+      display: none;
+    }
+
+    .header-container .search{
+        padding: 10px;
+    }
+
+    .header-container .search .input-group{
+        padding:0 ;
+    }
+
+    .header-container .functionButtons{
+        padding:20px 10px ;
+    }
+  }
+
+  @media only screen and (max-width: 500px) {
+    /* For mobile phones: */
+    .header-container{
+        padding: 0;
+    }
+    .header-container .functionButtons{
+        padding:5px 5px ;
+        display: inline-block;
+    }
+
+    .header-container .account{
+        padding: 10px 0;
+    }
+
+    .header-container .account .content{
+        display: none;
+    }
+  }

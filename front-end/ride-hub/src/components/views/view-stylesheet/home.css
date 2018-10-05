@@ -1,0 +1,26 @@
+.main-content{
+    background-color: white;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.50);
+    min-height: 400px;
+    border-radius: 3px;
+    align-content: center;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+}
+
+.main-content .loader{
+    width: 100%;
+    padding-top:150px;
+}
+
+.main-content .loader img{
+    margin: auto;
+    display: block;
+    width: 80px;
+    height: 80px;;
+}
+
+.main-content .subforum-main{
+    padding: 30px;
+}
