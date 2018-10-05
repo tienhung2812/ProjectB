@@ -28,7 +28,7 @@
     transition: all 0.2s ease-out;
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;
-    border-left: 3px solid #1E88E5;
+    border-left: 4px solid #1E88E5;
     background-color: rgb(226, 226, 226);
 }
 
@@ -42,4 +42,29 @@
 
 .home .btn-subforum .title{
     padding: 25px 0; 
+}
+
+.subsubforum{
+    padding-left:30px;
+}
+
+.subsubforum div .btn-subforum{
+    height:60px;
+}
+
+.subsubforum div .btn-subforum:hover{
+    border-left: 4px solid rgb(229, 126, 30);
+}
+
+.subsubforum div .btn-subforum .avatar{
+    padding: 10px 15px;
+}
+
+.subsubforum div .btn-subforum .avatar img{
+    height: 30px;
+}
+
+.subsubforum div .btn-subforum .title{
+    padding: 15px 0; 
+    font-size:1.05rem;
 }
