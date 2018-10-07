@@ -170,8 +170,8 @@ export default class SubForum extends Component {
                     {this.title}
                   </div>
                 </button>
+                </ReactLink>
                 {this.childcontent}
-              </ReactLink>
             </div>
           </div>
         );  

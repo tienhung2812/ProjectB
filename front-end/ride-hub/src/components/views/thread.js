@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { browserHistory } from 'react-router';
 import {Link as ReactLink} from 'react-router';
+import TextEditor from './textEditor';
+import Post from './post';
 import './view-stylesheet/thread.css';
 import defaultimage from '../../defaultimage72x40.jpg'
 
@@ -12,6 +14,7 @@ export default class Thread extends Component {
     //home: display in HOMEPAGE
     //subforum: display in SUB-FORUM PAGE
     //null: display in THREAD PAGE
+    this.handleChange = this.handleChange.bind(this)
   }
   componentDidMount() {
     //Set state
@@ -31,12 +34,14 @@ export default class Thread extends Component {
     
     
   }
-
+  handleChange(value) {
+    this.setState({ text: value })
+  }
   render() {
     if (this.props.url==="home"){
       return(
       <div className="thread"> 
-        <ReactLink to={'/thread/'+this.props.id}>
+        <ReactLink to={'/thread/'+this.props.id} style={{textDecoration:"none !important"}}>
         <button type="button" className="btn btn-link btn-thread">
           <div className="threadImage">
               <img src={defaultimage} alt="SubForumAvatar"></img>
@@ -63,8 +68,42 @@ export default class Thread extends Component {
       </div>
       );
   }else{
+    //Child Content
+    this.childcontent=
+      <div className="post-wrapper">
+        <div className="original-post-wrapper">
+          <Post type = "original-post" threadId={this.id}/>
+        </div>
+        <div className="comment-post-wrapper">
+          <div className="add-comment-wrapper">
+          <TextEditor type="comment"/>
+          </div>
+          <div className="comments">
+            <Post type = "comment-post" threadId={this.id}/>
+          </div>
+        </div>
+        <div className="blank"></div>
+      </div>
+
     return(
-      <div></div>
+      <div className="main-thread-content">
+          <div className="title-wrapper">
+            <div className="title">
+              <div className="thread-title">
+                {this.title}
+              </div>
+              <div className="thread-tag needhelp-tag">
+                need help
+              </div>
+            </div>
+            <div className="thread-image">
+              <img src={defaultimage} alt="threadImage"></img>
+            </div>
+          </div>
+          <div className="content-wrapper">
+            {this.childcontent}
+          </div>
+      </div>
     );
   }
   }
