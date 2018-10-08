@@ -37,22 +37,39 @@ export default class TextEditor extends Component {
   }
 
   render() {
+    if(this.props.type==='comment'){ 
       return (
-    <div className={this.props.type}>
-        <ReactQuill 
-            theme="snow"
-            modules={this.modules}
-            formats={this.formats} 
-            placeholder={this.placeholder}
-            ref={this.textInput}
-        />
-        <div className="btn-wrapper">
-        <button type="button" className="btn btn-link" onClick={this.handlePost}>Post</button>
+        <div className={this.props.type}>
+            <ReactQuill 
+                theme="snow"
+                modules={this.modules}
+                formats={this.formats} 
+                placeholder={this.placeholder}
+                ref={this.textInput}
+            />
+            <div className="btn-wrapper">
+            <button type="button" className="btn btn-link" onClick={this.handlePost}>Post</button>
+            </div>
+            <div className="end-line">
+            </div>
         </div>
-        <div className="end-line">
-        </div>
-    </div>
       );
+    }else{
+      return (
+        <div className={this.props.type}>
+            <ReactQuill 
+                theme="snow"
+                modules={this.modules}
+                formats={this.formats} 
+                placeholder={this.placeholder}
+                ref={this.textInput}
+            />
+            <div className="end-line">
+            </div>
+        </div>
+      );
+    }
+
   }
 }
 
