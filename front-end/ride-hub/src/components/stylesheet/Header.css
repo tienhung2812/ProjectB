@@ -107,7 +107,6 @@
 }
 
 .header-container .functionButtons div{
-    
     padding: 0px 10px;
     opacity: 0.38;
 }
@@ -115,6 +114,22 @@
 .header-container .functionButtons div:hover{
     opacity: 1 !important;
 }
+
+.header-container .functionButtons .add-post-button button{
+    padding: 0;
+    line-height: 1;
+    border:none;
+}
+
+.header-container .functionButtons .add-post-button button a{
+    color:black;
+}
+
+.header-container .functionButtons .notification-button{
+    padding-top: 2px;
+
+}
+
 
 .header-container .account{
     padding: 10px 20px;

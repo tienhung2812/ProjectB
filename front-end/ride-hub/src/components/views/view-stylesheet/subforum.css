@@ -1,3 +1,4 @@
+/* For HOMEPAGE */
 .home{
     padding: 10px 0;
     transition: all 0.3s ease-out;
@@ -69,6 +70,253 @@
     font-size:1.05rem;
 }
 
-a {
+
+
+/* For SUBFORUM PAGE */
+.main-subforum-content{
+    background-color:none;
+    min-height: 400px;
+    align-content: center;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+}
+
+.main-subforum-content .title-wrapper{
+    height:100px;
+    background-color: #006064;
+    border: 1px solid #979797;
+    display: flex;
+    font-family: 'Roboto Slab', serif;
+}
+
+.main-subforum-content .title-wrapper .avatar{
+    padding: 20px 20px;
+}
+.main-subforum-content .title-wrapper .avatar img{
+    height: 50px;
+}
+
+.main-subforum-content .title-wrapper .title{
+    padding:25px 0;
+}
+
+.main-subforum-content .title-wrapper .title .subforum-name{
+    color:white;
+    font-size:1.6rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.main-subforum-content .title-wrapper .title .subforum-description{
+    color: #DDDDDD;
+    font-size: 0.9rem;
+    
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper{
+    margin-left: auto;
+    margin-right: 60px;
+    display: inline-block;
+    padding: 25px 0;
+    
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-status-content{
+    margin:auto;
+    align-content: center;
+    text-align: center;
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-follow{
+    color:white;
+    border: 1px solid white;
+    padding: 5px 30px;
     text-decoration: none !important;
+    line-height:1;
+    margin: auto;
+    
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-follow:hover{
+    background-color: white;
+    color:#006064;
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-follow.following{
+    background-color: white;
+    color:#006064;
+    padding: 5px 18px;
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-follow.following:hover{
+    background-color: rgb(221, 221, 221);
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .subforum-status{
+    display: flex;
+    color:white;
+    padding: 3px 0;
+    font-size:0.8rem;
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .subforum-status .statusDivider{
+    width:15px;
+}
+
+.main-subforum-content .content-wrapper{
+    min-height: 400px;
+    background-color: white;
+    margin:auto;
+    width:95%;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.50);
+}
+
+.main-subforum-content .subsubforum{
+    padding-left:0px;
+    width:100%;
+    text-decoration: none !important;
+    text-align:left;
+    display: flex;
+    height:80px;   
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-weight:bold;
+    font-size:1.3rem;
+    padding: 0px 0;
+    transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    border-left: 3px solid #979797;
+    border-bottom: 1px solid #979797;
+    border-right: 1px solid #979797;
+}
+
+.main-subforum-content .subsubforum div{
+    width: 100%;
+}
+
+.main-subforum-content .subsubforum div button{
+    transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    align-content: left;
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.main-subforum-content .subsubforum div button:hover{
+    background-color: rgb(226, 226, 226);
+}
+
+.main-subforum-content .subsubforum div .btn-subforum .avatar{
+    padding: 10px 15px;
+    width: auto;
+}
+
+.main-subforum-content .subsubforum div .btn-subforum .avatar img{
+    height: 40px;
+    
+}
+
+.main-subforum-content .subsubforum div .btn-subforum .title{
+    padding: 20px 0; 
+    font-size:1.05rem;
+    width:auto;
+    color:black;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+
+/* For thread */
+
+.main-subforum-content .thread{
+    padding-left:0px;
+    width:100%;
+    text-decoration: none !important;
+    text-align:left;
+    display: flex;
+    height:80px;   
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-weight:bold;
+    font-size:1.3rem;
+    padding: 0px 0;
+    transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    border-left: 3px solid #979797;
+    border-bottom: 1px solid #979797;
+    border-right: 1px solid #979797;
+}
+.main-subforum-content .thread a{
+    width:100%;
+}
+.main-subforum-content .thread button{
+    transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    align-content: left;
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.main-subforum-content .thread button:hover{
+    background-color: rgb(226, 226, 226);
+}
+
+.main-subforum-content .thread .btn-thread .avatar{
+    padding: 10px 15px;
+    width: auto;
+}
+
+.main-subforum-content .thread .btn-thread .avatar img{
+    height: 40px;
+    
+}
+
+.main-subforum-content .thread .btn-thread .title{
+    padding: 20px 0; 
+    font-size:1.05rem;
+    width:auto;
+    color:black;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+
+a{
+    text-decoration: none!important
+}
+
+a:hover{
+    text-decoration: none!important;
+}
+
+@media only screen and (max-width: 500px) {
+    .main-subforum-content .title-wrapper .title .subforum-name{
+        font-size: 1.2rem;
+    }
+    
+    .main-subforum-content .title-wrapper .title .subforum-description{
+        font-size: 0.6rem;
+    }
+
+    .main-subforum-content .title-wrapper .btn-status-wrapper {
+        padding-right: 10px;
+    }
+
+    .main-subforum-content .title-wrapper .btn-status-wrapper .btn-follow{
+        padding: 5px 20px;
+        font-size:0.7rem;
+    }
+
+    .main-subforum-content .title-wrapper .btn-status-wrapper .btn-follow.following{
+        padding: 5px 13px;
+        background-color: white;
+        color:#006064;
+    }
 }

@@ -26,7 +26,12 @@ class Header extends Component {
         </div>
         <div className="functionButtons">
           <div className="add-post-button">
+          <button type="button" className="btn btn-link">
+            <ReactLink to={'/addthread/'}>
             <i className="fas fa-plus"></i>
+            </ReactLink>
+          </button>
+            
           </div>
           <div className="notification-button">
             <i className="fas fa-bell"></i>

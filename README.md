@@ -1,5 +1,9 @@
 # Project B GitHub repository
+<<<<<<< HEAD
 
+=======
+The webapp is deployed at https://ride-hub.herokuapp.com/
+>>>>>>> 60f0c10ef8724116fcad374ef225080983baa0a3
 ## Functionalty
 1.	Thread
     1.	ID

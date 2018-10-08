@@ -6,6 +6,7 @@ Basic Functions:
 	3. Grant Privillage
  	4. Delete users
  	5. Create/ modify/ delete a new post
+<<<<<<< HEAD
 	6. Create/ modify/ delete a new comment
 	7. Create/ modify/ delete a new channel
 	8. Search 
@@ -14,6 +15,11 @@ Basic Functions:
 	10. Indication of status
 	11. Thread Subcription
 	12. Report button
+=======
+	 6. Create/ modify/ delete a new comment
+	 7. Create/ modify/ delete a new channel
+	 8. Search 
+>>>>>>> 60f0c10ef8724116fcad374ef225080983baa0a3
 
 Users:
 	- Admin
