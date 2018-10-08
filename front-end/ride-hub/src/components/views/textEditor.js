@@ -56,20 +56,35 @@ export default class TextEditor extends Component {
       );
     }else{
       return (
-        <div className={this.props.type}>
-            <ReactQuill 
+        <div className={this.props.type} >
+          <form class="bg-light p-3 rounded">        
+            <div class="form-group">          
+              <input class="form-control" placeholder="Title"/>
+            </div>
+            <div class="form-group bg-white">
+              <ReactQuill 
                 theme="snow"
                 modules={this.modules}
                 formats={this.formats} 
-                placeholder={this.placeholder}
+                placeholder={'Text (optional)'}
                 ref={this.textInput}
-            />
-            <div className="end-line">
+              />
             </div>
-        </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-group form-check form-check-inline">          
+                  <input class="form-control mr-2" placeholder="#Tag"/>
+                  <button type="submit" class="btn btn-primary">Add Tag(s)</button>
+                </div>            
+              </div>
+              <div class="col">
+                  <button type="submit" class="btn btn-primary float-right">POST</button>        
+              </div>
+            </div>          
+        </form>
+      </div>
       );
     }
-
   }
 }
 
