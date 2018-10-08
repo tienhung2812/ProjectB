@@ -21,7 +21,7 @@ export default class AddThread extends Component {
       <br/>
       <h5 class="card-title">Create a post</h5>
       <hr/>
-            <TextEditor type="addthread"/>
+            <TextEditor type="add-thread"/>
     </div>
     </div>
       );

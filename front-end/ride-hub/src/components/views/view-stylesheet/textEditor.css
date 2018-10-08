@@ -42,7 +42,7 @@
 
 .add-thread{
     margin: auto;
-    padding: 50px 25px;
+    /* padding: 50px 25px; */
     padding-bottom: 0;
     display: inline-block;
     width: 100%;

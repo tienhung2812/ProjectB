@@ -9,6 +9,7 @@ export default class TextEditor extends Component {
     super(props);
     this.handlePost = this.handlePost.bind(this);
     this.textInput = React.createRef();
+    
   }
   componentDidMount() {
     this.modules= {
