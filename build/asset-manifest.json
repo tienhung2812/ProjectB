@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "main.css": "static/css/main.b1c4598a.css",
   "main.css.map": "static/css/main.b1c4598a.css.map",
   "main.js": "static/js/main.fe6e0d94.js",
@@ -6,4 +7,13 @@
   "static/media/defaultavatar.png": "static/media/defaultavatar.ab81fc39.png",
   "static/media/loading.gif": "static/media/loading.80cada2b.gif",
   "static/media/logo.png": "static/media/logo.274bc869.png"
+=======
+  "main.css": "static/css/main.223efee8.css",
+  "main.css.map": "static/css/main.223efee8.css.map",
+  "main.js": "static/js/main.656597f9.js",
+  "main.js.map": "static/js/main.656597f9.js.map",
+  "static\\media\\defaultavatar.png": "static/media/defaultavatar.ab81fc39.png",
+  "static\\media\\loading.gif": "static/media/loading.80cada2b.gif",
+  "static\\media\\logo.png": "static/media/logo.274bc869.png"
+>>>>>>> refs/remotes/origin/master
 }

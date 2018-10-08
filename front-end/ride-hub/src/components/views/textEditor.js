@@ -9,6 +9,7 @@ export default class TextEditor extends Component {
     super(props);
     this.handlePost = this.handlePost.bind(this);
     this.textInput = React.createRef();
+    
   }
   componentDidMount() {
     this.modules= {
@@ -37,22 +38,54 @@ export default class TextEditor extends Component {
   }
 
   render() {
+    if(this.props.type==='comment'){ 
       return (
-    <div className={this.props.type}>
-        <ReactQuill 
-            theme="snow"
-            modules={this.modules}
-            formats={this.formats} 
-            placeholder={this.placeholder}
-            ref={this.textInput}
-        />
-        <div className="btn-wrapper">
-        <button type="button" className="btn btn-link" onClick={this.handlePost}>Post</button>
+        <div className={this.props.type}>
+            <ReactQuill 
+                theme="snow"
+                modules={this.modules}
+                formats={this.formats} 
+                placeholder={this.placeholder}
+                ref={this.textInput}
+            />
+            <div className="btn-wrapper">
+            <button type="button" className="btn btn-link" onClick={this.handlePost}>Post</button>
+            </div>
+            <div className="end-line">
+            </div>
         </div>
-        <div className="end-line">
-        </div>
-    </div>
       );
+    }else{
+      return (
+        <div className={this.props.type} >
+          <form class="bg-light p-3 rounded">        
+            <div class="form-group">          
+              <input class="form-control" placeholder="Title"/>
+            </div>
+            <div class="form-group bg-white">
+              <ReactQuill 
+                theme="snow"
+                modules={this.modules}
+                formats={this.formats} 
+                placeholder={'Text (optional)'}
+                ref={this.textInput}
+              />
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-group form-check form-check-inline">          
+                  <input class="form-control mr-2" placeholder="#Tag"/>
+                  <button type="submit" class="btn btn-primary">Add Tag(s)</button>
+                </div>            
+              </div>
+              <div class="col">
+                  <button type="submit" class="btn btn-primary float-right">POST</button>        
+              </div>
+            </div>          
+        </form>
+      </div>
+      );
+    }
   }
 }
 
