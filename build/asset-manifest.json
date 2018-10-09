@@ -1,19 +1,12 @@
 {
-<<<<<<< HEAD
-  "main.css": "static/css/main.b1c4598a.css",
-  "main.css.map": "static/css/main.b1c4598a.css.map",
-  "main.js": "static/js/main.fe6e0d94.js",
-  "main.js.map": "static/js/main.fe6e0d94.js.map",
+  "main.css": "static/css/main.91d07b53.css",
+  "main.css.map": "static/css/main.91d07b53.css.map",
+  "main.js": "static/js/main.a56b4b51.js",
+  "main.js.map": "static/js/main.a56b4b51.js.map",
+  "static/media/billboard-bg.jpg": "static/media/billboard-bg.d42d58ec.jpg",
   "static/media/defaultavatar.png": "static/media/defaultavatar.ab81fc39.png",
   "static/media/loading.gif": "static/media/loading.80cada2b.gif",
-  "static/media/logo.png": "static/media/logo.274bc869.png"
-=======
-  "main.css": "static/css/main.223efee8.css",
-  "main.css.map": "static/css/main.223efee8.css.map",
-  "main.js": "static/js/main.656597f9.js",
-  "main.js.map": "static/js/main.656597f9.js.map",
-  "static\\media\\defaultavatar.png": "static/media/defaultavatar.ab81fc39.png",
-  "static\\media\\loading.gif": "static/media/loading.80cada2b.gif",
-  "static\\media\\logo.png": "static/media/logo.274bc869.png"
->>>>>>> refs/remotes/origin/master
+  "static/media/logo.png": "static/media/logo.bcdb4717.png",
+  "static/media/newestthread-bg.jpg": "static/media/newestthread-bg.a113ba8e.jpg",
+  "static/media/recentactivities-bg.jpg": "static/media/recentactivities-bg.02af0544.jpg"
 }
