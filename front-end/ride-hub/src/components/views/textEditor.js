@@ -3,6 +3,18 @@ import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'; 
 import './view-stylesheet/textEditor.css';
 
+import { withStyles, MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+
+const theme = createMuiTheme({
+  palette: {
+    primary:{main: '#ff5722'},
+  },
+});
 
 export default class TextEditor extends Component {
   constructor(props){
@@ -28,7 +40,6 @@ export default class TextEditor extends Component {
         'list', 'bullet', 'indent',
         'link', 'image'
       ]
-    this.placeholder = 'Write a comment ...';
   }
 
   handlePost(){
@@ -40,50 +51,68 @@ export default class TextEditor extends Component {
   render() {
     if(this.props.type==='comment'){ 
       return (
+      <React.Fragment>
+        <CssBaseline />
         <div className={this.props.type}>
+        <Grid container spacing={24}>
+          <Grid item xs={12}>
             <ReactQuill 
-                theme="snow"
-                modules={this.modules}
-                formats={this.formats} 
-                placeholder={this.placeholder}
-                ref={this.textInput}
+              theme="snow"
+              modules={this.modules}
+              formats={this.formats} 
+              placeholder={'What are your thoughts ?'}
+              ref={this.textInput}
             />
-            <div className="btn-wrapper">
-            <button type="button" className="btn btn-link" onClick={this.handlePost}>Post</button>
-            </div>
-            <div className="end-line">
-            </div>
+          </Grid>
+          <Grid item xs={12} align="right">
+            <MuiThemeProvider theme={theme}>
+              <Button variant="contained" color="primary">
+                COMMENT
+              </Button>
+            </MuiThemeProvider>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider/>
+          </Grid>    
+        </Grid>
+        
         </div>
+      </React.Fragment>  
       );
     }else{
       return (
-        <div className={this.props.type} >
-          <form class="bg-light p-3 rounded">        
-            <div class="form-group">          
-              <input class="form-control" placeholder="Title"/>
-            </div>
-            <div class="form-group bg-white">
-              <ReactQuill 
-                theme="snow"
-                modules={this.modules}
-                formats={this.formats} 
-                placeholder={'Text (optional)'}
-                ref={this.textInput}
-              />
-            </div>
-            <div class="row">
-              <div class="col">
-                <div class="form-group form-check form-check-inline">          
-                  <input class="form-control mr-2" placeholder="#Tag"/>
-                  <button type="submit" class="btn btn-primary">Add Tag(s)</button>
-                </div>            
-              </div>
-              <div class="col">
-                  <button type="submit" class="btn btn-primary float-right">POST</button>        
-              </div>
-            </div>          
-        </form>
+      <React.Fragment>
+      <CssBaseline />
+      <div className={this.props.type}>
+      <Grid container spacing={24} alignItems="flex-end">
+        <Grid item xs={12}>
+          <ReactQuill 
+            theme="snow"
+            modules={this.modules}
+            formats={this.formats} 
+            placeholder={'Text (optional)'}
+            ref={this.textInput}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <TextField
+            label="Add Tag(s)"
+            placeholder="#Tag"
+            fullWidth
+            error
+          />
+        </Grid>
+        <Grid item xs align="right">
+          <MuiThemeProvider theme={theme}>
+            <Button variant="contained" color="primary">
+              POST
+            </Button>
+          </MuiThemeProvider>
+        </Grid> 
+      </Grid>
+      
       </div>
+      </React.Fragment> 
       );
     }
   }

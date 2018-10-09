@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { browserHistory } from 'react-router';
 import TextEditor from './textEditor';
+import Typography from '@material-ui/core/Typography';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
+import CreateIcon from '@material-ui/icons/Create';
+import TextField from '@material-ui/core/TextField';
 import './view-stylesheet/addthread.css';
 
 
@@ -16,14 +22,33 @@ export default class AddThread extends Component {
 
   render() {
     return (
+    <React.Fragment>
+    <CssBaseline />
     <div className='add-thread-wrapper'>
-    <div class="container ">
-      <br/>
-      <h5 class="card-title">Create a post</h5>
-      <hr/>
-            <TextEditor type="add-thread"/>
+    <Grid container spacing={16} alignItems="flex-end">
+      <Grid item xs>  
+        <Typography variant="h6" gutterBottom>
+          <CreateIcon/> Create a post
+        </Typography>
+        <Divider/>
+      </Grid>
+      <Grid item xs>
+      <TextField
+          disabled
+          fullWidth
+          label="Forum:"
+          defaultValue="SubForum > SubSubForum"
+          variant="outlined"
+        />
+      </Grid>
+      <Grid item xs={12}>
+      <div className="comment-post-wrapper">  
+        <TextEditor type="add-thread"/>
+      </div>
+      </Grid>
+    </Grid>
     </div>
-    </div>
+    </React.Fragment>
       );
   }
 }
