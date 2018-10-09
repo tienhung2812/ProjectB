@@ -1,3 +1,87 @@
 .sidebar-content{
-    background-color: blue;
+    background-color: none;
+}
+
+.sidebar-content .wrapper{
+    width:100%;
+    margin-bottom: 25px;
+    background-color: white;
+    min-height: 230px;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.50);
+}
+
+.sidebar-content .wrapper .head-img{
+   width: 100%;
+}
+
+.sidebar-content .wrapper .head-img img{
+    width:100%;
+}
+
+.sidebar-content .wrapper .content-wrapper{
+    padding: 10px;
+    width:100%;
+    display: block;
+}
+
+.sidebar-content .wrapper .content-wrapper .title{
+    font-family: 'Roboto Slab', serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 5px 10px;
+    padding-top:0;
+    width:100%;
+}
+
+.sidebar-content .wrapper .content-wrapper .content{
+    font-family: 'Roboto', serif;
+    font-size: 0.9rem;
+    min-width: 100%;
+    padding: 10px;
+    display: block;
+    
+}
+
+.sidebar-content .wrapper .content-wrapper .content .child{
+    padding: 5px 10px;
+    display: inline-block;
+    width:100%;
+}
+
+.sidebar-content .wrapper .content-wrapper .content a{
+    width: 100%;
+    color: rgb(94, 94, 94);
+}
+
+.sidebar-content .wrapper .content-wrapper .content a:hover{
+    width: 100%;
+    color: rgb(32, 32, 32);
+}
+
+.sidebar-content .wrapper.recentactivities .content-wrapper .content a{
+    padding: 0 2px;
+    color: #BA5454;
+}
+
+
+.sidebar-content .wrapper.billboard .content-wrapper .content .child{
+    display:flex;
+}
+
+.sidebar-content .wrapper.billboard .content-wrapper .content .child div{
+    padding-right: 2px;
+}
+
+.sidebar-content .wrapper.billboard .content-wrapper .content .child .order{
+    color: #868036;
+}
+
+.sidebar-content .wrapper.billboard .content-wrapper .content .child .username a{
+    color: #BA5454;
+}
+
+.sidebar-content .wrapper.billboard .content-wrapper .content .child .point {
+    color: rgb(94, 94, 94);
+    margin-left: auto;
+    margin-right:0;
 }

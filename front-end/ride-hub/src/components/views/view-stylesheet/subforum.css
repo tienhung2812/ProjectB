@@ -240,8 +240,7 @@
     display: flex;
     height:80px;   
     color: black;
-    font-family: 'Roboto', sans-serif;
-    font-weight:bold;
+    font-family: 'Roboto Slab', sans-serif;
     font-size:1.3rem;
     padding: 0px 0;
     transition: all 0.2s ease-out;
@@ -283,8 +282,7 @@
     font-size:1.05rem;
     width:auto;
     color:black;
-    font-family: 'Roboto', sans-serif;
-    font-weight: bold;
+    font-family: 'Roboto Slab', sans-serif;
     text-decoration: none !important;
 }
 

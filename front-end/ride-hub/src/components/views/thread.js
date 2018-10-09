@@ -9,7 +9,7 @@ import defaultimage from '../../defaultimage72x40.jpg'
 export default class Thread extends Component {
   constructor(props){
     super(props);
-    this.state = {id:null}
+    this.state = {id:0,title:""}
     //Props url
     //home: display in HOMEPAGE
     //subforum: display in SUB-FORUM PAGE
@@ -21,19 +21,31 @@ export default class Thread extends Component {
     if(this.props.url !== "home" && this.props.url!=="subforum"){
       browserHistory.push('/thread/'+this.props.params.id);
       this.id = this.props.params.id;
-      this.setState({id:this.props.params.id});
     }else{
       this.id = this.props.id;
-      this.setState({id:this.props.id})
     }
-      
+    this.title = "Thread "+ String(this.id);
+    this.setState({id:this.id,title:this.title});
 
     //Sample
-    this.title = "Thread "+ String(this.id)
+    
     //For display in HOMEPAGE
     
     
   }
+
+  componentDidUpdate(){
+    if(this.props.url !== "home" && this.props.url!=="subforum"){
+      if(this.state.id!==this.props.params.id){
+        browserHistory.push('/thread/'+this.props.params.id);
+        this.id = this.props.params.id;
+        this.title = "Thread "+ String(this.id);
+        this.setState({id:this.props.params.id,title:this.title});
+      }
+      
+    }
+  }
+
   handleChange(value) {
     this.setState({ text: value })
   }
@@ -90,7 +102,7 @@ export default class Thread extends Component {
           <div className="title-wrapper">
             <div className="title">
               <div className="thread-title">
-                {this.title}
+                {this.state.title}
               </div>
               <div className="thread-tag needhelp-tag">
                 need help
