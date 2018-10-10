@@ -9,11 +9,11 @@ const { Pool} = require('pg')
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/';
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  password: 'gresPost123@',
-  database: 'ridehub-demo',
-  port: 5432,
+  // user: 'postgres',
+  // host: 'localhost',
+  // password: 'gresPost123@',
+  // database: 'ridehub-demo',
+  // port: 5432,
 })
 
 
