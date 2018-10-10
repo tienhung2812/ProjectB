@@ -5,19 +5,28 @@ const path = require("path")
 var express = require('express');
 var bodyParser = require('body-parser')
 const { Pool} = require('pg')
+const url = require('url')
+//const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/';
+const params = url.parse(process.env.DATABASE_URL );
+const auth = params.auth.split(':');
 
-const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/';
+const config = {
+  user: auth[0],
+  password: auth[1],
+  host: params.hostname,
+  port: params.port,
+  database: params.pathname.split('/')[1],
+  ssl: true
+};
 
-const pool = new Pool({
+const pool = new Pool(config);
+// const pool = new Pool({
   // user: 'postgres',
   // host: 'localhost',
   // password: 'gresPost123@',
   // database: 'ridehub-demo',
   // port: 5432,
-})
-
-
-
+// });
 
 //var bodyParser = require('body-parser');
 //const react = require("react")
@@ -46,17 +55,29 @@ app.route('/api/data')
  */
   pool.query('SELECT content from post', (err, data) => {
     //console.log(err, data.rows[0])
-    res.json(data.rows[0].content)
-    pool.end()
+    try {
+      res.json(data.rows[0].content)
+      pool.end()
+    } catch (e) {
+      console.log(e)
+      res.status(400).send('Data is not available')
+    }
+    
   })
 
   })
   
   .post(function (req, res) {
-    var query = req.body;    
-    console.log(query);
+    try {
+      var query = req.body
+      console.log(query)
+      res.end("success")
+    } catch (e) {
+        res.status(400).send('Data is not available')
+    }
+    
     //res.json(content)
-    res.end("yes");
+    
   })
 
   /* .put(function (req, res) {
