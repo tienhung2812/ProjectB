@@ -108,28 +108,50 @@
 
 .header-container .functionButtons div{
     padding: 0px 10px;
-    opacity: 0.38;
-}
-
-.header-container .functionButtons div:hover{
-    opacity: 1 !important;
-}
-
-.header-container .functionButtons .add-post-button button{
-    padding: 0;
-    line-height: 1;
-    border:none;
-}
-
-.header-container .functionButtons .add-post-button button a{
-    color:black;
+    opacity: 1;
 }
 
 .header-container .functionButtons .notification-button{
-    padding-top: 2px;
-
+    margin-top:-7px;
 }
 
+.header-container .functionButtons .notification-button .btn-group button {
+    color: #979797;
+}
+
+.header-container .functionButtons .notification-button .btn-group button.true {
+    color:red
+}
+
+.header-container .functionButtons .notification-button .btn-group button:hover{
+    color:black;
+}
+
+.header-container .functionButtons .notification-button .dropdown-toggle::after{
+    display:none;
+} 
+
+.header-container .functionButtons .notification-button .dropdown-menu{
+    width:250px;
+    transform: translate3d(-150px, 38px, 0px);
+    font-size: 0.9rem;
+    padding : 0;
+}
+
+.header-container .functionButtons .notification-button .dropdown-menu .child{
+    padding: 10px 10px;
+    border-bottom: 1px solid #cacacad0;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+}
+
+.header-container .functionButtons .notification-button .dropdown-menu .child:hover{
+    background-color: #ebebeb;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+}
 
 .header-container .account{
     padding: 10px 20px;
