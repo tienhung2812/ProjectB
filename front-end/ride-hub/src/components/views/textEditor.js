@@ -66,7 +66,7 @@ export default class TextEditor extends Component {
           </Grid>
           <Grid item xs={12} align="right">
             <MuiThemeProvider theme={theme}>
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={this.handlePost}>
                 COMMENT
               </Button>
             </MuiThemeProvider>

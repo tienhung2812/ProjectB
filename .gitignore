@@ -1,3 +1,4 @@
 # ignore documents
 **/documents
 **/front-end
+front-end/ride-hub/src/components/views/textEditor.js
