@@ -90,6 +90,16 @@ export default class SubForum extends Component {
           123 threads
         </div>
       </div>
+      //Add Post button
+      if(this.state.type===1){
+        this.addThreadBtn =       
+          <button type="button" className="btn btn-link btn-createThread">
+            <ReactLink to={'/addthread/'+this.state.id}>
+            create Thread
+            </ReactLink>
+          </button>
+      }
+
       //Child content
       //Sepereate type
       if(this.state.type===0){
@@ -131,6 +141,7 @@ export default class SubForum extends Component {
             </div>
             <div className="btn-status-wrapper">
               <div className="btn-status-content">
+                {this.addThreadBtn}
                 {this.followStatus}
                 {this.subforumStatus}
               </div>

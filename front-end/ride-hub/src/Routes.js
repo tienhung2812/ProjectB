@@ -12,7 +12,7 @@ export default (
     <IndexRoute component={Home} />
     <HashRouter path={'/subforum/:id'} component={Channel} />
     <HashRouter path={'/thread/:id'} component={Thread}/>
-    <HashRouter path={'/addthread/'} component={AddThread}/>
+    <HashRouter path={'/addthread/:subforumID'} component={AddThread}/>
     <HashRouter path={'*'} component={Home} />
   </HashRouter>
 );
