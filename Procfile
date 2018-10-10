@@ -1,1 +1,1 @@
-web: RideHub-Deployment
+web: node server.js
