@@ -53,11 +53,13 @@ app.route('/api/data')
     ];
     res.json({content});
  */
+
+ 
   pool.query('SELECT content from post', (err, data) => {
     //console.log(err, data.rows[0])
     try {
       res.json(data.rows[0].content)
-      pool.end()
+ //     pool.end()
     } catch (e) {
       console.log(e)
       res.status(400).send('Data is not available')
