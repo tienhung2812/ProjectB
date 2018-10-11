@@ -18,6 +18,8 @@ class SearchBar extends Component {
         </div>
       )
     }
+
+    
   }
 
   handleSearchChange(event) {
@@ -39,8 +41,7 @@ class SearchBar extends Component {
     }
 
     //Style for search result
-    if(this.searchInput.current!==null)
-      console.log("moun")
+
     var searchResultStyle="";
     // if(this.searchInput.current.offsetWidth>0){
     //   var searchResultStyle = {
@@ -59,9 +60,9 @@ class SearchBar extends Component {
             </div>
           </form>
         </div>
-        <div className={"search-result-wrapper "} style={searchResultStyle}>
+        <div className={"search-result-wrapper "}>
           <div className={"search-result "+this.state.displayResult}>
-            {this.sampleResult}
+            {/* {this.sampleResult} */}
           </div>
           
         </div>

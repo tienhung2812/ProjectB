@@ -9,8 +9,7 @@ const theme = createMuiTheme({
       primary:{main: '#ff5722'},
     },
   });
-
-function UserForm() {
+function UserForm(props) {
   return (
     <React.Fragment>
         <Typography variant="h6" gutterBottom>
@@ -26,6 +25,7 @@ function UserForm() {
                     fullWidth
                     label="Username"
                     variant="outlined"
+                    onChange={props.handleUsernameChange}
                     />
             </MuiThemeProvider>
             </Grid>
@@ -36,6 +36,7 @@ function UserForm() {
                     type="password"
                     label="Password"
                     variant="outlined"
+                    onChange={props.handlePasswordChange}
                     />
             </MuiThemeProvider>
             </Grid>
@@ -46,6 +47,7 @@ function UserForm() {
                     type="password"
                     label="Confirm password"
                     variant="outlined"
+                    onChange={props.handleConfirmPasswordChange}
                     />
             </MuiThemeProvider>
             </Grid>
