@@ -50,5 +50,8 @@
     padding: 20px 50px;
     font-size:0.9rem;
     text-align: justify;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
 }
 
