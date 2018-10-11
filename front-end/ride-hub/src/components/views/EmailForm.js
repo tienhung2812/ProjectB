@@ -11,7 +11,7 @@ const theme = createMuiTheme({
     },
   });
 
-function EmailForm() {
+function EmailForm(props) {
   return (
     <React.Fragment>
         <Typography variant="h6" gutterBottom>
@@ -27,6 +27,8 @@ function EmailForm() {
                 fullWidth
                 label="Email address"
                 variant="outlined"
+                value={props.emailValue}
+                onChange={props.handleEmailChange}
                 />
             </MuiThemeProvider>
             </Grid>
