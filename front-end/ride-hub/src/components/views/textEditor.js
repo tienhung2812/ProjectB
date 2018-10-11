@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'; 
 import './view-stylesheet/textEditor.css';
-
 import { withStyles, MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
