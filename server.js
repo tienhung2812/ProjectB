@@ -6,6 +6,8 @@ var express = require('express');
 var bodyParser = require('body-parser')
 const { Pool} = require('pg')
 const url = require('url')
+var cors = require('cors')
+
 //const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/';
 const params = url.parse(process.env.DATABASE_URL );
 const auth = params.auth.split(':');
@@ -31,7 +33,7 @@ const pool = new Pool(config);
 //var bodyParser = require('body-parser');
 //const react = require("react")
 var app = express();
-
+app.use(cors())
 // configure the app to use bodyParser 
 // bodyParse is required to get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -109,3 +111,11 @@ app.listen(port, err => {
   }
   console.info(`Server running on http://localhost:${port} [${env}]`);
 });
+
+
+/* 
+INSERT INTO post
+(content,creation_date,userid,threadid,pid)
+VALUES
+(ARRAY['{"insert": "Hello\n"}','{"insert": "This is colorful", "attributes": {"color": "#f00"}}']::json[],'2018-10-10 23:45:00',2,1,1);
+*/
