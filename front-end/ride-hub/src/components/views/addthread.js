@@ -13,11 +13,11 @@ import './view-stylesheet/addthread.css';
 export default class AddThread extends Component {
   constructor(props){
     super(props);
-   
+    this.state = {subforumID:0}
   }
   componentDidMount() {
-    browserHistory.push('/addthread/');
-    
+    browserHistory.push('/addthread/'+this.props.params.subforumID);
+    this.setState({subforumID:this.props.subforumID})
   }
 
   render() {

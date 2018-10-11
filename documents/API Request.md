@@ -72,7 +72,19 @@ This is for Homepage
 {
     "subforums_pid0":[
         {
-            "id":"SAMPLE-ID",
+            "id":"SAMPLE-ID-1",
+            "title":"SAMPLE-TITLE",
+            "description":"SAMPLE-DES",
+            "user-following-state":true,
+            "follower":"SAMPLE-NUMBERFOLLOWER",
+            "type":0,
+            "child":[
+                "SAMPLE-CHILD-ID",...
+            ]
+
+        },
+        {
+            "id":"SAMPLE-ID-2",
             "title":"SAMPLE-TITLE",
             "description":"SAMPLE-DES",
             "user-following-state":true,
@@ -91,7 +103,7 @@ This is for Homepage
 ```type : 1``` sub forum does not have child (subsubforum)  
 ```child``` array of child ID (thread or subsubforum based on type). If ```type:0``` child is array of ```subsubforumID```, else child is an array of ```threadID```.  
 
-### Subforun infomation
+### Subforum infomation
 This is for Subforum page
 #### Request
 ```json
@@ -170,8 +182,42 @@ This is for Thread page
     ]
 }
 ```
+### Add Thread page
+### Subforum
+#### request
+```json
+{
+   "subforumID":"SAMPLE-SUBFORUM-ID"
+}
+```
+#### respone
+```json
+{
+   "subforum":[
+    {
+        "subforumID":"SAMPLE-ID",
+        "subforumName":"SAMPLE-NAME"
+     },
+     ...
+   ]
+}
+```
+### Tag
+#### respone
+```json
+{
+    "tags":[
+        {
+            "tagID":"SAMPLE-ID",
+            "tagName":"TAG NAME"
+        },
+        ...
+    ]
+}
+```
 
-##3.Sidebar
+
+## 3.Sidebar
 ### Newest post
 This will be discuss in group meeting
 

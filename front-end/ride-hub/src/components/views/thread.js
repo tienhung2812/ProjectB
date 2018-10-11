@@ -84,14 +84,14 @@ export default class Thread extends Component {
     this.childcontent=
       <div className="post-wrapper">
         <div className="original-post-wrapper">
-          <Post type = "original-post" threadId={this.id}/>
+          <Post type = "original-post" threadID={this.id}/>
         </div>
         <div className="comment-post-wrapper">
           <div className="add-comment-wrapper">
           <TextEditor type="comment"/>
           </div>
           <div className="comments">
-            <Post type = "comment-post" threadId={this.id}/>
+            <Post type = "comment-post" threadID={this.id}/>
           </div>
         </div>
         <div className="blank"></div>

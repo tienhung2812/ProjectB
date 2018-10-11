@@ -128,6 +128,30 @@
     text-align: center;
 }
 
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-createThread{
+    color:white;
+    border: 1px solid white;
+    padding: 5px 10px;
+    text-decoration: none !important;
+    line-height:1;
+    margin: auto;
+    margin-right: 10px;
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-createThread:hover{
+    background-color: white;
+    
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-createThread a{
+    color:white;
+    
+}
+
+.main-subforum-content .title-wrapper .btn-status-wrapper .btn-createThread a:hover{
+    color:#006064 !important;
+}
+
 .main-subforum-content .title-wrapper .btn-status-wrapper .btn-follow{
     color:white;
     border: 1px solid white;
@@ -158,6 +182,8 @@
     color:white;
     padding: 3px 0;
     font-size:0.8rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .main-subforum-content .title-wrapper .btn-status-wrapper .subforum-status .statusDivider{

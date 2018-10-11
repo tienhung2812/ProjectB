@@ -1,9 +1,9 @@
 # Project B GitHub repository
-<<<<<<< HEAD
-
-=======
 The webapp is deployed at https://ride-hub.herokuapp.com/
->>>>>>> 60f0c10ef8724116fcad374ef225080983baa0a3
+Gantt chart: https://realtimeboard.com/app/board/o9J_kyjeRnA=/ 
+WBS: https://www.draw.io/#G1S-3hLZrEdBM7tBQXm7cjAjz-V5geKC7U
+
+
 ## Functionalty
 1.	Thread
     1.	ID

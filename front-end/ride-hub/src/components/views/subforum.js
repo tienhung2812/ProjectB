@@ -22,11 +22,7 @@ export default class SubForum extends Component {
   componentDidMount() {
     this.id = null;
 
-    //WILL DELETE
-    if(this.props.url!=="subsubforum")
-      this.title = "Sub Forum ";
-    else
-      this.title = "Sub sub Forum";
+   
 
     //Change url in subforum page
     if(this.props.url !== "home" && this.props.url !=="subsubforum"){
@@ -37,8 +33,22 @@ export default class SubForum extends Component {
     }
 
     this.setState({id:this.id}); 
+
+     //WILL DELETE
+     if(this.props.url!=="subsubforum")
+     this.title = "Sub Forum "+String(this.state.id);
+    else
+      this.title = "Sub sub Forum "+String(this.state.id);
   }
 
+  componentDidUpdate(){
+    if(this.props.url !== "home" && this.props.url !=="subsubforum"){
+      if(this.state.id!==this.props.params.id){
+        this.id = this.props.params.id;
+        this.setState({id:this.id})
+      }
+    }
+  }
 
   //Fucntion for handle follow button
   handleFollowBtn(){
@@ -80,6 +90,16 @@ export default class SubForum extends Component {
           123 threads
         </div>
       </div>
+      //Add Post button
+      if(this.state.type===1){
+        this.addThreadBtn =       
+          <button type="button" className="btn btn-link btn-createThread">
+            <ReactLink to={'/addthread/'+this.state.id}>
+            create Thread
+            </ReactLink>
+          </button>
+      }
+
       //Child content
       //Sepereate type
       if(this.state.type===0){
@@ -121,6 +141,7 @@ export default class SubForum extends Component {
             </div>
             <div className="btn-status-wrapper">
               <div className="btn-status-content">
+                {this.addThreadBtn}
                 {this.followStatus}
                 {this.subforumStatus}
               </div>
