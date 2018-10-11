@@ -27,6 +27,7 @@ function EmailForm(props) {
                 fullWidth
                 label="Email address"
                 variant="outlined"
+                value={props.emailValue}
                 onChange={props.handleEmailChange}
                 />
             </MuiThemeProvider>

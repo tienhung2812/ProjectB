@@ -68,9 +68,9 @@ class SignUp extends Component {
   getStepContent(step) {
     switch (step) {
       case 0:
-        return <EmailForm handleEmailChange ={this.handleEmailChange}/>;
+        return <EmailForm emailValue={this.state.email} handleEmailChange ={this.handleEmailChange}/>;
       case 1:
-        return <UserForm handleUsernameChange={this.handleUsernameChange} handlePasswordChange={this.handlePasswordChange} handleConfirmPasswordChange={this.handleConfirmPasswordChange}/>;
+        return <UserForm usernameValue={this.state.username} handleUsernameChange={this.handleUsernameChange} handlePasswordChange={this.handlePasswordChange} handleConfirmPasswordChange={this.handleConfirmPasswordChange}/>;
       case 2:
         return <MoreForm />;
       default:

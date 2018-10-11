@@ -25,6 +25,7 @@ function UserForm(props) {
                     fullWidth
                     label="Username"
                     variant="outlined"
+                    value={props.usernameValue}
                     onChange={props.handleUsernameChange}
                     />
             </MuiThemeProvider>
