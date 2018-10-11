@@ -45,7 +45,14 @@ export default class TextEditor extends Component {
   handlePost(){
     var text = this.textInput.current.getEditor().getContents();
     this.textInput.current.getEditor().setContents([{ insert: '\n' }]);;
-    console.log(text);
+    fetch('https://ride-hub.herokuapp.com/api/data', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: text
+    })
   }
 
   render() {
