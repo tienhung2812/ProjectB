@@ -4,12 +4,14 @@ import {Link as ReactLink} from 'react-router';
 import './view-stylesheet/subforum.css';
 import avatar from '../../sampleSubForumIcon/cycle.png'
 import Thread from './thread';
+import Loader from '../app-components/Loader';
 import { type } from "os";
 export default class SubForum extends Component {
   constructor(props){
     super(props);
     this.state = {id:null,description:null, type:1, following : false,title:null,followerNumber:null,child:[]}
     this.handleFollowBtn = this.handleFollowBtn.bind(this);
+    this.fetchData = this.fetchData.bind(this);
     //ID: Sub Forum ID
     //Type: 0 sub forum have child
     //Type: 1 sub forum does not have child
@@ -20,6 +22,28 @@ export default class SubForum extends Component {
     //null: display in SUB-FORUM PAGE
     //subsubforum-sub: display in SUB-FORUM PAGE
   }
+  fetchData(id){
+    fetch('http://ride-hub.herokuapp.com/api/subforum/'+id)
+    .then(response => response.json())
+    .then(data => {
+      data=data[0];  
+      //Parse Child
+      let child = []
+      if(data.child!==null){
+        child = JSON.parse("[" + data.child + "]")
+      }   
+
+      this.setState({
+        title:data.title,
+        type:data.type,
+        followerNumber:data.followers,
+        following:data.user_following_state,
+        child: child,
+        description:data.description
+      })
+    });
+  }
+
   componentDidMount() {
     this.id = null;
 
@@ -34,21 +58,8 @@ export default class SubForum extends Component {
     this.setState({id:this.id}); 
 
     //fetch data
-    console.log('http://ride-hub.herokuapp.com/api/subforum/'+this.id)
-    fetch('http://ride-hub.herokuapp.com/api/subforum/'+this.id)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      data=data[0];     
-      this.setState({
-        title:data.title,
-        type:data.type,
-        followerNumber:data.followers,
-        following:data.user_following_state,
-        child: JSON.parse("[" + data.child + "]"),
-        description:data.description
-      })
-    });
+    this.fetchData(this.id)
+    
   }
 
   componentDidUpdate(){
@@ -56,7 +67,7 @@ export default class SubForum extends Component {
       if(this.state.id!==this.props.params.id){
         this.id = this.props.params.id;
         this.setState({id:this.id})
-
+        this.fetchData(this.id)
       }
     }
   }
@@ -120,7 +131,6 @@ export default class SubForum extends Component {
           
           this.childcontent=[]
           for(var i=0;i<this.state.child.length;i++){
-            console.log(this.state.child[i])
             this.childcontent.push(<SubForum id={this.state.child[i]} url="subsubforum" parent_id={this.state.id}/>)
           }
 
@@ -131,6 +141,7 @@ export default class SubForum extends Component {
           //Generate some thread
           this.childcontent = []
           for(var i=0;i<this.state.child.length;i++){
+            console.log(this.state.child[i])
             this.childcontent.push(<Thread id={this.state.child[i]} url="home"/>)
           }
           //Sub forum do not have child
@@ -182,7 +193,6 @@ export default class SubForum extends Component {
           //Generate some sub sub Forum
           this.childcontent=[]
           for(var i=0;i<this.state.child.length;i++){
-            console.log(this.state.child[i])
             this.childcontent.push(<SubForum id={this.state.child[i]} url="subsubforum" parent_id={this.state.id}/>)
           }
           //Sub Forum have child
@@ -216,6 +226,12 @@ export default class SubForum extends Component {
       }
       //Content for sub sub forum (parent_id != 0)
       else if(this.props.parent_id !== 0){
+        let subsubtitle = null
+        if(this.state.title===null){
+          subsubtitle= "..."
+        }else{
+          subsubtitle = this.state.title;
+        }
         return( 
           <div className={this.props.url}>
             <div> 
@@ -225,7 +241,7 @@ export default class SubForum extends Component {
                     <img src={avatar} alt="SubForumAvatar"></img>
                   </div>
                   <div className="title">
-                    {this.state.title}
+                    {subsubtitle}
                   </div>
                 </button>
               </ReactLink>

@@ -3,19 +3,36 @@ import { browserHistory } from 'react-router';
 import {Link as ReactLink} from 'react-router';
 import TextEditor from './textEditor';
 import Post from './post';
+import Loader from '../app-components/Loader';
 import './view-stylesheet/thread.css';
 import defaultimage from '../../defaultimage72x40.jpg'
 
 export default class Thread extends Component {
   constructor(props){
     super(props);
-    this.state = {id:0,title:""}
+    this.state = {id:null,title:"",child:[],thumbnail:null,tag:null,text:""}
     //Props url
     //home: display in HOMEPAGE
     //subforum: display in SUB-FORUM PAGE
     //null: display in THREAD PAGE
     this.handleChange = this.handleChange.bind(this)
   }
+
+  fetchData(id){
+    fetch('http://ride-hub.herokuapp.com/api/thread/'+id)
+    .then(response => response.json())
+    .then(data => {
+      data=data[0];     
+      this.setState({
+        title:data.title,
+        child: JSON.parse("[" + data.child + "]"),
+        thumbnail:data.thumbnail,
+        tag:data.tag
+
+      })
+    });
+  }
+
   componentDidMount() {
     //Set state
     if(this.props.url !== "home" && this.props.url!=="subforum"){
@@ -24,9 +41,8 @@ export default class Thread extends Component {
     }else{
       this.id = this.props.id;
     }
-    this.title = "Thread "+ String(this.id);
-    this.setState({id:this.id,title:this.title});
-
+    this.setState({id:this.id});
+    this.fetchData(this.id)
     //Sample
     
     //For display in HOMEPAGE
@@ -39,8 +55,8 @@ export default class Thread extends Component {
       if(this.state.id!==this.props.params.id){
         browserHistory.push('/thread/'+this.props.params.id);
         this.id = this.props.params.id;
-        this.title = "Thread "+ String(this.id);
-        this.setState({id:this.props.params.id,title:this.title});
+        this.setState({id:this.props.params.id});
+        this.fetchData(this.id)
       }
       
     }
@@ -51,6 +67,7 @@ export default class Thread extends Component {
   }
   render() {
     if (this.props.url==="home"){
+      //For display short type
       return(
       <div className="thread"> 
         <ReactLink to={'/thread/'+this.props.id} style={{textDecoration:"none !important"}}>
@@ -80,24 +97,40 @@ export default class Thread extends Component {
       </div>
       );
   }else{
-    //Child Content
-    this.childcontent=
+    
+    if(this.state.child.length===0){
+      this.childcontent = <Loader/>
+    }else{
+      //OP 
+      var originalPost = <Post type = "original-post" postID={this.state.child[0]}/>
+      //Comment
+      var comments = []
+      for(var i = 1; i<this.state.child.length;i++){
+        comments.push(<Post type = "comment-post" postID={this.state.child[i]}/>)
+      }
+
+
+      //Child Content
+      this.childcontent=
       <div className="post-wrapper">
         <div className="original-post-wrapper">
-          <Post type = "original-post" threadID={this.id}/>
+          {originalPost}
         </div>
         <div className="comment-post-wrapper">
           <div className="add-comment-wrapper">
           <TextEditor type="comment"/>
           </div>
           <div className="comments">
-            <Post type = "comment-post" threadID={this.id}/>
+            {comments}
           </div>
         </div>
         <div className="blank"></div>
       </div>
+    }
+    
 
     return(
+      //For display full page
       <div className="main-thread-content">
           <div className="title-wrapper">
             <div className="title">
@@ -105,7 +138,7 @@ export default class Thread extends Component {
                 {this.state.title}
               </div>
               <div className="thread-tag needhelp-tag">
-                need help
+                {this.state.tag}
               </div>
             </div>
             <div className="thread-image">
