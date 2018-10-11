@@ -1,5 +1,118 @@
 [
   {
+    "type": "get",
+    "url": "/forum/root",
+    "title": "Get List of Subforums",
+    "group": "Forum",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userid",
+            "description": "<p>userid</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"userid\":\"2\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "subforums",
+            "description": "<p>Sub-forum list</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "subforums.id",
+            "description": "<p>Sub-forum id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subforums.title",
+            "description": "<p>Sub-forum title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subforums.description",
+            "description": "<p>Sub-forum description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subforum.child",
+            "description": "<p>Sub-forum child</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "subforums.user_following_state",
+            "description": "<p>Is User follow this sub-forum</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "subforums.followers",
+            "description": "<p>Number of user follow this sub-forum</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subforums.type",
+            "description": "<p>Sub-forum title</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n   {\n     \"subforums\":[\n\t \t\t{\n\t\t\t\tid: 2,\n\t\t\t\ttitle: \"CAR \",\n\t\t\t\tdescription: \"Car forum\",\n\t\t\t\tchild: \"3,4,5\",\n\t\t\t\tuser_following_state: false,\n\t\t\t\tfollowers: \"2\",\n\t\t\t\ttype: 0\n\t\t\t},\n\t\t\t{\n\t\t\t\tid: 6,\n\t\t\t\ttitle: \"MOTOCYCLE \",\n\t\t\t\tdescription: \"Motocycle forum\",\n\t\t\t\tchild: \"7,8,9\",\n\t\t\t\tuser_following_state: false,\n\t\t\t\tfollowers: \"0\",\n\t\t\t\ttype: 0\n\t\t\t},\n\t\t\t{\n\t\t\t\tid: 10,\n\t\t\t\ttitle: \"BICYCLE \",\n\t\t\t\tdescription: \"Bicycle forum\",\n\t\t\t\tchild: null,\n\t\t\t\tuser_following_state: false,\n\t\t\t\tfollowers: \"0\",\n\t\t\t\ttype: 1\n\t\t\t}\n\t\t]\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "List error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "sampleRequest": [
+      {
+        "url": "http://ride-hub.herokuapp.com/api/subforum/root"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Forum",
+    "name": "GetForumRoot"
+  },
+  {
     "success": {
       "fields": {
         "Success 200": [
@@ -23,8 +136,8 @@
     "url": "",
     "version": "0.0.0",
     "filename": "task-api/doc/main.js",
-    "group": "D__task_api_doc_main_js",
-    "groupTitle": "D__task_api_doc_main_js",
+    "group": "G__ride_hubtest_task_api_doc_main_js",
+    "groupTitle": "G__ride_hubtest_task_api_doc_main_js",
     "name": ""
   },
   {
