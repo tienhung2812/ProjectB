@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Link as ReactLink} from 'react-router';
+import Loader from '../Loader';
 import headimg from '../../../billboard-bg.jpg'
 
 export default class Billboard extends Component {
@@ -34,6 +35,10 @@ export default class Billboard extends Component {
 
 
   render() {
+    if(this.content===null){
+        this.content = <Loader/>
+    }
+
     return(
     <div className="billboard wrapper">
         <div className="head-img">

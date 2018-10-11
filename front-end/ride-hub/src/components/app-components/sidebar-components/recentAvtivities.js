@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Link as ReactLink} from 'react-router';
+import Loader from '../Loader';
 import headimg from '../../../recentactivities-bg.jpg'
 
 export default class RecentActivities extends Component {
@@ -12,6 +13,8 @@ export default class RecentActivities extends Component {
   componentDidMount() {
 
     this.content = [];
+
+    //sample
     this.content.push(
         <div className="child">
             <ReactLink to={"/user/ablacuta"}>
@@ -48,6 +51,11 @@ export default class RecentActivities extends Component {
 
 
   render() {
+
+    if(this.content===null){
+        this.content = <Loader/>
+    }
+
     return(
     <div className="recentactivities wrapper">
         <div className="head-img">
