@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Link as ReactLink} from 'react-router';
 import headimg from '../../../newestthread-bg.jpg';
+import Loader from '../Loader';
 
 export default class NewestThread extends Component {
   constructor(props){
@@ -27,6 +28,10 @@ export default class NewestThread extends Component {
 
 
   render() {
+    if(this.content===null){
+        this.content= <Loader/>
+    }
+
     return(
     <div className="newestthread wrapper">
         <div className="head-img">
