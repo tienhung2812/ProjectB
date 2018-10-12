@@ -1,7 +1,120 @@
 define({ "api": [
   {
     "type": "get",
-    "url": "/forum/root",
+    "url": "/subforum/:id",
+    "title": "Get Sub-forum information",
+    "group": "Forum",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Sub-forum id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userid",
+            "description": "<p>userid</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"userid\":\"2\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Sub-forum id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Sub-forum title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Sub-forum description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "child",
+            "description": "<p>Sub-forum child</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "user_following_state",
+            "description": "<p>Is User follow this sub-forum</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "followers",
+            "description": "<p>Number of user follow this sub-forum</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Sub-forum title</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n\t \t{\n\t\t\tid: 2,\n\t\t\ttitle: \"CAR \",\n\t\t\tdescription: \"Car forum\",\n\t\t\tchild: \"3,4,5\",\n\t\t\tuser_following_state: false,\n\t\t\tfollowers: \"2\",\n\t\t\ttype: 0\n\t\t}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Sub forum not found",
+          "content": "HTTP/1.1 404 Not Found",
+          "type": "json"
+        }
+      ]
+    },
+    "sampleRequest": [
+      {
+        "url": "http://ride-hub.herokuapp.com/api/subforum/:id"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Forum",
+    "name": "GetSubforumId"
+  },
+  {
+    "type": "get",
+    "url": "/subforum/root",
     "title": "Get List of Subforums",
     "group": "Forum",
     "parameter": {
@@ -110,7 +223,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "task-api/index.js",
     "groupTitle": "Forum",
-    "name": "GetForumRoot"
+    "name": "GetSubforumRoot"
   },
   {
     "success": {
@@ -139,6 +252,16 @@ define({ "api": [
     "group": "G__ride_hubtest_task_api_doc_main_js",
     "groupTitle": "G__ride_hubtest_task_api_doc_main_js",
     "name": ""
+  },
+  {
+    "type": "get",
+    "url": "/user/getUserById/:id/summary",
+    "title": "Get User information summary",
+    "group": "User",
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "User",
+    "name": "GetUserGetuserbyidIdSummary"
   },
   {
     "type": "post",
