@@ -34,21 +34,20 @@ export default class SubForum extends Component {
     this.setState({id:this.id}); 
 
     //fetch data
+    console.log('http://ride-hub.herokuapp.com/api/subforum/'+this.id)
     fetch('http://ride-hub.herokuapp.com/api/subforum/'+this.id)
     .then(response => response.json())
     .then(data => {
-      data=data[0]; 
-      this.title = String(data.title).replace(/ /g,'')
-     
+      console.log(data)
+      data=data[0];     
       this.setState({
-        title:this.title,
+        title:data.title,
         type:data.type,
         followerNumber:data.followers,
         following:data.user_following_state,
         child: JSON.parse("[" + data.child + "]"),
         description:data.description
       })
-      console.log(this.state.child)
     });
   }
 
@@ -115,33 +114,25 @@ export default class SubForum extends Component {
       //Child content
       //Sepereate type
       if(this.state.child.length!==0){
-        
         if(this.state.type===0){
           //This is example before having API, this section will be deleted after done API
           //Generate some sub sub Forum
           
-          let tempdata = []
+          this.childcontent=[]
           for(var i=0;i<this.state.child.length;i++){
-            tempdata.push(<SubForum id={this.state.child[i]} url="subsubforum" parent_id={this.state.id}/>)
+            console.log(this.state.child[i])
+            this.childcontent.push(<SubForum id={this.state.child[i]} url="subsubforum" parent_id={this.state.id}/>)
           }
 
-          this.childcontent = <div className="subsubforum-wrapper">
-                              {tempdata}
-                            </div>
+
           //Sub Forum have child
-          console.log(tempdata)
         }else{
           //This is example before having API, this section will be deleted after done API
           //Generate some thread
-          let tempdata = []
+          this.childcontent = []
           for(var i=0;i<this.state.child.length;i++){
-            tempdata.push(<Thread id={this.state.child[i]} url="home"/>)
+            this.childcontent.push(<Thread id={this.state.child[i]} url="home"/>)
           }
-
-          this.childcontent = <div className="subsubforum-wrapper">
-                              {tempdata}
-                            </div>
-
           //Sub forum do not have child
         }
       }
@@ -171,7 +162,11 @@ export default class SubForum extends Component {
             </div>
           </div>
           <div className="content-wrapper">
-            {this.childcontent}
+            <div className="subsubforum-wrapper">
+              {this.childcontent}
+            
+            </div>
+            
           </div>
       </div>
       );
@@ -185,20 +180,19 @@ export default class SubForum extends Component {
         if(this.state.type===0){
           //This is example before having API, this section will be deleted after done API
           //Generate some sub sub Forum
-          this.childcontent = <div className="subsubforum-wrapper">
-                              <SubForum id={34535} url="subsubforum" parent_id={this.id}/>
-                              <SubForum id={123414} url="subsubforum" parent_id={this.id}/>
-                              <SubForum id={15135254} url="subsubforum" parent_id={this.id}/>
-                            </div>
+          this.childcontent=[]
+          for(var i=0;i<this.state.child.length;i++){
+            console.log(this.state.child[i])
+            this.childcontent.push(<SubForum id={this.state.child[i]} url="subsubforum" parent_id={this.state.id}/>)
+          }
           //Sub Forum have child
         }else{
           //This is example before having API, this section will be deleted after done API
           //Generate some thread
-          this.childcontent = <div className="subsubforum-wrapper">
-                              <Thread id={132456} url="home"/>
-                              <Thread id={132456} url="home"/>
-                              <Thread id={132456} url="home"/>
-                            </div>
+          this.childcontent = []
+          for(var i=0;i<this.state.child.length;i++){
+            this.childcontent.push(<Thread id={this.state.child[i]} url="home"/>)
+          }
 
           //Sub forum do not have child
         }
@@ -231,7 +225,7 @@ export default class SubForum extends Component {
                     <img src={avatar} alt="SubForumAvatar"></img>
                   </div>
                   <div className="title">
-                    {this.title}
+                    {this.state.title}
                   </div>
                 </button>
               </ReactLink>
