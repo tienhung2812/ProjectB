@@ -46,7 +46,7 @@ exports.post_get = function(req, res) {
         )
         SELECT pv.*, p.content
         FROM post_withvote pv
-        INNER JOIN post p
+        LEFT JOIN post p
         ON pv.id = p.id;`,
     values,
     (err, data) => {
