@@ -76,7 +76,7 @@ export default class Thread extends Component {
               <img src={defaultimage} alt="SubForumAvatar"></img>
           </div>
           <div className="title">
-              {this.title}
+              {this.state.title}
           </div>
           <div className="status">
             <div className="username">
