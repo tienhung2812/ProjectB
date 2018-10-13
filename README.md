@@ -1,7 +1,7 @@
 # Project B GitHub repository
-The webapp is deployed at https://ride-hub.herokuapp.com/
-Gantt chart: https://realtimeboard.com/app/board/o9J_kyjeRnA=/ 
-WBS: https://www.draw.io/#G1S-3hLZrEdBM7tBQXm7cjAjz-V5geKC7U
+* The webapp is deployed at https://ride-hub.herokuapp.com/
+* Gantt chart: https://realtimeboard.com/app/board/o9J_kyjeRnA=/ 
+* WBS: https://www.draw.io/#G1S-3hLZrEdBM7tBQXm7cjAjz-V5geKC7U
 
 
 ## Functionalty
