@@ -26,12 +26,37 @@ const theme = createMuiTheme({
 class AccountDropDown extends Component {
   constructor(props){
     super(props);
-    this.state= {isLogged:false, username:"anoymous", point:"0"}
- 
+    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null}
+    
+  }
+
+  fetchData(uid){
+    fetch('http://ride-hub.herokuapp.com/api/user/'+uid+'/details')
+    .then(response => response.json())
+    .then(data => {   
+      this.setState({
+        username:data.username,
+        point:data.point,
+        gender:data.gender,
+        address:data.address,
+        phone:data.phone,
+        description:data.description,
+        birthday:data.birthday
+      })
+    });
   }
 
   componentDidMount(){
-      this.childcontent=[];
+    this.childcontent=[];
+    
+    //set temp data:
+    sessionStorage.setItem('uid',1);
+
+    if(sessionStorage.getItem('uid')!==null){
+        this.setState({isLogged:true})
+        let id = sessionStorage.getItem('uid');
+        this.fetchData(id)
+    }
   }
   state = {
     open: false,

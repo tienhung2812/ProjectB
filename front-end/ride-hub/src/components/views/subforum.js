@@ -9,7 +9,7 @@ import { type } from "os";
 export default class SubForum extends Component {
   constructor(props){
     super(props);
-    this.state = {id:null,description:null, type:1, following : false,title:null,followerNumber:null,child:[]}
+    this.state = {id:null,description:null, type:1, following : false,title:null,followerNumber:null,child:[], subforumStatus:null}
     this.handleFollowBtn = this.handleFollowBtn.bind(this);
     this.fetchData = this.fetchData.bind(this);
     //ID: Sub Forum ID
@@ -41,6 +41,13 @@ export default class SubForum extends Component {
         child: child,
         description:data.description
       })
+      if(data.type ===0 ){
+        let substt = child.length +" subforums"
+        this.setState({subforumStatus:substt})
+      }else{
+        let substt = child.length +" threads"
+        this.setState({subforumStatus:substt})
+      }
     });
   }
 
@@ -109,7 +116,7 @@ export default class SubForum extends Component {
         </div>
         <div className="statusDivider"></div>
         <div className="threadstatus">
-          123 threads
+          {this.state.subforumStatus}
         </div>
       </div>
       //Add Post button
