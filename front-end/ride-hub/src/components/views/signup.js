@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { browserHistory } from 'react-router';
 import withStyles from '@material-ui/core/styles/withStyles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import passwordHash from 'password-hash';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -51,19 +52,29 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-function checkSamePasswordAndNull(password,retypepassword){
-  return (password!==null)&&(retypepassword!==null)&&(password===retypepassword);
-}
-
 class SignUp extends Component {
   constructor(props){
     super(props);
     this.state={activeStep:0,email:null,username:null,password:null,confirmpassword:null}
+    this.signUp = this.signUp.bind(this);
   }
   componentDidMount() {
     browserHistory.push('/signup');
   }
   
+  signUp(){
+    fetch('https://ride-hub.herokuapp.com/api/signup', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      })
+    })
+  }
 
   getStepContent(step) {
     switch (step) {
@@ -88,12 +99,14 @@ class SignUp extends Component {
 
   handlePasswordChange = (event)=>{
     //NEED to HASH event.target.value before setState
-    this.setState({password:event.target.value})
+    var hashedPassword = passwordHash.generate(event.target.value);
+    this.setState({password:hashedPassword})
   }
 
   handleConfirmPasswordChange = (event)=>{
     //NEED to HASH event.target.value before setState
-    this.setState({confirmpassword:event.target.value})
+    var isSamePassword = passwordHash.verify(event.target.value,this.state.password);
+    this.setState({confirmpassword:isSamePassword})
   }
 
   handleNext = () => {
@@ -109,13 +122,17 @@ class SignUp extends Component {
     }
     //Check Same Password on state 1
     else if(this.state.activeStep===1){
-      if(checkSamePasswordAndNull(this.state.password,this.state.confirmpassword)){
+      if((this.state.password!==null)&&this.state.confirmpassword){
         this.setState(state => ({
           activeStep: state.activeStep + 1,
         }));
       }else{
         alert("Password not same")
       }
+    }
+    else if(this.state.activeStep===2){
+      console.log("Sign up api")
+      this.signUp();
     }
     
   };

@@ -27,7 +27,21 @@ class AccountDropDown extends Component {
   constructor(props){
     super(props);
     this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null}
-    
+    this.handleSignIn = this.handleSignIn.bind(this)
+  }
+
+  handleSignIn(){
+    // fetch('https://ride-hub.herokuapp.com/api/login', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Accept': 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       firstParam: 'yourValue',
+    //       secondParam: 'yourOtherValue',
+    //     })
+    //   })
   }
 
   fetchData(uid){
@@ -50,13 +64,13 @@ class AccountDropDown extends Component {
     this.childcontent=[];
     
     //set temp data:
-    sessionStorage.setItem('uid',1);
+    // sessionStorage.setItem('uid',1);
 
-    if(sessionStorage.getItem('uid')!==null){
-        this.setState({isLogged:true})
-        let id = sessionStorage.getItem('uid');
-        this.fetchData(id)
-    }
+    // if(sessionStorage.getItem('uid')!==null){
+    //     this.setState({isLogged:true})
+    //     let id = sessionStorage.getItem('uid');
+    //     this.fetchData(id)
+    // }
   }
   state = {
     open: false,
@@ -139,7 +153,7 @@ class AccountDropDown extends Component {
                 
                 <Grid item xs={6}>
                 <MuiThemeProvider theme={theme}>
-                    <Button variant="contained" color="primary" size="large" fullWidth>
+                    <Button onClick={this.handleSignIn} variant="contained" color="primary" size="large" fullWidth >
                     SIGN IN
                     </Button>
                 </MuiThemeProvider>
