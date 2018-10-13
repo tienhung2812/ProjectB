@@ -31,7 +31,7 @@ class AccountDropDown extends Component {
   }
 
   fetchData(uid){
-    fetch('http://ride-hub.herokuapp.com/api/user/'+uid+'/details')
+    fetch('https://ride-hub.herokuapp.com/api/user/'+uid+'/details')
     .then(response => response.json())
     .then(data => {   
       this.setState({

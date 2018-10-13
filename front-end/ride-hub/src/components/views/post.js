@@ -20,7 +20,7 @@ export default class Post extends Component {
   fetchData(id,userID){
     //fetch data
     if(id!==11)
-    fetch('http://ride-hub.herokuapp.com/api/post/'+id+'?user='+userID)
+    fetch('https://ride-hub.herokuapp.com/api/post/'+id+'?user='+userID)
     .then(response => {
         response.json().then(data => {
             //Content

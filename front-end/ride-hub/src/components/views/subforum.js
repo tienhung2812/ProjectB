@@ -23,7 +23,7 @@ export default class SubForum extends Component {
     //subsubforum-sub: display in SUB-FORUM PAGE
   }
   fetchData(id){
-    fetch('http://ride-hub.herokuapp.com/api/subforum/'+id)
+    fetch('https://ride-hub.herokuapp.com/api/subforum/'+id)
     .then(response => response.json())
     .then(data => {
       data=data[0];  

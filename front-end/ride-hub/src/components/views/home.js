@@ -18,7 +18,7 @@ export default class Home extends Component {
   componentDidMount() {
     browserHistory.push('/');
     //fetch data
-    fetch('http://ride-hub.herokuapp.com/api/subforum/root')
+    fetch('https://ride-hub.herokuapp.com/api/subforum/root')
     .then(response => response.json())
     .then(data => {
       var idData=[]

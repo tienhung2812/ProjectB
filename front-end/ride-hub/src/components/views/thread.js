@@ -19,7 +19,7 @@ export default class Thread extends Component {
   }
 
   fetchData(id){
-    fetch('http://ride-hub.herokuapp.com/api/thread/'+id)
+    fetch('https://ride-hub.herokuapp.com/api/thread/'+id)
     .then(response => response.json())
     .then(data => {
       data=data[0];     
