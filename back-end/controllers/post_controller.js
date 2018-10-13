@@ -40,13 +40,13 @@ exports.post_get = function(req, res) {
         ), post_withvote AS (
             SELECT pu.*, COUNT(pv.userid) AS vote_number
             FROM post_withuser pu
-            INNER JOIN post_votes pv
+            LEFT JOIN post_votes pv
             ON pu.id = pv.postid
             GROUP BY(pu.id,pu.user_post,pu.user_vote_state)
         )
         SELECT pv.*, p.content
         FROM post_withvote pv
-        LEFT JOIN post p
+        INNER JOIN post p
         ON pv.id = p.id;`,
     values,
     (err, data) => {
