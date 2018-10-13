@@ -52,8 +52,13 @@
     position: flex;
 }
 
-.header-container .search .input-group form input{
-    background-color: #EDEDED;
+.header-container .search .input-group form div{
+    border:none; 
+    padding: 5;
+}
+
+.header-container .search .input-group form .form-control{
+    /* background-color: #EDEDED; */
     border-radius: 8px;
     border: none;
     padding: 0 0 0 20px;
@@ -62,8 +67,9 @@
 
 }
 
-.header-container .search .input-group input:focus{
+.header-container .search .input-group .form-control:focus{
     box-shadow:  none;
+    border-color: #ededed
 }
 
 .header-container .search .input-group .search-clear{

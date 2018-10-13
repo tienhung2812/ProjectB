@@ -1,14 +1,61 @@
 import React, { Component } from 'react';
+import Select from 'react-select/lib/Async';
+import {browserHistory} from 'react-router';
+import {Redirect} from 'react-router';
 import '../../stylesheet/Header.css';
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' }
+];
+
+
 
 class SearchBar extends Component {
   constructor(props){
     super(props);
-    this.state= {searchValue:'',displayResult:false}
+    this.state= {searchValue:'',displayResult:false,selectedOption: null}
     this.searchInput = React.createRef();
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
+  promiseOptions = inputValue =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve(this.getModelsAPI(inputValue));
+    }, 1000);
+    return options;
+  });
+  
+  getModelsAPI = (input) => {
 
+    if (!input) {
+        return Promise.resolve({ options: [] });
+    }
+
+    // const url = `(...)?cmd=item_codes_json&term=${input}`;
+
+    // fetch(url, {credentials: 'include'})
+    //     .then((response) => {
+    //         return response.json();
+    //     })
+    //     .then((json) => {
+    //         const formatted = json.map((l) => {
+    //             return Object.assign({}, {
+    //                 value: l.value,
+    //                 label: l.label
+    //             });
+    //         })
+    //         return { options: formatted }
+    //     })
+    return options
+}
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedOption });
+    console.log(`Option selected:`, selectedOption);
+  }
   componentDidMount(){
     this.sampleResult = [];
     for(var i =0 ;i <4; i++){
@@ -34,6 +81,7 @@ class SearchBar extends Component {
 
 
   render() {
+
     //FOR CLEAR BUTTON
     var clearButtonClassName = "search-clear"
     if (this.state.searchValue.length===0){
@@ -41,20 +89,22 @@ class SearchBar extends Component {
     }
 
     //Style for search result
-
-    var searchResultStyle="";
-    // if(this.searchInput.current.offsetWidth>0){
-    //   var searchResultStyle = {
-    //     width:this.searchInput.current.offsetWidth
-    //   }
-    // }
+    const { selectedOption } = this.state;
     
 
     return (
       <div>
         <div className="input-group">
           <form ref={this.searchInput}>
-            <input type="text" className="form-control" placeholder="Ask something..." aria-label="Search-bar" onChange={this.handleSearchChange}></input>
+            <Select
+              value={selectedOption}
+              // options={options}
+              loadOptions={this.promiseOptions}
+              onChange={this.handleChange}
+              className="form-control"
+              placeholder="Ask something..."
+            />
+            {/* <input type="text"  placeholder="Ask something..." aria-label="Search-bar" onChange={this.handleSearchChange}></input> */}
             <div>
               <button className={clearButtonClassName} type="reset"></button>
             </div>
@@ -70,6 +120,7 @@ class SearchBar extends Component {
         
     );
   }
+  
 }
 
 export default SearchBar;
