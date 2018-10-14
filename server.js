@@ -80,7 +80,7 @@ app.use("/api/subforum", forumRouter);
 
 // test
 // create the login get and post routes
-app.get('/login', (req, res) => {
+app.get('/api/login', (req, res) => {
   console.log('signin: ' + req.sessionID);
   res.send(`You got the login page!\n`)
 })
