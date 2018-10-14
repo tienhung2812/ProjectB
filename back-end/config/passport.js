@@ -7,7 +7,7 @@ var passport = require("passport");
 let date = require("date-and-time");
 var LocalStrategy = require("passport-local").Strategy;
 //const bcrypt = require("bcrypt-nodejs");
-//const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 module.exports = function(passport) {
   /* **********************************************************************/
   // passport session setup
@@ -45,22 +45,24 @@ module.exports = function(passport) {
     new LocalStrategy(function(username, password, done) {
       console.log("authenticate user");
       var values = [username];
+      console.log(values);
       // promise
       db.query(
-        "select u.id, u.username, u.password from public.user u where u.username=$1;",
+        "select u.id, u.username, u.password from public.user u where u.username=$1",
         values
       )
         .then(res => {
-          var user = res.rows[0];
-          if (user.username != username) {
+          var user = res.rows[0];          
+          if (user === undefined) {
+            console.log('x')
             return done(null, false, { message: "Incorrect username." });
           }
-          if (password != user.password) {
-            return done(null, false, { message: "Incorrect password." });
-          }
-          // if (!bcrypt.compareSync(password, user.password)) {
+          // if (password != user.password) {
           //   return done(null, false, { message: "Incorrect password." });
           // }
+          if (!bcrypt.compareSync(password, user.password)) {
+            return done(null, false, { message: "Incorrect password." });
+          }
           // if successful
           return done(null, user);
         })
@@ -79,11 +81,11 @@ module.exports = function(passport) {
       var creation_date = new Date();
       //also need to store password in hash
 
-      /* const saltRounds = 10;
-      let hashpassword = bcrypt.hashSync(password, saltRounds); */
+      const saltRounds = 10;
+      let hashpassword = bcrypt.hashSync(password, saltRounds);
       var params_1 = [
         username,
-        password,
+        hashpassword,
         avatar,
         role_id,
         point,
