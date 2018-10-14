@@ -53,17 +53,14 @@ class AccountDropDown extends Component {
     sessionStorage.setItem('uid',1);
 
     if(sessionStorage.getItem('uid')!==null){
-        this.setState({isLogged:true})
+        this.setState({isLogged:false})
         let id = sessionStorage.getItem('uid');
         this.fetchData(id)
     }
   }
   state = {
     open: false,
-    amount: '',
     password: '',
-    weight: '',
-    weightRange: '',
     showPassword: false,
   };
 
@@ -96,6 +93,7 @@ class AccountDropDown extends Component {
                 aria-labelledby="form-dialog-title"
             >
             <DialogContent>
+            <form>
             <Grid container spacing={16}>
                 <Grid item xs={12}>
                     <div class="row pl-3">
@@ -111,6 +109,7 @@ class AccountDropDown extends Component {
                     fullWidth
                     label="Username"
                     variant="outlined"
+                    inputProps={{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", title:"Invalid Email"}}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -139,7 +138,7 @@ class AccountDropDown extends Component {
                 
                 <Grid item xs={6}>
                 <MuiThemeProvider theme={theme}>
-                    <Button variant="contained" color="primary" size="large" fullWidth>
+                    <Button variant="contained" color="primary" size="large" type="submit" fullWidth> 
                     SIGN IN
                     </Button>
                 </MuiThemeProvider>
@@ -160,7 +159,8 @@ class AccountDropDown extends Component {
                 </MuiThemeProvider>
                 </Grid>
               
-            </Grid>       
+            </Grid>
+            </form>     
             </DialogContent>
             </Dialog>
             </div>
