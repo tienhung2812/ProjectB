@@ -42,6 +42,7 @@ const db = require("./back-end/db");
 // passport
 // 
 
+const cookieTimeLife = 5*60*1000;
 
 app.use(
   session({
@@ -58,7 +59,8 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge: 10*60*1000}
+    cookie: {maxAge: cookieTimeLife, 
+             expires: new Date(Date.now() + cookieTimeLife)}
   })
 );
 
@@ -94,7 +96,7 @@ app.post(
 );
 
 app.get('/api/signup', (req, res) => {
-  console.log('signup success: ' + req.sessionID);
+  //console.log('signup success: ' + req.sessionID);
   res.send(`You got the signup page!\n`)
 })
  
@@ -110,18 +112,23 @@ app.post(
 
 
 app.post('/api/logout', function(req, res){
-  console.log('log out: ' + req.sessionID);
-  req.logout();
-  res.redirect('/');
+  //console.log('log out: ' + req.sessionID);
+  //req.logout();
+  req.session.destroy(function (err) {
+    res.clearCookie('connect.sid');
+    res.redirect('/'); //Inside a callback… bulletproof!
+  });
+
+  //res.redirect('/');
 });
 
 
 
 
 app.get("/api/authrequired", (req, res) => {
-  console.log("Inside GET /authrequired callback");
-  console.log("id: "+req.sessionID);
-  console.log(`User authenticated? ${req.isAuthenticated()}`);
+  // console.log("Inside GET /authrequired callback");
+  // console.log("id: "+req.sessionID);
+  // console.log(`User authenticated? ${req.isAuthenticated()}`);
   if (req.isAuthenticated()) {
     res.send("you hit the authentication endpoint\n");
   } else {
