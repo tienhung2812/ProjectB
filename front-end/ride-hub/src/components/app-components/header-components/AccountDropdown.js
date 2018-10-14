@@ -27,7 +27,7 @@ const theme = createMuiTheme({
 class AccountDropDown extends Component {
   constructor(props){
     super(props);
-    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null,pw:null,loggingin:false}
+    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null,pw:null,loggingin:false,loginSucess:true}
     this.handleSignIn = this.handleSignIn.bind(this)
     this.handleUsername =this.handleUsername.bind(this)
     this.handlePasswordChange = this.handlePasswordChange.bind(this)
@@ -47,6 +47,17 @@ class AccountDropDown extends Component {
           username: this.state.username,
           password: this.state.pw,
         })
+      }).then(response =>{
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            //Wrong 
+            this.setState({isLogged:false,loggingin:false,pw:null,loginSucess:false})
+
+        } else {
+            //Correct
+            this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
+            
+        }
       })
   }
 
@@ -146,20 +157,22 @@ class AccountDropDown extends Component {
   
 
   render() { 
+    
     //Set variable
+    var signInDialogContent;
+    var status;
+    if(!this.state.loggingin&&!this.state.isLogged&&!this.state.loginSucess){
+        status = <p style={{color:"red"}}>Incorrect username or password</p>
+    }else{
+        status = ""
+    }
     if(this.state.loggingin&&!this.state.isLogged){
-        var signInDialogContent = 
+        signInDialogContent = 
         <div style={{width:"568px"}}>
             <Loader/>
         </div>
-    }else if(!this.state.loggingin&&this.state.isLogged){
-        var signInDialogContent = 
-        <div style={{width:"568px"}}>
-           Sign in sucessfuly
-        </div>
-        this.setState({open:false})
     }else{
-        var signInDialogContent = this.defaultSignInDialogContent
+        signInDialogContent = this.defaultSignInDialogContent
     }
 
     if(!this.state.isLogged){
@@ -173,6 +186,7 @@ class AccountDropDown extends Component {
                 aria-labelledby="form-dialog-title"
             >
             <DialogContent>
+                
             <form>
             <Grid container spacing={16}>
                 <Grid item xs={12}>
@@ -184,6 +198,7 @@ class AccountDropDown extends Component {
                     </div>  
                 <Divider/>   
                 </Grid>
+                {status}
                 {signInDialogContent}
               
             </Grid>

@@ -139,13 +139,13 @@ class SignUp extends Component {
   handlePasswordChange = (event)=>{
     //NEED to HASH event.target.value before setState;
     var validatePw = validatePassword(event.target.value);
-    var hashedPassword = passwordHash.generate(event.target.value);
-    this.setState({password:hashedPassword,validatePw:validatePw})
+    // var hashedPassword = passwordHash.generate(event.target.value);
+    this.setState({password:event.target.value,validatePw:validatePw})
   }
 
   handleConfirmPasswordChange = (event)=>{
     //NEED to HASH event.target.value before setState
-    var isSamePassword = passwordHash.verify(event.target.value,this.state.password);
+    var isSamePassword = (this.state.password===event.target.value);
     this.setState({confirmpassword:isSamePassword})
   }
 

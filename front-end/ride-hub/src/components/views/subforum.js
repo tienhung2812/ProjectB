@@ -67,6 +67,9 @@ export default class SubForum extends Component {
     //fetch data
     this.fetchData(this.id)
     
+
+    //Set up variable
+    this.addThreadBtn = "";
   }
 
   componentDidUpdate(){
@@ -127,6 +130,8 @@ export default class SubForum extends Component {
             create Thread
             </ReactLink>
           </button>
+      }else{
+        this.addThreadBtn = ""
       }
 
       //Child content
