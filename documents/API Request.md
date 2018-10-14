@@ -228,6 +228,19 @@ This will be discuss in group meeting
 This will be discus in group meeting
 
 
+## Sign up
+
+### Already user account ?
+
+### request
+```json
+    "username":"username"
+```
+### respone
+```json
+    "already":true/false
+```
+
 ## POST
 ### 1 Registration
 This will be discuss in group meeting
@@ -272,3 +285,20 @@ This will be discuss in group meeting
 
 
 # Search
+### request
+```json
+    "value" : sometext
+```
+
+### respone
+```json
+    [
+        {
+            "type": "subforum/thread",
+            "id":"id",
+            "label":"Full title"
+        },
+        ...
+    ]
+    
+```
