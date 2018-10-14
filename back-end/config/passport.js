@@ -45,14 +45,16 @@ module.exports = function(passport) {
     new LocalStrategy(function(username, password, done) {
       console.log("authenticate user");
       var values = [username];
+      console.log(values);
       // promise
       db.query(
-        "select u.id, u.username, u.password from public.user u where u.username=$1;",
+        "select u.id, u.username, u.password from public.user u where u.username=$1",
         values
       )
         .then(res => {
-          var user = res.rows[0];
-          if (user.username != username) {
+          var user = res.rows[0];          
+          if (user === undefined) {
+            console.log('x')
             return done(null, false, { message: "Incorrect username." });
           }
           // if (password != user.password) {

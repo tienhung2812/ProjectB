@@ -88,13 +88,34 @@ app.get('/api/login', (req, res) => {
   res.send(`You got the login page!\n`)
 })
 
-app.post(
-  "/api/login",  
-  passport.authenticate("signin", {
-    successRedirect: "/",
-    failureRedirect: "/login"
-  })
-);
+app.get("api/login", function(req, res){
+  res.render('index', { messages: req.flash('info') });
+})
+
+// app.post(
+//   "/api/login",  
+//   passport.authenticate("signin", {
+//     successRedirect: "/",
+//     failureRedirect: "/api/login",
+//     badRequestMessage : 'Missing username or password.',
+//     failureFlash: true
+//   })
+// );
+
+app.post('/api/login', function(req, res, next) {
+  passport.authenticate('signin', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { 
+      return res.send({"error": "Error in username or password"});
+      //return res.redirect('/api/login'); 
+    }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/users/' + user.username);
+    });
+  })(req, res, next);
+});
+
 
 app.get('/api/signup', (req, res) => {
   //console.log('signup success: ' + req.sessionID);
@@ -107,7 +128,7 @@ app.post(
   passport.authenticate("signup", {
     successRedirect: "/",
     failureRedirect: "/signup",
-    badRequestMessage : 'Missing username or password.',
+    //badRequestMessage : 'Missing username or password.',
     failureFlash: true
   })
 );
