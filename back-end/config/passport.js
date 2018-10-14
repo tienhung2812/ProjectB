@@ -7,7 +7,7 @@ var passport = require("passport");
 let date = require("date-and-time");
 var LocalStrategy = require("passport-local").Strategy;
 //const bcrypt = require("bcrypt-nodejs");
-//const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 module.exports = function(passport) {
   /* **********************************************************************/
   // passport session setup
