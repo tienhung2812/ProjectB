@@ -36,20 +36,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
---
--- Name: adminpack; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS adminpack WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION adminpack; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION adminpack IS 'administrative functions for PostgreSQL';
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -61,7 +47,7 @@ SET default_with_oids = false;
 CREATE TABLE public.forum (
     id integer NOT NULL,
     pid integer,
-    title character(255) NOT NULL,
+    title character varying NOT NULL,
     description text NOT NULL,
     creation_date timestamp with time zone NOT NULL,
     userid integer NOT NULL
@@ -110,7 +96,7 @@ ALTER SEQUENCE public.forum_id_seq OWNED BY public.forum.id;
 
 CREATE TABLE public.gender (
     id integer NOT NULL,
-    type character(20) NOT NULL
+    type character varying NOT NULL
 );
 
 
@@ -134,11 +120,11 @@ ALTER TABLE public.permission OWNER TO postgres;
 
 CREATE TABLE public.post (
     id integer NOT NULL,
-    creation_date timestamp with time zone NOT NULL,
     userid integer NOT NULL,
     threadid integer NOT NULL,
     pid integer,
-    content json[] NOT NULL
+    creation_date timestamp with time zone NOT NULL,
+    content json[]
 );
 
 
@@ -236,7 +222,7 @@ ALTER TABLE public.status OWNER TO postgres;
 
 CREATE TABLE public.tag (
     id integer NOT NULL,
-    name character(100) NOT NULL
+    name character varying NOT NULL
 );
 
 
@@ -248,12 +234,13 @@ ALTER TABLE public.tag OWNER TO postgres;
 
 CREATE TABLE public.thread (
     id integer NOT NULL,
-    title character(255) NOT NULL,
+    title character varying NOT NULL,
     userid integer NOT NULL,
     forumid integer NOT NULL,
     creation_date timestamp with time zone NOT NULL,
     thumbnail bytea,
-    tag_id integer
+    tag_id integer,
+    content character varying NOT NULL
 );
 
 
@@ -310,15 +297,15 @@ ALTER TABLE public.thread_votes OWNER TO postgres;
 
 CREATE TABLE public."user" (
     id integer NOT NULL,
-    username character(255) NOT NULL,
-    password character(255) NOT NULL,
+    username character varying NOT NULL,
+    password character varying NOT NULL,
     avatar bytea NOT NULL,
     role_id integer NOT NULL,
     point integer NOT NULL,
     creation_date timestamp with time zone NOT NULL,
     gender_id integer,
-    address character(255),
-    phone character(20),
+    address character varying,
+    phone character varying,
     description text,
     last_signin timestamp with time zone,
     birthday character(10),
@@ -404,7 +391,7 @@ ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
 
 CREATE TABLE public.user_role (
     id integer NOT NULL,
-    name character(20) NOT NULL,
+    name character varying NOT NULL,
     description text
 );
 
@@ -451,16 +438,16 @@ ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_
 --
 
 COPY public.forum (id, pid, title, description, creation_date, userid) FROM stdin;
-1	\N	RideHub                                                                                                                                                                                                                                                        	Ridehub mainforum	2018-10-07 22:10:05+07	1
-2	1	CAR                                                                                                                                                                                                                                                            	Car forum	2018-10-07 22:11:25+07	1
-3	2	BMW                                                                                                                                                                                                                                                            	BMW sub-forum	2018-10-07 22:11:26+07	1
-4	2	ROLL ROYCE                                                                                                                                                                                                                                                     	Roll royce sub-forum	2018-10-07 22:11:27+07	1
-5	2	FORD                                                                                                                                                                                                                                                           	Ford sub-forum	2018-10-07 22:11:28+07	1
-6	1	MOTOCYCLE                                                                                                                                                                                                                                                      	Motocycle forum	2018-10-07 22:11:25+07	1
-7	6	YAMAHA                                                                                                                                                                                                                                                         	Yamaha sub-forum	2018-10-07 22:11:26+07	1
-8	6	KAWASAKI                                                                                                                                                                                                                                                       	Kawasaki sub-forum	2018-10-07 22:11:27+07	1
-9	6	SUZUKI                                                                                                                                                                                                                                                         	Suzuki sub-forum	2018-10-07 22:11:28+07	1
-10	1	BICYCLE                                                                                                                                                                                                                                                        	Bicycle forum	2018-10-09 20:09:01+07	1
+1	\N	RideHub	Ridehub mainforum	2018-10-07 22:10:05+07	1
+2	1	CAR	Car forum	2018-10-07 22:11:25+07	1
+3	2	BMW	BMW sub-forum	2018-10-07 22:11:26+07	1
+4	2	ROLL ROYCE	Roll royce sub-forum	2018-10-07 22:11:27+07	1
+5	2	FORD	Ford sub-forum	2018-10-07 22:11:28+07	1
+6	1	MOTOCYCLE	Motocycle forum	2018-10-07 22:11:25+07	1
+7	6	YAMAHA	Yamaha sub-forum	2018-10-07 22:11:26+07	1
+8	6	KAWASAKI	Kawasaki sub-forum	2018-10-07 22:11:27+07	1
+9	6	SUZUKI	Suzuki sub-forum	2018-10-07 22:11:28+07	1
+10	1	BICYCLE	Bicycle forum	2018-10-09 20:09:01+07	1
 \.
 
 
@@ -481,8 +468,8 @@ COPY public.forum_followers (userid, forumid) FROM stdin;
 --
 
 COPY public.gender (id, type) FROM stdin;
-1	Male                
-2	Female              
+1	Male
+2	Female
 \.
 
 
@@ -508,20 +495,21 @@ COPY public.permission (id, permission_name) FROM stdin;
 -- Data for Name: post; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.post (id, creation_date, userid, threadid, pid, content) FROM stdin;
-1	2018-10-07 22:46:00+07	4	1	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-2	2018-10-07 22:46:01+07	5	2	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-3	2018-10-07 22:46:02+07	2	3	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-4	2018-10-07 22:46:04+07	4	4	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-5	2018-10-07 22:46:05+07	4	5	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-6	2018-10-07 22:46:00+07	5	6	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-7	2018-10-07 22:46:01+07	5	7	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-8	2018-10-07 22:46:02+07	2	8	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-9	2018-10-08 13:26:02+07	2	9	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-10	2018-10-08 13:26:02+07	4	10	\N	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-11	2018-10-07 22:46:01+07	1	1	1	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-12	2018-10-07 22:46:01+07	2	1	1	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
-13	2018-10-07 22:46:05+07	2	2	2	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+COPY public.post (id, userid, threadid, pid, creation_date, content) FROM stdin;
+1	4	1	\N	2018-10-07 22:46:00+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+2	5	2	\N	2018-10-07 22:46:01+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+3	2	3	\N	2018-10-07 22:46:02+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+4	4	4	\N	2018-10-07 22:46:04+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+5	4	5	\N	2018-10-07 22:46:05+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+6	5	6	\N	2018-10-07 22:46:00+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+7	5	7	\N	2018-10-07 22:46:01+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+8	2	8	\N	2018-10-07 22:46:02+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+9	2	9	\N	2018-10-08 13:26:02+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+10	4	10	\N	2018-10-08 13:26:02+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+11	1	1	1	2018-10-07 22:46:01+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+12	2	1	1	2018-10-07 22:46:01+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+13	2	2	2	2018-10-07 22:46:05+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+14	2	1	1	2018-10-10 23:45:00+07	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
 \.
 
 
@@ -584,11 +572,11 @@ COPY public.status (id, status_name) FROM stdin;
 --
 
 COPY public.tag (id, name) FROM stdin;
-1	Help                                                                                                
-2	Event                                                                                               
-3	Sale                                                                                                
-4	Discussion                                                                                          
-5	Important                                                                                           
+1	Help
+2	Event
+3	Sale
+4	Discussion
+5	Important
 \.
 
 
@@ -596,17 +584,17 @@ COPY public.tag (id, name) FROM stdin;
 -- Data for Name: thread; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.thread (id, title, userid, forumid, creation_date, thumbnail, tag_id) FROM stdin;
-1	BMW thread1                                                                                                                                                                                                                                                    	4	3	2018-10-07 22:46:00+07	\N	1
-2	BMW thread2                                                                                                                                                                                                                                                    	5	3	2018-10-07 22:46:01+07	\N	1
-3	BMW thread3                                                                                                                                                                                                                                                    	2	3	2018-10-07 22:46:02+07	\N	1
-4	FORD thread1                                                                                                                                                                                                                                                   	4	5	2018-10-07 22:46:04+07	\N	1
-5	FORD thread2                                                                                                                                                                                                                                                   	4	5	2018-10-07 22:46:05+07	\N	1
-6	YAMAHA thread1                                                                                                                                                                                                                                                 	5	7	2018-10-07 22:46:00+07	\N	2
-7	YAMAHA thread2                                                                                                                                                                                                                                                 	5	7	2018-10-07 22:46:01+07	\N	2
-8	YAMAHA thread3                                                                                                                                                                                                                                                 	2	7	2018-10-07 22:46:02+07	\N	2
-9	ROLL ROYCE thread1                                                                                                                                                                                                                                             	2	4	2018-10-08 13:26:02+07	\N	2
-10	ROLL ROYCE thread2                                                                                                                                                                                                                                             	4	4	2018-10-08 13:26:02+07	\N	2
+COPY public.thread (id, title, userid, forumid, creation_date, thumbnail, tag_id, content) FROM stdin;
+1	BMW thread1	4	3	2018-10-07 22:46:00+07	\N	1	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+2	BMW thread2	5	3	2018-10-07 22:46:01+07	\N	1	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+3	BMW thread3	2	3	2018-10-07 22:46:02+07	\N	1	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+4	FORD thread1	4	5	2018-10-07 22:46:04+07	\N	1	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+5	FORD thread2	4	5	2018-10-07 22:46:05+07	\N	1	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+6	YAMAHA thread1	5	7	2018-10-07 22:46:00+07	\N	2	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+7	YAMAHA thread2	5	7	2018-10-07 22:46:01+07	\N	2	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+8	YAMAHA thread3	2	7	2018-10-07 22:46:02+07	\N	2	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+9	ROLL ROYCE thread1	2	4	2018-10-08 13:26:02+07	\N	2	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
+10	ROLL ROYCE thread2	4	4	2018-10-08 13:26:02+07	\N	2	{"{\\"insert\\": \\"Hello\\\\n\\"}","{\\"insert\\": \\"This is colorful\\", \\"attributes\\": {\\"color\\": \\"#f00\\"}}"}
 \.
 
 
@@ -639,10 +627,10 @@ COPY public.thread_votes (userid, threadid) FROM stdin;
 --
 
 COPY public."user" (id, username, password, avatar, role_id, point, creation_date, gender_id, address, phone, description, last_signin, birthday, status_id) FROM stdin;
-1	admin                                                                                                                                                                                                                                                          	thanos                                                                                                                                                                                                                                                         	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	1	0	2018-10-04 11:42:25+07	1	\N	\N	\N	\N	\N	\N
-2	mode1                                                                                                                                                                                                                                                          	123456                                                                                                                                                                                                                                                         	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	2	0	2018-10-04 11:42:25+07	1	\N	\N	\N	\N	\N	\N
-4	user2                                                                                                                                                                                                                                                          	123456                                                                                                                                                                                                                                                         	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	3	0	2018-10-04 11:42:25+07	1	\N	\N	\N	\N	\N	\N
-5	user1                                                                                                                                                                                                                                                          	123456                                                                                                                                                                                                                                                         	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	3	0	2018-10-04 11:42:27+07	2	\N	\N	\N	\N	\N	\N
+1	admin	thanos	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	1	0	2018-10-04 11:42:25+07	1	\N	\N	\N	\N	\N	\N
+2	mode1	123456	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	2	0	2018-10-04 11:42:25+07	1	\N	\N	\N	\N	\N	\N
+4	user2	123456	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	3	0	2018-10-04 11:42:25+07	1	\N	\N	\N	\N	\N	\N
+5	user1	123456	\\x473a5c74726964756e675c5647555c3472645f796561725c50726f6a656374425c696d616765735c69636f6e5f757365722e706e67	3	0	2018-10-04 11:42:27+07	2	\N	\N	\N	\N	\N	\N
 \.
 
 
@@ -651,10 +639,10 @@ COPY public."user" (id, username, password, avatar, role_id, point, creation_dat
 --
 
 COPY public.user_role (id, name, description) FROM stdin;
-1	Admin               	\N
-2	Moderator           	\N
-3	User                	\N
-4	Non-User            	\N
+1	Admin	\N
+2	Moderator	\N
+3	User	\N
+4	Non-User	\N
 \.
 
 
@@ -669,7 +657,7 @@ SELECT pg_catalog.setval('public.forum_id_seq', 10, true);
 -- Name: post_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.post_id_seq', 13, true);
+SELECT pg_catalog.setval('public.post_id_seq', 14, true);
 
 
 --

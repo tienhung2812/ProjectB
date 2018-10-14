@@ -26,38 +26,25 @@ const theme = createMuiTheme({
 class AccountDropDown extends Component {
   constructor(props){
     super(props);
-    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null}
+    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null,pw:null}
     this.handleSignIn = this.handleSignIn.bind(this)
+    this.handleUsername =this.handleUsername.bind(this)
+    this.handlePasswordChange = this.handlePasswordChange.bind(this)
   }
 
   handleSignIn(){
-    // fetch('https://ride-hub.herokuapp.com/api/login', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Accept': 'application/json',
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       firstParam: 'yourValue',
-    //       secondParam: 'yourOtherValue',
-    //     })
-    //   })
-  }
-
-  fetchData(uid){
-    fetch('https://ride-hub.herokuapp.com/api/user/'+uid+'/details')
-    .then(response => response.json())
-    .then(data => {   
-      this.setState({
-        username:data.username,
-        point:data.point,
-        gender:data.gender,
-        address:data.address,
-        phone:data.phone,
-        description:data.description,
-        birthday:data.birthday
+    console.log('singin')
+    fetch('https://ride-hub.herokuapp.com/api/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.pw,
+        })
       })
-    });
   }
 
   componentDidMount(){
@@ -74,15 +61,16 @@ class AccountDropDown extends Component {
   }
   state = {
     open: false,
-    amount: '',
     password: '',
-    weight: '',
-    weightRange: '',
     showPassword: false,
   };
 
-  handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
+  handleUsername(event){
+      this.setState({username:event.target.value})
+  }
+
+  handlePasswordChange = (event) => {
+    this.setState({ pw: event.target.value });
   };
 
   handleClickShowPassword = () => {
@@ -110,6 +98,7 @@ class AccountDropDown extends Component {
                 aria-labelledby="form-dialog-title"
             >
             <DialogContent>
+            <form>
             <Grid container spacing={16}>
                 <Grid item xs={12}>
                     <div class="row pl-3">
@@ -125,6 +114,8 @@ class AccountDropDown extends Component {
                     fullWidth
                     label="Username"
                     variant="outlined"
+                    onChange={this.handleUsername}
+                    inputProps={{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", title:"Invalid Email"}}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -135,7 +126,7 @@ class AccountDropDown extends Component {
                 type={this.state.showPassword ? 'text' : 'password'}
                 label="Password"
                 value={this.state.password}
-                onChange={this.handleChange('password')}
+                onChange={this.handlePasswordChange}
                 InputProps={{
                     endAdornment: (
                     <InputAdornment position="end">
@@ -174,7 +165,8 @@ class AccountDropDown extends Component {
                 </MuiThemeProvider>
                 </Grid>
               
-            </Grid>       
+            </Grid>
+            </form>     
             </DialogContent>
             </Dialog>
             </div>
@@ -196,6 +188,13 @@ class AccountDropDown extends Component {
         );
     }
 
+    var username;
+    if(this.state.isLogged){
+        username = this.state.username;
+    }else{
+        username = "anonymous"
+    }
+
     return (
         <React.Fragment>
         <CssBaseline /> 
@@ -203,7 +202,7 @@ class AccountDropDown extends Component {
             <button type="button" className="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div className="avatar"></div>
                 <div className="content">
-                    <div className="username">{this.state.username}</div>
+                    <div className="username">{username}</div>
                     <div className="point">{this.state.point} points</div>
                 </div>
                 

@@ -14,6 +14,10 @@ import Typography from '@material-ui/core/Typography';
 import EmailForm from './EmailForm';
 import UserForm from './UserForm';
 import MoreForm from './MoreForm';
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import ErrorIcon from '@material-ui/icons/Error';
 
 
 const styles = theme => ({
@@ -22,6 +26,12 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
+  icon: {
+    fontSize: 20,
+    opacity: 0.9,
+    marginRight: theme.spacing.unit,
+  },
+
   paper: {
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
@@ -43,6 +53,13 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     marginLeft: theme.spacing.unit,
   },
+  close: {
+    padding: theme.spacing.unit / 2
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 });
 
 const steps = ['', '', ''];
@@ -51,11 +68,21 @@ function validateEmail(email) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
+function validatePassword(password){
+  var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  return re.test(password);
+}
+
+
+function validateUserName(username){
+  var re = /^[A-Za-z0-9_]{6,20}$/;
+  return re.test(username);
+}
 
 class SignUp extends Component {
   constructor(props){
     super(props);
-    this.state={activeStep:0,email:null,username:null,password:null,confirmpassword:null}
+    this.state={activeStep:0,email:null,username:null,password:null,confirmpassword:null,validatePw:false}
     this.signUp = this.signUp.bind(this);
   }
   componentDidMount() {
@@ -89,6 +116,18 @@ class SignUp extends Component {
     }
   }
 
+  state = {
+    open: false
+  };
+
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ open: false });
+  };
+
   handleEmailChange = (event) =>{
     this.setState({email:event.target.value})
   }
@@ -98,9 +137,10 @@ class SignUp extends Component {
   }
 
   handlePasswordChange = (event)=>{
-    //NEED to HASH event.target.value before setState
+    //NEED to HASH event.target.value before setState;
+    var validatePw = validatePassword(event.target.value);
     var hashedPassword = passwordHash.generate(event.target.value);
-    this.setState({password:hashedPassword})
+    this.setState({password:hashedPassword,validatePw:validatePw})
   }
 
   handleConfirmPasswordChange = (event)=>{
@@ -117,21 +157,27 @@ class SignUp extends Component {
           activeStep: state.activeStep + 1,
         }));
       }else{
-        alert("Wrong Email")
+        this.setState({ open: true, message: "Invalid Email" });
       }
     }
     //Check Same Password on state 1
     else if(this.state.activeStep===1){
-      if((this.state.password!==null)&&this.state.confirmpassword){
+      if(validateUserName(this.state.username)&&this.state.confirmpassword&&this.state.validatePw){
         this.setState(state => ({
           activeStep: state.activeStep + 1,
         }));
-      }else{
-        alert("Password not same")
+      }else if(!(validateUserName(this.state.username))){
+        this.setState({ open: true, message: "Username only has letters and numbers, between 6 and 20 characters" });
+      }else if(!this.state.validatePw){
+        this.setState({ open: true, message: "Password has at least 1 letter and 1 number, minimum 8 character" });
+      }else if(!this.state.confirmpassword){
+        this.setState({ open: true, message: "Password and Re-typed Password does not match" });
       }
     }
     else if(this.state.activeStep===2){
-      console.log("Sign up api")
+      this.setState(state => ({
+        activeStep: state.activeStep + 1,
+      }))
       this.signUp();
     }
     
@@ -151,7 +197,7 @@ class SignUp extends Component {
 
   render() {
     const { classes } = this.props;
-    const { activeStep } = this.state;
+    const { activeStep, message } = this.state;
     return (
     <React.Fragment>
     <CssBaseline />
@@ -199,6 +245,31 @@ class SignUp extends Component {
               )}
             </React.Fragment>
       </Paper>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left"
+        }}
+        open={this.state.open}
+        autoHideDuration={6000}
+        onClose={this.handleClose}
+        ContentProps={{
+          "aria-describedby": "message-id"
+        }}
+        
+        message={<span id="message-id" className={classes.message}><ErrorIcon className={classes.icon} />{message}</span>}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            className={classes.close}
+            onClick={this.handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ]}
+      />
     </div>  
     </React.Fragment>
       );

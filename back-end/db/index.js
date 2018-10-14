@@ -12,7 +12,13 @@ const config = {
   database: params.pathname.split("/")[1],
   ssl: true
 };
+
 const pool = new Pool(config); //for database connection
+
+module.exports = {
+ rideHubPool: pool
+};
+
 
 module.exports = {
     query: (text, params, callback) => {        
