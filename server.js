@@ -105,7 +105,9 @@ app.post(
   "/api/signup",  
   passport.authenticate("signup", {
     successRedirect: "/",
-    failureRedirect: "/signup"
+    failureRedirect: "/signup",
+    badRequestMessage : 'Missing username or password.',
+    failureFlash: true
   })
 );
 

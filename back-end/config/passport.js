@@ -55,12 +55,12 @@ module.exports = function(passport) {
           if (user.username != username) {
             return done(null, false, { message: "Incorrect username." });
           }
-          if (password != user.password) {
-            return done(null, false, { message: "Incorrect password." });
-          }
-          // if (!bcrypt.compareSync(password, user.password)) {
+          // if (password != user.password) {
           //   return done(null, false, { message: "Incorrect password." });
           // }
+          if (!bcrypt.compareSync(password, user.password)) {
+            return done(null, false, { message: "Incorrect password." });
+          }
           // if successful
           return done(null, user);
         })
@@ -79,11 +79,11 @@ module.exports = function(passport) {
       var creation_date = new Date();
       //also need to store password in hash
 
-      /* const saltRounds = 10;
-      let hashpassword = bcrypt.hashSync(password, saltRounds); */
+      const saltRounds = 10;
+      let hashpassword = bcrypt.hashSync(password, saltRounds);
       var params_1 = [
         username,
-        password,
+        hashpassword,
         avatar,
         role_id,
         point,
