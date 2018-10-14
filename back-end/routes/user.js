@@ -10,7 +10,13 @@ router.get('/:user_id/details', user_controller.user_details_get)
 router.get('/:user_id/summary', user_controller.user_summary_get)
 
 // Create user
-//router.post('/', user_controller.user_create);
+
+/* router.post('/signup', passport.authenticate('local-signup', {
+    successRedirect : '/profile', // redirect to the secure profile section
+    failureRedirect : '/signup', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+}));
+ */
 
 module.exports = router;
 
