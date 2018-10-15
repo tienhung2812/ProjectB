@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Link as ReactLink} from 'react-router';
+import Loader from '../Loader';
 import '../../stylesheet/Header.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -26,37 +27,107 @@ const theme = createMuiTheme({
 class AccountDropDown extends Component {
   constructor(props){
     super(props);
-    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null}
-    
+    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null,pw:null,loggingin:false,loginSucess:true}
+    this.handleSignIn = this.handleSignIn.bind(this)
+    this.handleUsername =this.handleUsername.bind(this)
+    this.handlePasswordChange = this.handlePasswordChange.bind(this)
+    this.handleLogOut = this.handleLogOut.bind(this)
   }
 
-  fetchData(uid){
-    fetch('https://ride-hub.herokuapp.com/api/user/'+uid+'/details')
-    .then(response => response.json())
-    .then(data => {   
-      this.setState({
-        username:data.username,
-        point:data.point,
-        gender:data.gender,
-        address:data.address,
-        phone:data.phone,
-        description:data.description,
-        birthday:data.birthday
+  handleSignIn(){
+    this.setState({loggingin:true})
+    console.log('singin')
+    fetch('https://ride-hub.herokuapp.com/api/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.pw,
+        })
+      }).then(response =>{
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            //Wrong 
+            this.setState({isLogged:false,loggingin:false,pw:null,loginSucess:false})
+
+        } else {
+            //Correct
+            this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
+            
+        }
       })
-    });
+  }
+
+  handleLogOut(){
+      this.setState({isLogged:false,loggingin:false,open:false})
   }
 
   componentDidMount(){
     this.childcontent=[];
     
-    //set temp data:
-    sessionStorage.setItem('uid',1);
-
-    if(sessionStorage.getItem('uid')!==null){
-        this.setState({isLogged:false})
-        let id = sessionStorage.getItem('uid');
-        this.fetchData(id)
-    }
+    this.defaultSignInDialogContent=[
+        <Grid item xs={12}>
+            <TextField
+            fullWidth
+            label="Username"
+            variant="outlined"
+            onChange={this.handleUsername}
+            inputProps={{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", title:"Invalid Email"}}
+            />
+        </Grid>,
+        <Grid item xs={12}>
+        <TextField
+        fullWidth
+        id="outlined-adornment-password"
+        variant="outlined"
+        type={this.state.showPassword ? 'text' : 'password'}
+        label="Password"
+        value={this.state.password}
+        onChange={this.handlePasswordChange}
+        InputProps={{
+            endAdornment: (
+            <InputAdornment position="end">
+                <IconButton
+                aria-label="Toggle password visibility"
+                onClick={this.handleClickShowPassword}
+                >
+                {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+            </InputAdornment>
+            ),
+        }}
+        />
+        </Grid>
+        ,
+        <Grid item xs={6}>
+        <MuiThemeProvider theme={theme}>
+            <Button onClick={this.handleSignIn} variant="contained" color="primary" size="large" fullWidth >
+            SIGN IN
+            </Button>
+        </MuiThemeProvider>
+        
+        </Grid>
+        ,
+        <Grid item xs={7}></Grid>
+        ,
+        <Grid item xs={6}>
+            New to Ride hub ?
+            <ReactLink to={'/signup'}>
+            <MuiThemeProvider theme={theme}>
+            <Button color="primary" onClick={this.handleClose}>SIGN UP</Button>
+            </MuiThemeProvider>
+            </ReactLink>
+        </Grid>
+        ,
+        <Grid item xs={6}  align="right">
+        <MuiThemeProvider theme={theme}>
+        <Button color="primary">FORGOT PASSWORD</Button>
+        </MuiThemeProvider>
+        </Grid>
+    ]
   }
   state = {
     open: false,
@@ -64,8 +135,12 @@ class AccountDropDown extends Component {
     showPassword: false,
   };
 
-  handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
+  handleUsername(event){
+      this.setState({username:event.target.value})
+  }
+
+  handlePasswordChange = (event) => {
+    this.setState({ pw: event.target.value });
   };
 
   handleClickShowPassword = () => {
@@ -73,6 +148,7 @@ class AccountDropDown extends Component {
   };
   handleClickOpen = () => {
     this.setState({ open: true });
+
   };
 
   handleClose = () => {
@@ -81,7 +157,24 @@ class AccountDropDown extends Component {
   
 
   render() { 
+    
     //Set variable
+    var signInDialogContent;
+    var status;
+    if(!this.state.loggingin&&!this.state.isLogged&&!this.state.loginSucess){
+        status = <p style={{color:"red"}}>Incorrect username or password</p>
+    }else{
+        status = ""
+    }
+    if(this.state.loggingin&&!this.state.isLogged){
+        signInDialogContent = 
+        <div style={{width:"568px"}}>
+            <Loader/>
+        </div>
+    }else{
+        signInDialogContent = this.defaultSignInDialogContent
+    }
+
     if(!this.state.isLogged){
         this.childcontent = []
         this.childcontent.push(
@@ -93,6 +186,7 @@ class AccountDropDown extends Component {
                 aria-labelledby="form-dialog-title"
             >
             <DialogContent>
+                
             <form>
             <Grid container spacing={16}>
                 <Grid item xs={12}>
@@ -104,60 +198,8 @@ class AccountDropDown extends Component {
                     </div>  
                 <Divider/>   
                 </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                    fullWidth
-                    label="Username"
-                    variant="outlined"
-                    inputProps={{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", title:"Invalid Email"}}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                <TextField
-                fullWidth
-                id="outlined-adornment-password"
-                variant="outlined"
-                type={this.state.showPassword ? 'text' : 'password'}
-                label="Password"
-                value={this.state.password}
-                onChange={this.handleChange('password')}
-                InputProps={{
-                    endAdornment: (
-                    <InputAdornment position="end">
-                        <IconButton
-                        aria-label="Toggle password visibility"
-                        onClick={this.handleClickShowPassword}
-                        >
-                        {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                    </InputAdornment>
-                    ),
-                }}
-                />
-                </Grid>
-                
-                <Grid item xs={6}>
-                <MuiThemeProvider theme={theme}>
-                    <Button variant="contained" color="primary" size="large" type="submit" fullWidth> 
-                    SIGN IN
-                    </Button>
-                </MuiThemeProvider>
-                
-                </Grid>
-                <Grid item xs={7}></Grid>
-                <Grid item xs={6}>
-                    New to Ride hub ?
-                    <ReactLink to={'/signup'}>
-                    <MuiThemeProvider theme={theme}>
-                    <Button color="primary" onClick={this.handleClose}>SIGN UP</Button>
-                    </MuiThemeProvider>
-                    </ReactLink>
-                </Grid>
-                <Grid item xs={6}  align="right">
-                <MuiThemeProvider theme={theme}>
-                <Button color="primary">FORGOT PASSWORD</Button>
-                </MuiThemeProvider>
-                </Grid>
+                {status}
+                {signInDialogContent}
               
             </Grid>
             </form>     
@@ -178,8 +220,15 @@ class AccountDropDown extends Component {
             <button className="dropdown-item" type="button" >My Account</button>
         )
         this.childcontent.push(
-            <button className="dropdown-item" type="button">Log out</button>
+            <button className="dropdown-item" type="button" onClick={this.handleLogOut}>Log out</button>
         );
+    }
+
+    var username;
+    if(this.state.isLogged){
+        username = this.state.username;
+    }else{
+        username = "anonymous"
     }
 
     return (
@@ -189,7 +238,7 @@ class AccountDropDown extends Component {
             <button type="button" className="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div className="avatar"></div>
                 <div className="content">
-                    <div className="username">{this.state.username}</div>
+                    <div className="username">{username}</div>
                     <div className="point">{this.state.point} points</div>
                 </div>
                 
