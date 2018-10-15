@@ -118,7 +118,7 @@ export default class Thread extends Component {
         </div>
         <div className="comment-post-wrapper">
           <div className="add-comment-wrapper">
-          <TextEditor type="comment"/>
+          <TextEditor type="comment" userID={4} threadid={this.state.id} pid={this.state.child[0]}/>
           </div>
           <div className="comments">
             {comments}
