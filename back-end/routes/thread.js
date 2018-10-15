@@ -14,4 +14,8 @@ router.delete('/:thread_id',thread_controller.thread_delete);
 
 // Update thread
 router.put('/:thread_id',thread_controller.thread_update);
+
+// Search thread
+router.put('/search',thread_controller.thread_search);
+
 module.exports = router;

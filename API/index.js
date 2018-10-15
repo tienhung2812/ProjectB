@@ -271,9 +271,9 @@ app.post('/subforum', function(req, res) {
 });
 
 /**
- * @api {get} /thread/:id [Get] Thread information
+ * @api {get} /thread/:thread_id [Get] Thread information
  * @apiGroup Thread
- * @apiParam {Number} id Thread id
+ * @apiParam {Number} thread_id Thread id
  * @apiSuccess {Number} id thread id
  * @apiSuccess {String} title thread title
  * @apiSuccess {json} thumbnail thread thumbnail
@@ -292,10 +292,10 @@ app.post('/subforum', function(req, res) {
  *  
  * @apiErrorExample {json} Thread not found
  *    HTTP/1.1 404 Not Found
- * @apiSampleRequest http://ride-hub.herokuapp.com/api/thread/:id
+ * @apiSampleRequest http://ride-hub.herokuapp.com/api/thread/:thread_id
  *
  */
-app.get('/thread/:id', function(req, res) {  
+app.get('/thread/:thread_id', function(req, res) {  
 
 });
 
@@ -336,7 +336,7 @@ app.post('/thread', function(req, res) {
 
 /**
  * @api {get} /post/:id?user=:userid [Get] Post information
- * @apiGroup POST
+ * @apiGroup Post
  * @apiParam {Number} id Post id
  * @apiParam {Number} userid Userid
  * @apiSuccess {json} user_post Avatar of user that owns this post
@@ -411,6 +411,44 @@ app.get('/post/:id?user=:userid', function(req, res) {
  */
 app.post('/post', function(req, res) {  
     // business logic for creating a task...
+});
+
+/**
+ * @api {get} /thread/search [Get] Search 
+ * @apiGroup Thread
+ * @apiParam {Number} text_search Text to search
+ * @apiParamExample {json} Input
+ *    {
+ *      "text_search":"bmw"
+ *    }
+ * @apiSuccess {json[]} threads list threads
+ * @apiSuccess {Number} threads.tid Thread id
+ * @apiSuccess {String} threads.t_title Thread title
+ * @apiSuccess {String} threads.t_content Thread content
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+		{
+			"threads":[
+				{
+					"tid":1,
+					"t_title":"BMW thread1",
+					"t_content":"...."
+				},	
+				{
+					"tid":2,
+					"t_title":"BMW thread2",
+					"t_content":"...."
+				}
+			]
+		}
+ *  
+ * @apiErrorExample {json} thread list not found
+ *    HTTP/1.1 404 Not Found
+ * @apiSampleRequest http://ride-hub.herokuapp.com/api/thread/search
+ *
+ */
+app.get('/thread/search', function(req, res) {  
+
 });
 
 app.listen(3000, function() {  

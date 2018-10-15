@@ -88,3 +88,34 @@ exports.thread_update = function(req, res) {
 };
 
 
+exports.thread_search = function(req, res) {
+  var text = req.params.text_search;
+  console.log(req.params.text_search);
+  values = [text];
+  db.query(
+    `SELECT tid, t_title,t_content
+    FROM (SELECT thread.id as tid,
+                 thread.title as t_title,
+             thread.content as t_content,
+                 setweight(to_tsvector('english', thread.title), 'A') || 
+                 setweight(to_tsvector('english', thread.content), 'B') ||
+                 setweight(to_tsvector('simple', u.username), 'C') ||
+                 setweight(to_tsvector('simple', t.name), 'B') as document
+          FROM thread
+          JOIN public.user u ON u.id = thread.userid
+          JOIN tag t ON t.id = thread.tag_id
+          GROUP BY tid, u.id,t.name) t_search
+    WHERE t_search.document @@ to_tsquery('english', $1)
+    ORDER BY ts_rank(t_search.document, to_tsquery('english', $1)) DESC;`,
+    values,
+    (err, data) => {
+      try {
+        res.json(data.rows);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
+      }
+    }
+  );
+};
+
