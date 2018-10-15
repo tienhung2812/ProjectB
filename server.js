@@ -103,15 +103,26 @@ app.get("api/login", function(req, res){
 // );
 
 app.post('/api/login', function(req, res, next) {
+  //res.send({"success": "true"});
   passport.authenticate('signin', function(err, user, info) {
     if (err) { return next(err); }
-    if (!user) { 
-      return res.send({"error": "Error in username or password"});
+    if (!user) {
+      res.status(401);       
+      //return res.send({"success": "false"});
+      
+      return res.status(401).send({
+          "success": "false", 
+          "userid": ""});
       //return res.redirect('/api/login'); 
-    }
+    }         
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      return res.redirect('/users/' + user.username);
+      else {                
+        return res.send({
+          "success": "true"
+        });
+      }
+      
     });
   })(req, res, next);
 });
