@@ -344,7 +344,7 @@
     "type": "get",
     "url": "/post/:id?user=:userid",
     "title": "[Get] Post information",
-    "group": "POST",
+    "group": "Post",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -436,7 +436,7 @@
     ],
     "version": "0.0.0",
     "filename": "task-api/index.js",
-    "groupTitle": "POST",
+    "groupTitle": "Post",
     "name": "GetPostIdUserUserid"
   },
   {
@@ -528,7 +528,92 @@
   },
   {
     "type": "get",
-    "url": "/thread/:id",
+    "url": "/thread/search",
+    "title": "[Get] Search",
+    "group": "Thread",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "text_search",
+            "description": "<p>Text to search</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"text_search\":\"bmw\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json[]",
+            "optional": false,
+            "field": "threads",
+            "description": "<p>list threads</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "threads.tid",
+            "description": "<p>Thread id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "threads.t_title",
+            "description": "<p>Thread title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "threads.t_content",
+            "description": "<p>Thread content</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n\t\t{\n\t\t\t\"threads\":[\n\t\t\t\t{\n\t\t\t\t\t\"tid\":1,\n\t\t\t\t\t\"t_title\":\"BMW thread1\",\n\t\t\t\t\t\"t_content\":\"....\"\n\t\t\t\t},\t\n\t\t\t\t{\n\t\t\t\t\t\"tid\":2,\n\t\t\t\t\t\"t_title\":\"BMW thread2\",\n\t\t\t\t\t\"t_content\":\"....\"\n\t\t\t\t}\n\t\t\t]\n\t\t}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "thread list not found",
+          "content": "HTTP/1.1 404 Not Found",
+          "type": "json"
+        }
+      ]
+    },
+    "sampleRequest": [
+      {
+        "url": "http://ride-hub.herokuapp.com/api/thread/search"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Thread",
+    "name": "GetThreadSearch"
+  },
+  {
+    "type": "get",
+    "url": "/thread/:thread_id",
     "title": "[Get] Thread information",
     "group": "Thread",
     "parameter": {
@@ -538,7 +623,7 @@
             "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "id",
+            "field": "thread_id",
             "description": "<p>Thread id</p>"
           }
         ]
@@ -610,13 +695,13 @@
     },
     "sampleRequest": [
       {
-        "url": "http://ride-hub.herokuapp.com/api/thread/:id"
+        "url": "http://ride-hub.herokuapp.com/api/thread/:thread_id"
       }
     ],
     "version": "0.0.0",
     "filename": "task-api/index.js",
     "groupTitle": "Thread",
-    "name": "GetThreadId"
+    "name": "GetThreadThread_id"
   },
   {
     "type": "post",
