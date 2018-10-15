@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Select from 'react-select/lib/Async';
-import {browserHistory} from 'react-router';
-import {Redirect} from 'react-router';
+import { BrowserRouter, Route } from 'react-router-dom'
+import {Redirect,browserHistory} from 'react-router';
+import PropTypes from 'prop-types'
 import '../../stylesheet/Header.css';
 
 const options = [
@@ -13,13 +14,18 @@ const options = [
 
 
 class SearchBar extends Component {
-  constructor(props){
-    super(props);
+  constructor(props,context){
+    super(props,context);
     this.state= {searchValue:'',displayResult:false,selectedOption: null}
     this.searchInput = React.createRef();
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
+
+  static contextTypes = {
+    router: PropTypes.object
+  }
+
   promiseOptions = inputValue =>
   new Promise(resolve => {
     setTimeout(() => {
@@ -54,7 +60,11 @@ class SearchBar extends Component {
 
   handleChange = (selectedOption) => {
     this.setState({ selectedOption });
+    
     console.log(`Option selected:`, selectedOption);
+    
+    //This will navigate to search page
+    //browserHistory.push('/thread/1')
   }
   componentDidMount(){
     this.sampleResult = [];
@@ -79,6 +89,9 @@ class SearchBar extends Component {
     }
   }
 
+  handleRedirect(){
+   
+  }
 
   render() {
 
@@ -90,7 +103,7 @@ class SearchBar extends Component {
 
     //Style for search result
     const { selectedOption } = this.state;
-    
+
 
     return (
       <div>

@@ -72,15 +72,14 @@ app.use(passport.session());
 //serve static files
 app.use(
   "/RideHub/static/",
-  express.static(path.join(__dirname, "build", "static"))
 );
 
-// serve apis
+// serve apis express.static(path.join(__dirname, "build", "static")
 app.use("/api/user", userRouter);
 app.use("/api/thread", threadRouter);
 app.use("/api/post", postRouter);
 app.use("/api/subforum", forumRouter);
-
+app.use("/api/Help", express.static(path.join(__dirname, "API/apidoc/index.html")));
 // test
 // create the login get and post routes
 app.get('/api/login', (req, res) => {
@@ -170,6 +169,7 @@ app.get("/api/authrequired", (req, res) => {
     res.redirect("/");
   }
 });
+
 
 // serve built React files
 app.get("*", (req, res) => {
