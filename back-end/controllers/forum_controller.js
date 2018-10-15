@@ -108,3 +108,38 @@ exports.forum_create = function(req, res) {
     .catch(e => console.error(e.stack));
   res.send("Post");
 };
+
+// Forum delete
+exports.forum_delete = function(req, res) {
+  var query = req.body;
+  const text =
+    `DELETE FROM forum_followers where forumid = $1;
+    DELETE FROM forum where id = $1`;
+  const values = [
+    query.forum_id
+  ];
+  pool
+    .query(text, values)
+    .then(res => console.log("deleted"))
+    .catch(e => console.error(e.stack));
+  res.send("Delete");
+};
+
+// Forum update
+exports.forum_update = function(req, res) {
+  var query = req.body;
+  const text =
+    `UPDATE forum
+		SET title=$2, description=$3
+    WHERE id = $1`;
+  const values = [
+    query.forum_id,
+		query.title,
+		query.description
+  ];
+  pool
+    .query(text, values)
+    .then(res => console.log("updated"))
+    .catch(e => console.error(e.stack));
+  res.send("Update");
+};
