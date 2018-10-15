@@ -22,7 +22,11 @@ var forumRouter = require("./back-end/routes/forum");
 
 require("./back-end/config/passport")(passport); // pass passport for configuration
 
+var ac = require('./back-end/config/access-control');
 
+const permission = ac.rideHubAC.can('guest').readAny('post');
+  console.log(permission.granted);
+  console.log(permission.attributes);
 
 // Create an Express application
 var app = express();

@@ -102,7 +102,7 @@ exports.forum_create = function(req, res) {
     query.creation_date,
     query.userid
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("inserted"))
     .catch(e => console.error(e.stack));
@@ -118,7 +118,7 @@ exports.forum_delete = function(req, res) {
   const values = [
     query.forum_id
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("deleted"))
     .catch(e => console.error(e.stack));
@@ -137,7 +137,7 @@ exports.forum_update = function(req, res) {
 		query.title,
 		query.description
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("updated"))
     .catch(e => console.error(e.stack));

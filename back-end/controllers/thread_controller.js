@@ -45,8 +45,7 @@ exports.thread_create = function(req, res) {
     query.tagid,
     query.content
   ];
-  pool
-    .query(text, values)
+  db.query(text, values)
     .then(res => console.log("inserted"))
     .catch(e => console.error(e.stack));
   res.send("Post");
@@ -60,7 +59,7 @@ exports.thread_delete = function(req, res) {
   const values = [
     query.thread_id
   ];
-  pool
+  db
     .query(text, values)
 
     .then(res => console.log("deleted"))
@@ -81,7 +80,7 @@ exports.thread_update = function(req, res) {
     query.tagid,
     query.content
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("updated"))
     .catch(e => console.error(e.stack));

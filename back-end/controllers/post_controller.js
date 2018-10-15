@@ -12,7 +12,7 @@ exports.post_create = function(req, res) {
     query.threadid,
     query.pid
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("inserted"))
     .catch(e => console.error(e.stack));
@@ -69,7 +69,7 @@ exports.post_delete = function(req, res) {
   const values = [
     query.post_id
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("deleted"))
     .catch(e => console.error(e.stack));
@@ -87,7 +87,7 @@ exports.post_update = function(req, res) {
     query.post_id,
     query.content
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("updated"))
     .catch(e => console.error(e.stack));
