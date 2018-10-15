@@ -88,4 +88,23 @@ GROUP BY (ft.id,ft.title,ft.description,ft.user_following_state,ft.followers,ft.
         }
       }
     );
-  };
+	};
+	
+
+exports.forum_create = function(req, res) {
+  var query = req.body;
+  const text =
+    "INSERT INTO forum(pid,title,description,creation_date,userid) VALUES ($1,$2,$3,$4,$5)";
+  const values = [
+    query.pid,
+    query.title,
+    query.description,
+    query.creation_date,
+    query.userid
+  ];
+  pool
+    .query(text, values)
+    .then(res => console.log("inserted"))
+    .catch(e => console.error(e.stack));
+  res.send("Post");
+};
