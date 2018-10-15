@@ -302,3 +302,69 @@ This will be discuss in group meeting
     ]
     
 ```
+
+# Vote/Unvote
+POST
+```json
+    {
+        "username":"username",
+        "post_id":"ID"
+    }
+```
+#### response
+if sucess
+```json
+    {
+        "success":true
+    }
+```
+
+else
+```json
+    {
+        "success":false
+    }
+```
+
+# Newest Thread
+GET
+Get 3 threads only
+#### response
+```json
+    [
+        {
+            "title":"title",
+            "thread_id":"dada"
+        },
+        {
+            "title":"title",
+            "thread_id":"dada"
+        },
+                {
+            "title":"title",
+            "thread_id":"dada"
+        }
+    ]
+```
+
+# Billboard
+GET
+Get 3 users only
+#### response
+```json
+    [
+        {
+            "username":"username",
+            "point":"point"
+        },
+        {
+            "username":"username",
+            "point":"point"
+        },
+        {
+            "username":"username",
+            "point":"point"
+        }
+    ]
+```
+

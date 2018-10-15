@@ -73,7 +73,7 @@ module.exports = function(passport) {
   // strategy to signup new user
   passport.use(
     "signup",
-    new LocalStrategy(function(username, password, done) {
+    new LocalStrategy({ passReqToCallback : true},function(req, username, password, done) {
       // set up default value;
       var avatar = ".\front-enddesignSketchImagesdefault avatar.png";
       var role_id = 3;
@@ -100,7 +100,9 @@ module.exports = function(passport) {
       )
         .then(res => {
           if (res.rows[0] != null) {
-            return done(null, false, { message: "Username already exists." });
+            console.log('err');
+            //return done(null, false, { message: "Username already exists." });
+            return done(null, false, req.flash( "Username already exists."));
           } else {
             // if Username is available, we can create new account
             db.query(

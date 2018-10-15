@@ -69,7 +69,7 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 function validatePassword(password){
-  var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  var re = /^\S(?=.*[A-Za-z])(?=.*\d).{8,}$/;
   return re.test(password);
 }
 

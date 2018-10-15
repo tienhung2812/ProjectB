@@ -56,13 +56,14 @@ class AccountDropDown extends Component {
         } else {
             //Correct
             this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
-            
+
         }
       })
   }
 
   handleLogOut(){
       this.setState({isLogged:false,loggingin:false,open:false})
+      //Erease session sth
   }
 
   componentDidMount(){
