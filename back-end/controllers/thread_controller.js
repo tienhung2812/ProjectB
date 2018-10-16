@@ -35,20 +35,18 @@ exports.thread_get_by_id = function(req, res) {
 exports.thread_create = function(req, res) {
   var query = req.body;
   const text =
-    "INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tagid,content) VALUES($1,$2,$3,$4,$5,$6,$7)";
+    "INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) VALUES($1,$2,$3,$4,$5,$6)";
   const values = [
     query.title,
     query.userid,
     query.forumid,
     query.creation_date,
     query.thumbnail,
-    query.tagid,
-    query.content
+    query.tagid
   ];
   db.query(text, values)
-    .then(res => console.log("inserted"))
-    .catch(e => console.error(e.stack));
-  res.send("Post");
+  .then(res.json("Create successfully!"))
+  .catch(res.json("Create failed!"));
 };
 
 exports.thread_delete = function(req, res) {
@@ -66,36 +64,32 @@ exports.thread_delete = function(req, res) {
 
 exports.thread_update = function(req, res) {
   var query = req.body;
+  var query2 = req.params;
   const text =
     `UPDATE thread
-    SET title=$2, thumbnail=$3, tagid=$4, content=$5
+    SET title=$2, thumbnail=$3, tag_id=$4
     WHERE id = $1`;
   const values = [
-    query.thread_id,
+    query2.thread_id,
     query.title,
     query.thumbnail,
-    query.tagid,
-    query.content
+    query.tagid
   ];
   db
     .query(text, values)
-    .then(res => console.log("updated"))
-    .catch(e => console.error(e.stack));
-  res.send("Update");
+    .then(res.json("Update successfully!"))
+    .catch(res.json("Update failed!"));
 };
-
 
 exports.thread_search = function(req, res) {
   var text = req.body.text_search;
   console.log(req.params.text_search);
   values = [text.replace(/ +/g,"&")];
   db.query(
-    `SELECT tid, t_title,t_content
+    `SELECT tid, t_title
     FROM (SELECT thread.id as tid,
                  thread.title as t_title,
-             thread.content as t_content,
                  setweight(to_tsvector('english', thread.title), 'A') || 
-                 setweight(to_tsvector('english', thread.content), 'B') ||
                  setweight(to_tsvector('simple', u.username), 'C') ||
                  setweight(to_tsvector('simple', t.name), 'B') as document
           FROM thread
