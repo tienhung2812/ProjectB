@@ -12,17 +12,10 @@ define({ "api": [
             "type": "Number",
             "optional": false,
             "field": "forumid",
-            "description": "<p>Forum parent id</p>"
+            "description": "<p>Forum id</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"forumid\":\"12\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "success": {
       "fields": {
@@ -405,7 +398,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Input",
-          "content": "   {\n     \"id\":13,\n\t\t\"title\":\"...\",\n\t\t\"description\":\"...\"\n   }",
+          "content": "   {\n\t\t\"title\":\"...\",\n\t\t\"description\":\"...\"\n   }",
           "type": "json"
         }
       ]
@@ -471,6 +464,58 @@ define({ "api": [
     "group": "G__ride_hubtest_task_api_doc_main_js",
     "groupTitle": "G__ride_hubtest_task_api_doc_main_js",
     "name": ""
+  },
+  {
+    "type": "delete",
+    "url": "/post/:post_id",
+    "title": "[DELETE] Delete post",
+    "group": "Post",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "post_id",
+            "description": "<p>Post id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>Delete status</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n\t \t{\n\t\t\t\"response\":\"Delete successfully\"\n\t\t}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Post",
+    "name": "DeletePostPost_id"
   },
   {
     "type": "get",
@@ -657,6 +702,124 @@ define({ "api": [
     "filename": "task-api/index.js",
     "groupTitle": "Post",
     "name": "PostPost"
+  },
+  {
+    "type": "put",
+    "url": "/post/:post_id",
+    "title": "[PUT] Update existing Post",
+    "group": "Post",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "post_id",
+            "description": "<p>Post id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "json[]",
+            "optional": false,
+            "field": "content",
+            "description": "<p>New Post content</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "   {\n\t\t\"title\":[]\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>Update status</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n\t \t{\n\t\t\t\"response\":\"Update successfully\"\n\t\t}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Post",
+    "name": "PutPostPost_id"
+  },
+  {
+    "type": "delete",
+    "url": "/thread/:thread_id",
+    "title": "[DELETE] Delete Thread",
+    "group": "Thread",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "thread_id",
+            "description": "<p>Thread id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>Delete status</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n\t \t{\n\t\t\t\"response\":\"Delete successfully\"\n\t\t}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Thread",
+    "name": "DeleteThreadThread_id"
   },
   {
     "type": "get",
@@ -937,6 +1100,86 @@ define({ "api": [
     "name": "PostThreadSearch"
   },
   {
+    "type": "put",
+    "url": "/thread/:thread_id",
+    "title": "[PUT] Update existing Thread",
+    "group": "Thread",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "thread_id",
+            "description": "<p>Thread id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>New Thread title</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Image",
+            "optional": false,
+            "field": "thumbnail",
+            "description": "<p>New Forum thumbnail</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "tagid",
+            "description": "<p>New Thread tag id</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "   {\n\t\t\"title\":\"...\",\n\t\t\"thumbnail\":\"...\",\n\t\t\"tagid\":\"...\"\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "response",
+            "description": "<p>Update status</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n\t \t{\n\t\t\t\"response\":\"Update successfully\"\n\t\t}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Thread",
+    "name": "PutThreadThread_id"
+  },
+  {
     "type": "get",
     "url": "/user/:id/details",
     "title": "[Get] User information details",
@@ -952,14 +1195,7 @@ define({ "api": [
             "description": "<p>userid</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"userid\":\"2\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "success": {
       "fields": {
@@ -1065,14 +1301,7 @@ define({ "api": [
             "description": "<p>userid</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"userid\":\"2\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "success": {
       "fields": {

@@ -66,10 +66,6 @@ app.post('/checkUserLogin', function(req, res) {
  * @api {get} /user/:id/summary [Get] User information summary
  * @apiGroup User
  * @apiParam {Number} id userid
- * @apiParamExample {json} Input
- *    {
- *      "userid":"2"
- *    }
  * @apiSuccess {json} avatar User avatar
  * @apiSuccess {String} username 
  * @apiSuccess {Number} point User point for activities
@@ -103,10 +99,6 @@ app.get('user/:id/summary',function(req,res){
  * @api {get} /user/:id/details [Get] User information details
  * @apiGroup User
  * @apiParam {Number} id userid
- * @apiParamExample {json} Input
- *    {
- *      "userid":"2"
- *    }
  * @apiSuccess {String} username 
  * @apiSuccess {json} avatar User avatar
  * @apiSuccess {Number} point User point for activities
@@ -255,11 +247,11 @@ app.get('/subforum/:id', function(req, res) {
  * 		"2018-10-13 23:30:00",
  * 		"userid":"1"
  *    }
- * @apiSuccess {Number} id Sub-forum id
+ * @apiSuccess {String} response Create status
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
 	 	{
-			id: 11
+			"response":"Create successfully"
 		}
  *  
  * @apiErrorExample {json} Error
@@ -267,6 +259,51 @@ app.get('/subforum/:id', function(req, res) {
  *
  */
 app.post('/subforum', function(req, res) {  
+    // business logic for creating a task...
+});
+
+/**
+ * @api {delete} /subforum/:forumid [DELETE] Delete Subforum
+ * @apiGroup Forum
+ * @apiParam {Number} forumid Forum id
+ * @apiSuccess {String} response Delete status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Delete successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.delete('/subforum/:forumid', function(req, res) {  
+    // business logic for creating a task...
+});
+
+/**
+ * @api {put} /subforum/:forumid [PUT] Update existing Subforum
+ * @apiGroup Forum
+ * @apiParam {Number} id Forum id
+ * @apiParam {String} title New Forum title
+ * @apiParam {String} description New Forum description
+ * @apiParamExample {json} Input
+ *    {
+ * 		"title":"...",
+ * 		"description":"..."
+ *    }
+ * @apiSuccess {String} response Update status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Update successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.put('/subforum/:forumid', function(req, res) {  
     // business logic for creating a task...
 });
 
@@ -414,6 +451,49 @@ app.post('/post', function(req, res) {
 });
 
 /**
+ * @api {delete} /post/:post_id [DELETE] Delete post
+ * @apiGroup Post
+ * @apiParam {Number} post_id Post id
+ * @apiSuccess {String} response Delete status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Delete successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.delete('/post/:post_id', function(req, res) {  
+    // business logic for creating a task...
+});
+
+/**
+ * @api {put} /post/:post_id [PUT] Update existing Post
+ * @apiGroup Post
+ * @apiParam {Number} post_id Post id
+ * @apiParam {json[]} content New Post content
+ * @apiParamExample {json} Input
+ *    {
+ * 		"title":[]
+ *    }
+ * @apiSuccess {String} response Update status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Update successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.put('/post/:post_id', function(req, res) {  
+    // business logic for creating a task...
+});
+
+/**
  * @api {post} /thread/search [POST] Thread Search 
  * @apiGroup Thread
  * @apiParam {String} text_search Text to search
@@ -451,6 +531,54 @@ app.post('/thread/search', function(req, res) {
 
 });
 
+
+/**
+ * @api {delete} /thread/:thread_id [DELETE] Delete Thread
+ * @apiGroup Thread
+ * @apiParam {Number} thread_id Thread id
+ * @apiSuccess {String} response Delete status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Delete successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.delete('/thread/:thread_id', function(req, res) {  
+    // business logic for creating a task...
+});
+
+/**
+ * @api {put} /thread/:thread_id [PUT] Update existing Thread
+ * @apiGroup Thread
+ * @apiParam {Number} thread_id Thread id
+ * @apiParam {String} title New Thread title
+ * @apiParam {Image} thumbnail New Forum thumbnail
+ * @apiParam {Number} tagid New Thread tag id
+ * @apiParamExample {json} Input
+ *    {
+ * 		"title":"...",
+ * 		"thumbnail":"...",
+ * 		"tagid":"..."
+ *    }
+ * @apiSuccess {String} response Update status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Update successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.put('/thread/:thread_id', function(req, res) {  
+    // business logic for creating a task...
+});
+
 app.listen(3000, function() {  
     console.log('Task api up and running...');
-});s
+});
