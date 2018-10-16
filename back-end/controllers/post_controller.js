@@ -6,17 +6,16 @@ exports.post_create = function(req, res) {
   const text =
     "INSERT INTO post(content,creation_date,userid,threadid,pid) VALUES($1,$2,$3,$4,$5)";
   const values = [
-    query.ops,
+    query.content,
     query.creation_date,
     query.userid,
     query.threadid,
     query.pid
   ];
-  pool
+  db
     .query(text, values)
-    .then(res => console.log("inserted"))
-    .catch(e => console.error(e.stack));
-  res.send("Post");
+    .then(res.json("Create successfully!"))
+    .catch(res.json("Create failed!"));
 };
 
 exports.post_get = function(req, res) {
@@ -62,35 +61,33 @@ exports.post_get = function(req, res) {
 
 // Post delete
 exports.post_delete = function(req, res) {
-  var query = req.body;
+  var query = req.params;
   const text =
-    `DELETE FROM post_votes where postid = $1;
-    DELETE FROM post where id = $1`;
+    `DELETE FROM post where id = $1`;
   const values = [
     query.post_id
   ];
-  pool
+  db
     .query(text, values)
-    .then(res => console.log("deleted"))
-    .catch(e => console.error(e.stack));
-  res.send("Delete");
+    .then(res.json("Delete successfully!"))
+    .catch(res.json("Delete failed!"));
 };
 
 // Post update
 exports.post_update = function(req, res) {
-  var query = req.body;
+  var query = req.params;
+  var query2 = req.body;
   const text =
     `UPDATE post
     SET content=$2
     WHERE id = $1`;
   const values = [
     query.post_id,
-    query.content
+    query2.content
   ];
-  pool
+  db
     .query(text, values)
-    .then(res => console.log("updated"))
-    .catch(e => console.error(e.stack));
-  res.send("Update");
+    .then(res.json("Update successfully!"))
+    .catch(res.json("Update failed!"));
 };
 

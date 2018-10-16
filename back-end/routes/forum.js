@@ -10,10 +10,10 @@ router.get('/root', forum_controller.subforum_get);
 router.get('/:subforum_id', forum_controller.subsubforum_get);
 
 // create forum
-router.get('/', forum_controller.forum_create);
+router.post('/', forum_controller.forum_create);
 
 // delete forum
-router.delete('/:forum_id',forum_controller.forum_delete);
+router.delete('/:forumid',forum_controller.forum_delete);
 
 // update forum
 router.put('/:forum_id',forum_controller.forum_update);
