@@ -82,7 +82,7 @@ function validateUserName(username){
 class SignUp extends Component {
   constructor(props){
     super(props);
-    this.state={activeStep:0,email:null,username:null,password:null,confirmpassword:null,validatePw:false}
+    this.state={activeStep:0,email:null,username:null,password:null,confirmpassword:null,validatePw:false,useralready:false,successful:false}
     this.signUp = this.signUp.bind(this);
   }
   componentDidMount() {
@@ -100,6 +100,16 @@ class SignUp extends Component {
         username: this.state.username,
         password: this.state.password
       })
+    }).then(response =>{
+      if(response.status!==200){
+        //User already
+        this.setState({useralready:true,successful:false})
+        return false;
+      }else{
+        //Successful
+        this.setState({useralready:false,successful:true})
+        return true;
+      }
     })
   }
 
@@ -108,7 +118,7 @@ class SignUp extends Component {
       case 0:
         return <EmailForm emailValue={this.state.email} handleEmailChange ={this.handleEmailChange}/>;
       case 1:
-        return <UserForm usernameValue={this.state.username} handleUsernameChange={this.handleUsernameChange} handlePasswordChange={this.handlePasswordChange} handleConfirmPasswordChange={this.handleConfirmPasswordChange}/>;
+        return <UserForm usernameValue={this.state.username} handleUsernameChange={this.handleUsernameChange} handlePasswordChange={this.handlePasswordChange} handleConfirmPasswordChange={this.handleConfirmPasswordChange} alreadyUsername={this.state.useralready}/>;
       case 2:
         return <MoreForm />;
       default:
@@ -175,10 +185,17 @@ class SignUp extends Component {
       }
     }
     else if(this.state.activeStep===2){
-      this.setState(state => ({
-        activeStep: state.activeStep + 1,
-      }))
-      this.signUp();
+      this.setState({ open: true, message: "Signing up" });
+      if(this.signUp()){
+        this.setState(state => ({
+          activeStep: state.activeStep + 1,
+        }))
+      }else{
+        this.setState({ open: true, message: "Username already taken" });
+        this.setState(state => ({
+          activeStep: state.activeStep - 1,
+        }))
+      }
     }
     
   };

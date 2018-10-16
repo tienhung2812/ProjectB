@@ -12,7 +12,7 @@ exports.post_create = function(req, res) {
     query.threadid,
     query.pid
   ];
-  pool
+  db
     .query(text, values)
     .then(res => console.log("inserted"))
     .catch(e => console.error(e.stack));
@@ -58,6 +58,39 @@ exports.post_get = function(req, res) {
       }
     }
   );
-
-  
 };
+
+// Post delete
+exports.post_delete = function(req, res) {
+  var query = req.body;
+  const text =
+    `DELETE FROM post_votes where postid = $1;
+    DELETE FROM post where id = $1`;
+  const values = [
+    query.post_id
+  ];
+  db
+    .query(text, values)
+    .then(res => console.log("deleted"))
+    .catch(e => console.error(e.stack));
+  res.send("Delete");
+};
+
+// Post update
+exports.post_update = function(req, res) {
+  var query = req.body;
+  const text =
+    `UPDATE post
+    SET content=$2
+    WHERE id = $1`;
+  const values = [
+    query.post_id,
+    query.content
+  ];
+  db
+    .query(text, values)
+    .then(res => console.log("updated"))
+    .catch(e => console.error(e.stack));
+  res.send("Update");
+};
+

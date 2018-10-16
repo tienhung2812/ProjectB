@@ -43,7 +43,7 @@ export default class AddThread extends Component {
       </Grid>
       <Grid item xs={12}>
       <div className="comment-post-wrapper">  
-        <TextEditor type="add-thread"/>
+        <TextEditor type="add-thread" subforumID={this.setState.subforumID}/>
       </div>
       </Grid>
     </Grid>

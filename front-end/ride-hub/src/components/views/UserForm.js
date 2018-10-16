@@ -10,6 +10,11 @@ const theme = createMuiTheme({
     },
   });
 function UserForm(props) {
+  if(props.alreadyUsername){
+    var UsernameStatus = <p style={{color:"red"}}>This username already taken</p>
+  }else{
+    var UsernameStatus = "";
+  }
   return (
     <React.Fragment>
         <Typography variant="h6" gutterBottom>
@@ -21,6 +26,7 @@ function UserForm(props) {
             <Grid item xs={12}><Divider/></Grid>
             <Grid item xs={12}>
             <MuiThemeProvider theme={theme}>
+                    
                     <TextField
                     fullWidth
                     label="Username"
@@ -28,6 +34,7 @@ function UserForm(props) {
                     value={props.usernameValue}
                     onChange={props.handleUsernameChange}
                     />
+                    {UsernameStatus}
             </MuiThemeProvider>
             </Grid>
             <Grid item xs={12}>

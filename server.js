@@ -22,7 +22,11 @@ var forumRouter = require("./back-end/routes/forum");
 
 require("./back-end/config/passport")(passport); // pass passport for configuration
 
+var ac = require('./back-end/config/access-control');
 
+const permission = ac.rideHubAC.can('guest').readAny('post');
+  console.log(permission.granted);
+  console.log(permission.attributes);
 
 // Create an Express application
 var app = express();
@@ -33,16 +37,13 @@ app.use(bodyParser.json());
 
 //app.use(cookieParser()); // read cookies (needed for auth)
 // bodyParse is required to get the data from a POST
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const db = require("./back-end/db");
-
-// passport
-// 
-
 const cookieTimeLife = 5*60*1000;
+
+app.use(flash());
 
 app.use(
   session({
@@ -51,12 +52,11 @@ app.use(
       console.log(req.sessionID);
       return uuid(); // use UUIDs for session IDs
     }, */
-    //store: new FileStore(),
     store: new pgSession({
       pool : db.rideHubPool,                // Connection pool
       tableName : 'session'   // Use another table-name than the default "session" one
     }),
-    secret: "keyboard cat",
+    secret: "JeNX5lMRkF3DAkXc65oboQWk0z6pCE00", //a random value for hashing  session id
     resave: false,
     saveUninitialized: false,
     cookie: {maxAge: cookieTimeLife, 
@@ -64,13 +64,15 @@ app.use(
   })
 );
 
+
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
+
 
 //serve static files
 app.use(
   "/RideHub/static/",
+  express.static(path.join(__dirname, "build", "static"))
 );
 
 // serve apis express.static(path.join(__dirname, "build", "static")
@@ -78,63 +80,86 @@ app.use("/api/user", userRouter);
 app.use("/api/thread", threadRouter);
 app.use("/api/post", postRouter);
 app.use("/api/subforum", forumRouter);
-app.use("/api/Help", express.static(path.join(__dirname, "API/apidoc/index.html")));
-// test
+app.use("/api/Help", express.static(path.join(__dirname, "API", "apidoc")));
+
 // create the login get and post routes
-app.get('/api/login', (req, res) => {
-  console.log('signin: ' + req.sessionID);
-  res.send(`You got the login page!\n`)
-})
+app.post('/api/login', function(req, res, next) {
+  //res.send({"success": "true"});
+  passport.authenticate('signin', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) {
+      res.status(401);
+      console.log(info.message);
+      return res.status(401).send({
+          "success": "false"
+        });      
+    }         
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      else {                
+        return res.send({
+          "success": "true"
+        });
+      }
+      
+    });
+  })(req, res, next);
+});
 
-app.post(
-  "/api/login",  
-  passport.authenticate("signin", {
-    successRedirect: "/",
-    failureRedirect: "/login"
-  })
-);
-
-app.get('/api/signup', (req, res) => {
-  //console.log('signup success: ' + req.sessionID);
-  res.send(`You got the signup page!\n`)
-})
- 
-
-app.post(
-  "/api/signup",  
-  passport.authenticate("signup", {
-    successRedirect: "/",
-    failureRedirect: "/signup"
-  })
-);
-
-
-
-app.post('/api/logout', function(req, res){
-  //console.log('log out: ' + req.sessionID);
-  //req.logout();
-  req.session.destroy(function (err) {
-    res.clearCookie('connect.sid');
-    res.redirect('/'); //Inside a callback… bulletproof!
-  });
-
-  //res.redirect('/');
+app.post('/api/signup', function(req, res, next) {
+  //res.send({"success": "true"});
+  passport.authenticate('signup', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) {
+      res.status(401);
+      //console.log(info.message);
+      return res.status(401).send({
+          "message": "username already exists",
+          "success": "false"
+        });      
+    }         
+    req.login(user, function(err) {
+      if (err) { return next(err); }
+      //else {                
+        return res.send({
+          "message": "new account is created successfully",
+          "success": "true"
+        });
+      //}
+      
+    });
+  })(req, res, next);
 });
 
 
 
+ 
+// app.post(
+//   "/api/signup",  
+//   passport.authenticate("signup", {
+//     successRedirect: "/",
+//     failureRedirect: "/api/signup",
+//     //badRequestMessage : "error",
+//     failureFlash: true
+//   })
+// );
+
+
+app.post('/api/logout', function(req, res){
+  req.session.destroy(function (err) {
+    res.clearCookie('connect.sid');
+    res.redirect('/'); //Inside a callback… bulletproof!
+  });
+});
+
 
 app.get("/api/authrequired", (req, res) => {
-  // console.log("Inside GET /authrequired callback");
-  // console.log("id: "+req.sessionID);
-  // console.log(`User authenticated? ${req.isAuthenticated()}`);
   if (req.isAuthenticated()) {
     res.send("you hit the authentication endpoint\n");
   } else {
     res.redirect("/");
   }
 });
-
 
 // serve built React files
 app.get("*", (req, res) => {

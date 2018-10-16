@@ -1,6 +1,7 @@
 // post_controller.js
 const db = require("../db");
 
+
 exports.subforum_get = function(req, res) {    
   db.query(
     `WITH forum_details AS(
@@ -88,4 +89,54 @@ GROUP BY (ft.id,ft.title,ft.description,ft.user_following_state,ft.followers,ft.
         }
       }
     );
-  };
+	};
+	
+
+exports.forum_create = function(req, res) {
+  var query = req.body;
+  const text =
+    "INSERT INTO forum(pid,title,description,creation_date,userid) VALUES ($1,$2,$3,$4,$5)";
+  const values = [
+    query.pid,
+    query.title,
+    query.description,
+    query.creation_date,
+    query.userid
+  ];
+  db
+    .query(text, values)
+    .then(res.json("Create successfully!"))
+    .catch(res.json("Create failed!"));
+};
+
+// Forum delete
+exports.forum_delete = function(req, res) {
+  var query = req.params;
+  const text = `DELETE FROM forum WHERE id = $1;`;
+  const values = [
+    query.forumid
+  ];
+  db
+    .query(text, values)
+    .then(res.json("Delete successfully!"))
+    .catch(res.json("Delete failed!"));
+ 
+};
+
+// Forum update
+exports.forum_update = function(req, res) {
+  var query = req.body;
+  const text =
+    `UPDATE forum
+		SET title=$2, description=$3
+    WHERE id = $1`;
+  const values = [
+    query.forum_id,
+		query.title,
+		query.description
+  ];
+  db
+    .query(text, values)
+    .then(res.json("Update successfully!"))
+    .catch(res.json("Update failed!"));
+};

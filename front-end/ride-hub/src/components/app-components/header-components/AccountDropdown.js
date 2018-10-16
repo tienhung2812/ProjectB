@@ -47,22 +47,19 @@ class AccountDropDown extends Component {
           username: this.state.username,
           password: this.state.pw,
         })
-      }).then(response =>{
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-            //Wrong 
+      }).then(response => {
+          if(response.status===200){
+              console.log(response.json()); 
+              this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
+
+          }else{
             this.setState({isLogged:false,loggingin:false,pw:null,loginSucess:false})
-
-        } else {
-            //Correct
-            this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
-            
-        }
+          }
       })
-  }
-
+    }
   handleLogOut(){
       this.setState({isLogged:false,loggingin:false,open:false})
+      //Erease session sth
   }
 
   componentDidMount(){

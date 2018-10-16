@@ -9,4 +9,9 @@ router.get('/:post_id', post_controller.post_get);
 // POST post
 router.post('/', post_controller.post_create);
 
+// Delete post
+router.delete('/:post_id',post_controller.post_delete);
+
+// Update post
+router.put('/:post_id',post_controller.post_update);
 module.exports = router;
