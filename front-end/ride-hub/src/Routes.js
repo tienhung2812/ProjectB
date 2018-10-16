@@ -6,6 +6,7 @@ import Channel from './components/views/subforum';
 import Thread from './components/views/thread';
 import AddThread from './components/views/addthread';
 import SignUp from './components/views/signup';
+import UserProfile from './components/views/UserProfile';
 import App from './components/App';
 
 export default (
@@ -15,6 +16,7 @@ export default (
     <HashRouter path={'/thread/:id'} component={Thread}/>
     <HashRouter path={'/addthread/:subforumID'} component={AddThread}/>
     <HashRouter path={'/signup'} component={SignUp}/>
+    <HashRouter path={'/UserProfile'} component={UserProfile}/>
     <HashRouter path={'*'} component={Home} />
   </HashRouter>
 );
