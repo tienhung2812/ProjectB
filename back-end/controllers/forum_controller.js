@@ -1,6 +1,7 @@
 // post_controller.js
 const db = require("../db");
 
+
 exports.subforum_get = function(req, res) {    
   db.query(
     `WITH forum_details AS(
@@ -104,25 +105,22 @@ exports.forum_create = function(req, res) {
   ];
   db
     .query(text, values)
-    .then(res => console.log("inserted"))
-    .catch(e => console.error(e.stack));
-  res.send("Post");
+    .then(res.json("Create successfully!"))
+    .catch(res.json("Create failed!"));
 };
 
 // Forum delete
 exports.forum_delete = function(req, res) {
-  var query = req.body;
-  const text =
-    `DELETE FROM forum_followers where forumid = $1;
-    DELETE FROM forum where id = $1`;
+  var query = req.params;
+  const text = `DELETE FROM forum WHERE id = $1;`;
   const values = [
-    query.forum_id
+    query.forumid
   ];
   db
     .query(text, values)
-    .then(res => console.log("deleted"))
-    .catch(e => console.error(e.stack));
-  res.send("Delete");
+    .then(res.json("Delete successfully!"))
+    .catch(res.json("Delete failed!"));
+ 
 };
 
 // Forum update
@@ -139,7 +137,6 @@ exports.forum_update = function(req, res) {
   ];
   db
     .query(text, values)
-    .then(res => console.log("updated"))
-    .catch(e => console.error(e.stack));
-  res.send("Update");
+    .then(res.json("Update successfully!"))
+    .catch(res.json("Update failed!"));
 };

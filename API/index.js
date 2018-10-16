@@ -255,11 +255,11 @@ app.get('/subforum/:id', function(req, res) {
  * 		"2018-10-13 23:30:00",
  * 		"userid":"1"
  *    }
- * @apiSuccess {Number} id Sub-forum id
+ * @apiSuccess {String} response Create status
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
 	 	{
-			id: 11
+			"response":"Create successfully"
 		}
  *  
  * @apiErrorExample {json} Error
@@ -267,6 +267,56 @@ app.get('/subforum/:id', function(req, res) {
  *
  */
 app.post('/subforum', function(req, res) {  
+    // business logic for creating a task...
+});
+
+/**
+ * @api {delete} /subforum/:forumid [DELETE] Delete Subforum
+ * @apiGroup Forum
+ * @apiParam {Number} forumid Forum parent id
+ * @apiParamExample {json} Input
+ *    {
+ *      "forumid":"12"
+ *    }
+ * @apiSuccess {String} response Delete status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Delete successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.delete('/subforum/:forumid', function(req, res) {  
+    // business logic for creating a task...
+});
+
+/**
+ * @api {put} /subforum/:forumid [PUT] Update existing Subforum
+ * @apiGroup Forum
+ * @apiParam {Number} id Forum id
+ * @apiParam {String} title New Forum title
+ * @apiParam {String} description New Forum description
+ * @apiParamExample {json} Input
+ *    {
+ *      "id":13,
+ * 		"title":"...",
+ * 		"description":"..."
+ *    }
+ * @apiSuccess {String} response Update status
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+	 	{
+			"response":"Update successfully"
+		}
+ *  
+ * @apiErrorExample {json} Error
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
+app.put('/subforum/:forumid', function(req, res) {  
     // business logic for creating a task...
 });
 
