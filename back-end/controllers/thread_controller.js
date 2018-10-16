@@ -52,19 +52,16 @@ exports.thread_create = function(req, res) {
 };
 
 exports.thread_delete = function(req, res) {
-  var query = req.body;
+  var query = req.params;
   const text =
-    `DELETE FROM post where threadid = $1;
-    DELETE FROM thread where id = $1`;
+    `DELETE FROM thread where id = $1`;
   const values = [
     query.thread_id
   ];
   db
     .query(text, values)
-
-    .then(res => console.log("deleted"))
-    .catch(e => console.error(e.stack));
-  res.send("Delete");
+    .then(res.json("Delete successfully!"))
+    .catch(res.json("Delete failed!"));
 };
 
 exports.thread_update = function(req, res) {

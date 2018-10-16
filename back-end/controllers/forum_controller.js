@@ -126,12 +126,13 @@ exports.forum_delete = function(req, res) {
 // Forum update
 exports.forum_update = function(req, res) {
   var query = req.body;
+  var query2 = req.params;
   const text =
     `UPDATE forum
 		SET title=$2, description=$3
     WHERE id = $1`;
   const values = [
-    query.forum_id,
+    query2.forum_id,
 		query.title,
 		query.description
   ];
