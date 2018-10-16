@@ -17,10 +17,7 @@ module.exports = function(passport) {
 
   // serialize the user for a session
   passport.serializeUser(function(user, done) {
-    console.log("serialze user for login");
-    console.log(user.id);
-    console.log(user);
-    done(null, user.id);
+    done(null, user);
   });
 
   // deserialize the user
@@ -48,13 +45,17 @@ module.exports = function(passport) {
       console.log(values);
       // promise
       db.query(
-        "select u.id, u.username, u.password from public.user u where u.username=$1",
+        `select u.id, u.username, u.password , ur.name as role
+        from public.user u
+        JOIN public.role_permission r ON u.role_id = r.id
+        JOIN public.user_role ur ON ur.id = r.id
+        where u.username= $1;
+        `,
         values
       )
         .then(res => {
           var user = res.rows[0];          
           if (user === undefined) {
-            console.log('x')
             return done(null, false, { message: "Incorrect username." });
           }
           // if (password != user.password) {

@@ -91,53 +91,74 @@ GROUP BY (ft.id,ft.title,ft.description,ft.user_following_state,ft.followers,ft.
     );
 	};
 	
-
-exports.forum_create = function(req, res) {
-  var query = req.body;
-  const text =
-    "INSERT INTO forum(pid,title,description,creation_date,userid) VALUES ($1,$2,$3,$4,$5)";
-  const values = [
-    query.pid,
-    query.title,
-    query.description,
-    query.creation_date,
-    query.userid
-  ];
-  db
-    .query(text, values)
-    .then(res.json("Create successfully!"))
-    .catch(res.json("Create failed!"));
-};
-
+  exports.forum_create = function(req, res) {
+    if (!req.isAuthenticated()) {
+      return res.status(403).send({"message":"You are not allowed to create new forum"});
+    } 
+    else if (req.session.passport.user.role == "Admin"){
+      // only admin user can create a forum
+      var query = req.body;
+      const text =
+        "INSERT INTO forum(pid,title,description,creation_date,userid) VALUES ($1,$2,$3,$4,$5)";
+      const values = [
+        query.pid,
+        query.title,
+        query.description,
+        query.creation_date,
+        query.userid
+      ];
+      db.query(text, values, (err, data) => {
+        if (err) {
+          res.status(400).send({"message":"Create failed!"})
+        } else
+          res.status(200).send({"message":"Create successfully!"});
+      })    
+    } 
+    else {
+      return res.status(403).send({"message":"You are not allowed to create new forum"});
+    }
+  };
+  
 // Forum delete
 exports.forum_delete = function(req, res) {
-  var query = req.params;
-  const text = `DELETE FROM forum WHERE id = $1;`;
-  const values = [
-    query.forumid
-  ];
-  db
-    .query(text, values)
-    .then(res.json("Delete successfully!"))
-    .catch(res.json("Delete failed!"));
- 
+  if (!req.isAuthenticated()) {
+    res.status(403).send({"message":"You are not allowed to create new forum"});
+  }  
+  else if (req.session.passport.user.role == "Admin"){
+    var query = req.params;
+    const text = `DELETE FROM forum WHERE id = $1;`;
+    const values = [query.forumid];
+    db.query(text, values, (err, data) => {
+      if (err) {
+        res.status(400).send({"message": "Delete failed!"})
+      } else
+        res.status(200).send({"message": "Delete successfully!"});
+    })
+  } else {
+    res.status(403).send({"message":"You are not allowed to create new forum"});
+  }
 };
 
 // Forum update
 exports.forum_update = function(req, res) {
-  var query = req.body;
-  var query2 = req.params;
-  const text =
-    `UPDATE forum
-		SET title=$2, description=$3
-    WHERE id = $1`;
-  const values = [
-    query2.forum_id,
-		query.title,
-		query.description
-  ];
-  db
-    .query(text, values)
-    .then(res.json("Update successfully!"))
-    .catch(res.json("Update failed!"));
-};
+    if (!req.isAuthenticated()) {
+      res.status(403).send({"message":"You are not allowed to create new forum"});
+    }  
+    else if (req.session.passport.user.role == "Admin"){
+      var query = req.body;
+      var query2 = req.params;
+      const text = `UPDATE forum
+        SET title=$2, description=$3
+        WHERE id = $1`;
+      const values = [query2.forum_id, query.title, query.description];
+      db.query(text, values, (err, data) => {
+        if (err) {
+          res.status(400).send({"message":"Update failed!"});
+        } else {        
+          res.status(200).send({"message":"Update successfully!"});
+        }
+      });
+    } else {
+      res.status(403).send({"message":"You are not allowed to create new forum"});
+    }
+  }
