@@ -414,9 +414,9 @@ app.post('/post', function(req, res) {
 });
 
 /**
- * @api {get} /thread/search [Get] Search 
+ * @api {post} /thread/search [POST] Thread Search 
  * @apiGroup Thread
- * @apiParam {Number} text_search Text to search
+ * @apiParam {String} text_search Text to search
  * @apiParamExample {json} Input
  *    {
  *      "text_search":"bmw"
@@ -424,7 +424,7 @@ app.post('/post', function(req, res) {
  * @apiSuccess {json[]} threads list threads
  * @apiSuccess {Number} threads.tid Thread id
  * @apiSuccess {String} threads.t_title Thread title
- * @apiSuccess {String} threads.t_content Thread content
+ * @apiSuccess {json[]} threads.t_content Thread content
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
 		{
@@ -432,12 +432,12 @@ app.post('/post', function(req, res) {
 				{
 					"tid":1,
 					"t_title":"BMW thread1",
-					"t_content":"...."
+					"t_content":[]
 				},	
 				{
 					"tid":2,
 					"t_title":"BMW thread2",
-					"t_content":"...."
+					"t_content":[]
 				}
 			]
 		}
@@ -447,7 +447,7 @@ app.post('/post', function(req, res) {
  * @apiSampleRequest http://ride-hub.herokuapp.com/api/thread/search
  *
  */
-app.get('/thread/search', function(req, res) {  
+app.post('/thread/search', function(req, res) {  
 
 });
 

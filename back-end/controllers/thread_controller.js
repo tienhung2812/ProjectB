@@ -89,9 +89,9 @@ exports.thread_update = function(req, res) {
 
 
 exports.thread_search = function(req, res) {
-  var text = req.params.text_search;
+  var text = req.body.text_search;
   console.log(req.params.text_search);
-  values = [text];
+  values = [text.replace(/ +/g,"&")];
   db.query(
     `SELECT tid, t_title,t_content
     FROM (SELECT thread.id as tid,
@@ -105,8 +105,8 @@ exports.thread_search = function(req, res) {
           JOIN public.user u ON u.id = thread.userid
           JOIN tag t ON t.id = thread.tag_id
           GROUP BY tid, u.id,t.name) t_search
-    WHERE t_search.document @@ to_tsquery('english', $1)
-    ORDER BY ts_rank(t_search.document, to_tsquery('english', $1)) DESC;`,
+    WHERE t_search.document @@ to_tsquery('english',$1)
+    ORDER BY ts_rank(t_search.document, to_tsquery('english',$1)) DESC;`,
     values,
     (err, data) => {
       try {
