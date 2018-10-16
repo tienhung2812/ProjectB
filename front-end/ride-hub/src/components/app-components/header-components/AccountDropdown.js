@@ -214,7 +214,9 @@ class AccountDropDown extends Component {
     }else{
         this.childcontent = []
         this.childcontent.push(
+            <ReactLink to={'/UserProfile'}>
             <button className="dropdown-item" type="button" >My Account</button>
+            </ReactLink>
         )
         this.childcontent.push(
             <button className="dropdown-item" type="button" onClick={this.handleLogOut}>Log out</button>
