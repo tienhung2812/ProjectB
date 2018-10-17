@@ -91,3 +91,13 @@
     margin-top:20px;
     margin-left: 60%;
 }
+.sidebar-content .wrapper.credit{
+    min-height: 50px;
+}
+.sidebar-content .wrapper.credit .content{
+    min-width: 100%;
+    padding:10px;
+    text-align: center;
+    display:inline-block;
+    font-size: 0.8rem;
+}
