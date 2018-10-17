@@ -39,8 +39,6 @@ function updateThread(req, res) {
 }
 
 exports.thread_get_by_id = function(req, res) {
-  if (!req.isAuthenticated()) {
-    // guest
     var id = req.params.thread_id;  
     values = [id];
     db.query(
@@ -67,11 +65,6 @@ exports.thread_get_by_id = function(req, res) {
         }
       }
     );
-  } else {
-    // need to return user_following_state
-    res.send("to do");
-  }
-
 };
 
 exports.thread_create = function(req, res) {
@@ -81,17 +74,24 @@ exports.thread_create = function(req, res) {
   } else {
     var query = req.body;
     const text =
-      "INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) VALUES($1,$2,$3,$4,$5,$6)";
+      `WITH create_thread AS (
+        INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) 
+        VALUES($1,$2,$3,$4,$5,$6)
+        RETURNING creation_date,userid,id)
+        INSERT INTO post(content,creation_date,userid,threadid,pid) 
+        SELECT $7,creation_date,userid,id,null FROM create_thread;`;
     const values = [
       query.title,
-      query.userid,
+      req.session.passport.user.id,
       query.forumid,
       query.creation_date,
       query.thumbnail,
-      query.tagid
+      query.tagid,
+      query.content
     ];
     db.query(text, values, (err) => {
       if (err) {
+        console.log(err);
         res.status(400).send({"message":"Create failed!"});
       } else {
         res.status(200).send({"message":"Create successfully!"});
@@ -166,7 +166,7 @@ exports.thread_update = function(req, res) {
 exports.thread_search = function(req, res) {
   var text = req.body.text_search;
   console.log(req.params.text_search);
-  values = [text.replace(/ +/g,"&")];
+  values = [text.replace(/ +/g,"&").trim()];
   db.query(
     `SELECT tid, t_title
     FROM (SELECT thread.id as tid,

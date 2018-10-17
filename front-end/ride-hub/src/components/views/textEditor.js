@@ -171,7 +171,7 @@ export default class TextEditor extends Component {
             ref={this.textInput}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={2}>
           <TextField
           
             label="Add Tag(s)"

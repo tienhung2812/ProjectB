@@ -11,7 +11,7 @@ var passport = require("passport");
 var flash = require("connect-flash");
 //const FileStore = require("session-file-store")(session);
 var pgSession = require('connect-pg-simple')(session);
-
+var cookieParser = require('cookie-parser');
 const uuid = require("uuid/v4");
 
 // import custom modules
@@ -30,13 +30,13 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//app.use(cookieParser()); // read cookies (needed for auth)
+app.use(cookieParser()); // read cookies (needed for auth)
 // bodyParse is required to get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const db = require("./back-end/db");
-const cookieTimeLife = 10*60*1000;
+const cookieTimeLife = 45*60*1000;
 
 app.use(flash());
 
@@ -51,9 +51,13 @@ app.use(
     }),
     secret: "JeNX5lMRkF3DAkXc65oboQWk0z6pCE00", //a random value for hashing  session id
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {maxAge: cookieTimeLife, 
-             expires: new Date(Date.now() + cookieTimeLife)}
+             expires: new Date(Date.now() + cookieTimeLife),
+             httpOnly: false,
+             secure: false,
+             domain: "ride-hub.herokuapp.com"
+            }
   })
 );
 
