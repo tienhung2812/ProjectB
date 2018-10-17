@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Link as ReactLink} from 'react-router';
+import { browserHistory } from 'react-router';
 import Loader from '../Loader';
 import '../../stylesheet/Header.css';
 import TextField from '@material-ui/core/TextField';
@@ -16,13 +17,15 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Cookies from "universal-cookie";
 
+const cookie = new Cookies();
 const theme = createMuiTheme({
     palette: {
       primary:{main: '#ff5722'},
     },
   });
-  
+
 
 class AccountDropDown extends Component {
   constructor(props){
@@ -32,11 +35,43 @@ class AccountDropDown extends Component {
     this.handleUsername =this.handleUsername.bind(this)
     this.handlePasswordChange = this.handlePasswordChange.bind(this)
     this.handleLogOut = this.handleLogOut.bind(this)
+    this.setCookie = this.setCookie.bind(this);
+    this.fetchUserSummaryInfo = this.fetchUserSummaryInfo.bind(this);
+    if(cookie.get("userid")==null){
+        this.setState({isLogged:false});
+        this.setState({username:"anoymous", point:0})
+    }else{
+        var uid = cookie.get("userid");
+        this.fetchUserSummaryInfo(uid);
+    }
+  }
+
+  fetchUserSummaryInfo(uid){
+    fetch('https://ride-hub.herokuapp.com/api/user/'+uid+'/summary')
+    .then(response=>{
+        if(response.status!==200){
+            //User fault
+            this.setState({isLogged:false});
+            this.setState({username:"anoymous", point:0})
+            cookie.remove('userid');
+            cookie.remove('role');
+        }else{
+            //Correct user
+            response.json().then(
+                data=>{
+                    this.setState({
+                        isLogged:true,
+                        username:data.username,
+                        point:data.point
+                    })
+                }
+            )
+        }
+    })
   }
 
   handleSignIn(){
     this.setState({loggingin:true})
-    console.log('singin')
     fetch('https://ride-hub.herokuapp.com/api/login', {
         method: 'POST',
         headers: {
@@ -49,11 +84,13 @@ class AccountDropDown extends Component {
         })
       }).then(response => {
           if(response.status===200){
-              const json = response.json();
-              console.log(json.status);
-              console.log(json.data)
-              this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
-
+              response.json().then(
+                  json=>{
+                    this.setCookie(json);
+                    this.fetchUserSummaryInfo(json.userid)
+                    this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
+                  }
+              );
           }else{
             this.setState({isLogged:false,loggingin:false,pw:null,loginSucess:false})
           }
@@ -71,8 +108,21 @@ class AccountDropDown extends Component {
           username: this.state.username
         })
       })
+      cookie.remove("role");
+      cookie.remove("userid");
+      cookie.remove('connect.sid');
+      browserHistory.push('/UserProfile');
   }
 
+  setCookie(data){
+    cookie.set("role", data.role, {path: "/"});
+    cookie.set("userid", data.userid, {path: "/"});
+  }
+
+  getCookieExpireDate(minutes){
+      console.log(new Date(new Date().getTime()+1000*minutes).toUTCString())
+    return new Date(new Date().getTime()+1000*minutes).toUTCString()
+}
   componentDidMount(){
     this.childcontent=[];
     
@@ -226,12 +276,15 @@ class AccountDropDown extends Component {
         this.childcontent = []
         this.childcontent.push(
            
-            <button className="dropdown-item" type="button" > <ReactLink to={'/UserProfile'}>My Account </ReactLink></button>
+            <button className="dropdown-item" type="button" > <ReactLink to={'/UserProfile/'} params={{ uid:cookie.get('userid') }}>My Account </ReactLink></button>
            
         )
         this.childcontent.push(
             <button className="dropdown-item" type="button" onClick={this.handleLogOut}>Log out</button>
         );
+        if(cookie.get('role')==='Admin'){
+            this.childcontent.push(<button className="dropdown-item" type="button" > <ReactLink to={'/'}>Admin Page </ReactLink></button>)
+        }
     }
 
     var username;

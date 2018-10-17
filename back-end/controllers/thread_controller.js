@@ -192,3 +192,45 @@ exports.thread_search = function(req, res) {
   );
 };
 
+
+exports.thread_filter_get_data = function(req, res) {
+  db.query(
+    `WITH json_brand AS(
+      SELECT array_to_json(array_agg(row_to_json(brand))) AS brands
+      FROM (
+        SELECT brand.title AS brand_name, array_to_json(array_agg(model.model_name)) AS models
+        FROM (
+          SELECT sf.pid, sf.title AS model_name
+          FROM forum f
+          INNER JOIN forum sf
+          ON f.id = sf.pid
+        ) model
+        INNER JOIN forum brand
+        ON model.pid = brand.id 
+        WHERE brand.pid = 1
+        GROUP BY (brand.title,brand.id)
+        ORDER BY brand.id
+      ) brand
+    ), json_tag AS(
+      SELECT array_to_json(array_agg(row_to_json(tag))) AS tags
+      FROM (
+        SELECT name AS tag_name
+        FROM tag
+      ) tag
+    ) 
+    SELECT tags, brands
+    FROM json_tag jt
+    FULL OUTER JOIN json_brand jb
+    ON 1=1;`,
+    (err, data) => {
+      try {
+        res.json(data.rows);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
+      }
+    }
+  );
+};
+
+

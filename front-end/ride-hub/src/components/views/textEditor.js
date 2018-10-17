@@ -22,7 +22,8 @@ export default class TextEditor extends Component {
   constructor(props){
     super(props);
     this.state = {
-      disabledBtn:false
+      disabledBtn:false,
+      subforumID:""
     }
     this.handlePost = this.handlePost.bind(this);
     this.handleThread = this.handleThread.bind(this);
@@ -51,22 +52,30 @@ export default class TextEditor extends Component {
 
   handlePost(){
     this.setState({disabledBtn:true})
-    var text = this.textInput.current.getEditor().getContents();
+    var rawtext = this.textInput.current.getEditor().getContents();
+    var text = [];
+    for(let i=0;i<rawtext.ops.length;i++){
+      text.push(rawtext.ops[i])
+    }
     var date = this.getDateTime()
-    
+    var body = JSON.stringify({
+      content: text,
+      creation_date : date,
+      threadid : this.props.threadid,
+      pid : this.props.pid})
+    console.log(body)
+    if(this.textInput.current.getEditor().getText().length<2){
+      alert("Comment can't be null");
+      return null;
+    }
     fetch('https://ride-hub.herokuapp.com/api/post', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        content: text,
-        creation_date : date,
-        userid : this.props.userid,
-        threadid : this.props.threadid,
-        pid : this.props.pid
-      })}).then(response=>{
+      body: body
+      }).then(response=>{
         console.log("Reponse status: "+response.status)
         if(response.status===200){
           ///Post ok
@@ -74,7 +83,10 @@ export default class TextEditor extends Component {
           this.textInput.current.getEditor().setContents([{ insert: '\n' }]);;
         }else{
           //Post not ok
-          alert("Comment failed")
+          if(response.status==403){
+            alert("You must log in to use this feature")
+          }else
+            alert("Comment failed")
         }
         this.setState({disabledBtn:false})
       })
@@ -82,21 +94,33 @@ export default class TextEditor extends Component {
 
   handleThread(){
     this.setState({disabledBtn:true})
-    var text = this.textInput.current.getEditor().getContents();
+    var rawtext = this.textInput.current.getEditor().getContents();
+    var text = [];
+    for(let i=0;i<rawtext.ops.length;i++){
+      text.push(rawtext.ops[i])
+    }
     var date = this.getDateTime()
+    var forumid = this.props.subforumID
     var tag = 1;
     var userid = 1;
-    var title = "dadada";
+    var title = this.props.title;
     var body = JSON.stringify({
       title:title,
       userid:userid,
-      forumid:this.props.subforumID,
-      creation_date:null,
+      forumid:forumid,
+      creation_date:date,
       thumbnail:null,
       tagid:tag,
       content:text
     })
     console.log(body)
+    if(title.length===0){
+      alert("Title can't be null");
+      return null;
+    }else if(this.textInput.current.getEditor().getText().length<2){
+      alert("Content can't be null");
+      return null;
+    }
     fetch('https://ride-hub.herokuapp.com/api/thread', {
       method: 'POST',
       headers: {
@@ -111,7 +135,10 @@ export default class TextEditor extends Component {
           this.textInput.current.getEditor().setContents([{ insert: '\n' }]);;
         }else{
           //Post not ok
-          alert("Post failed")
+          if(response.status==403){
+            alert("You must log in to use this feature")
+          }else
+            alert("Post failed")
         }
         this.setState({disabledBtn:false})
       })
@@ -119,7 +146,7 @@ export default class TextEditor extends Component {
 
   getDateTime(){
     let currentdate = new Date(); 
-    let a = currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/" + currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"  + currentdate.getMinutes() + ":"  + currentdate.getSeconds();
+    let a =  currentdate.getFullYear()+ "-"+ (currentdate.getMonth()+1) + "-"+ currentdate.getDate() + " "+ currentdate.getHours() + ":"  + currentdate.getMinutes() + ":"  + currentdate.getSeconds();
     return a;
   }
 

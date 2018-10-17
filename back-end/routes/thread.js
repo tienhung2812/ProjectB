@@ -18,4 +18,7 @@ router.put('/:thread_id',thread_controller.thread_update);
 // Search thread
 router.post('/search',thread_controller.thread_search);
 
+// get thread filter data
+router.get('/filter_data',thread_controller.thread_filter_get_data);
+
 module.exports = router;

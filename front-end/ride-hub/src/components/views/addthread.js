@@ -19,11 +19,15 @@ const theme = createMuiTheme({
 export default class AddThread extends Component {
   constructor(props){
     super(props);
-    this.state = {subforumID:0}
+    this.state = {subforumID:0,title:''}
+    this.handleTitle = this.handleTitle.bind(this);
   }
   componentDidMount() {
     browserHistory.push('/addthread/'+this.props.params.subforumID);
-    this.setState({subforumID:this.props.subforumID})
+    this.setState({subforumID:this.props.params.subforumID})
+  }
+  handleTitle=(event)=>{
+    this.setState({title:event.target.value})
   }
 
   render() {
@@ -44,6 +48,7 @@ export default class AddThread extends Component {
           fullWidth
           label="Title"
           variant="outlined"
+          onChange={this.handleTitle}
         />
       </MuiThemeProvider>
       </Grid>
@@ -59,7 +64,7 @@ export default class AddThread extends Component {
       
       <Grid item xs={12}>
       <div className="comment-post-wrapper">  
-        <TextEditor type="add-thread" subforumID={this.setState.subforumID}/>
+        <TextEditor type="add-thread" subforumID={this.state.subforumID} title={this.state.title}/>
       </div>
       </Grid>
     </Grid>

@@ -85,3 +85,19 @@
     margin-left: auto;
     margin-right:0;
 }
+
+.sidebar-content .wrapper.filtersearch .content-wrapper .content .searchbtn{
+    margin:10px;
+    margin-top:20px;
+    margin-left: 60%;
+}
+.sidebar-content .wrapper.credit{
+    min-height: 50px;
+}
+.sidebar-content .wrapper.credit .content{
+    min-width: 100%;
+    padding:10px;
+    text-align: center;
+    display:inline-block;
+    font-size: 0.8rem;
+}

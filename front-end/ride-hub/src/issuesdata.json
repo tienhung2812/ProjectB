@@ -1,0 +1,30 @@
+[
+    {
+        "issueName":"Fuel system",
+        "issueCode":1
+    },
+    {
+        "issueName":"Battery",
+        "issueCode":2
+    },
+    {
+        "issueName":"Vibration",
+        "issueCode":3
+    },
+    {
+        "issueName":"Tire wear",
+        "issueCode":4
+    },
+    {
+        "issueName":"Chains",
+        "issueCode":5
+    },
+    {
+        "issueName":"Light",
+        "issueCode":6
+    },
+    {
+        "issueName":"Engine",
+        "issueCode":7
+    }
+]
