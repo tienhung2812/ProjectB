@@ -83,22 +83,33 @@ export default class TextEditor extends Component {
 
   handleThread(){
     this.setState({disabledBtn:true})
-    var text = this.textInput.current.getEditor().getContents();
+    var rawtext = this.textInput.current.getEditor().getContents();
+    var text = [];
+    for(let i=0;i<rawtext.ops.length;i++){
+      text.push(rawtext.ops[i])
+    }
     var date = this.getDateTime()
     var forumid = this.props.subforumID
     var tag = 1;
     var userid = 1;
-    var title = "dadada";
+    var title = this.props.title;
     var body = JSON.stringify({
       title:title,
       userid:userid,
       forumid:forumid,
-      creation_date:null,
+      creation_date:date,
       thumbnail:null,
       tagid:tag,
       content:text
     })
     console.log(body)
+    if(title.length===0){
+      alert("Title can't be null");
+      return null;
+    }else if(this.textInput.current.getEditor().getText().length<2){
+      alert("Content can't be null");
+      return null;
+    }
     fetch('https://ride-hub.herokuapp.com/api/thread', {
       method: 'POST',
       headers: {
@@ -121,7 +132,7 @@ export default class TextEditor extends Component {
 
   getDateTime(){
     let currentdate = new Date(); 
-    let a = currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/" + currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"  + currentdate.getMinutes() + ":"  + currentdate.getSeconds();
+    let a =  currentdate.getFullYear()+ "-"+ (currentdate.getMonth()+1) + "-"+ currentdate.getDate() + " "+ currentdate.getHours() + ":"  + currentdate.getMinutes() + ":"  + currentdate.getSeconds();
     return a;
   }
 

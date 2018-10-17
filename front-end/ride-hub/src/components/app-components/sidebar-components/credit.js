@@ -16,7 +16,10 @@ export default class Credit extends Component {
 
 
   render() {
-    return(<div></div>);
+    return(<div className="credit wrapper"> 
+      Designed and Developed by Ridehub © 2018.
+      © 2018 Ridehub. All Rights Reserved.
+    </div>);
       
   }
 }
