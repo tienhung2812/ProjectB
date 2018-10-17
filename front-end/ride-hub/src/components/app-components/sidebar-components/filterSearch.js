@@ -8,6 +8,7 @@ import {Link as ReactLink} from 'react-router';
 import headimg from '../../../filtersearch-bg.jpg';
 import Loader from '../Loader';
 import ScooterData from '../../../scooterdata.json';
+import IssueData from '../../../issuesdata.json';
 
 const styles = theme => ({
     button: {
@@ -23,16 +24,20 @@ const styles = theme => ({
 export default class FilterSearch extends Component {
   constructor(props){
     super(props);
-    this.state = {threadID:null,postID:null,likeStatus:false,open:false,brand:-1,model:-1,year:-1}
+    this.state = {threadID:null,postID:null,likeStatus:false,open:false,brand:-1,model:-1,year:-1,issue:-1}
     //Props url
     this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
     this.brand=[];
     this.model=[];
-    this.year = []
+    this.year = [];
+    this.issues = [];
     for(let i=0;i<ScooterData.length;i++){
         this.brand.push(<MenuItem value={i}>{ScooterData[i].brand}</MenuItem>)
+    }
+    for(let i =0;i<IssueData.length;i++){
+        this.issues.push(<MenuItem value={i}>{IssueData[i].issueName}</MenuItem>)
     }
 
   }
@@ -40,27 +45,26 @@ export default class FilterSearch extends Component {
     this.setState({ [event.target.name]: event.target.value });
     
     if(event.target.name=="brand"){
+        this.model=[]
+        this.year = []
+        this.setState({model:-1,year:-1})
         if(event.target.value>=0){
             for(let i=0;i<ScooterData[event.target.value].model.length;i++){
                 this.model.push(<MenuItem value={i}>{ScooterData[event.target.value].model[i].name}</MenuItem>)
             }
-        }else{
-            this.model=[]
-            this.year = []
-            this.setState({model:-1,year:-1})
+            
         }
     }
     if(event.target.name=="model"){
+        this.year = []
+        this.setState({year:-1})
         if(event.target.value>=0){
             for(let i=0;i<ScooterData[this.state.brand].model[event.target.value].year.length;i++){
                 this.year.push(<MenuItem value={i}>{ScooterData[this.state.brand].model[event.target.value].year[i]}</MenuItem>)
-            }
-        }else{
-            this.year=[],
-            this.setState({year:-1})
+            } 
         }
     }
-  };
+  }
 
   render() {
     if(this.content===null){
@@ -131,7 +135,7 @@ export default class FilterSearch extends Component {
                             Issue
                         </InputLabel>
                         <Select
-                            value={this.state.year}
+                            value={this.state.issue}
                             onChange={this.handleChange}
                             displayEmpty
                             name="issue"
@@ -139,7 +143,7 @@ export default class FilterSearch extends Component {
                             <MenuItem value={-1}>
                             <em>What is your issue?</em>
                             </MenuItem>
-                            {this.year}
+                            {this.issues}
                         </Select>
                     </FormControl>
                     <Button variant="contained" onClick={this.handleThread} className="searchbtn">
