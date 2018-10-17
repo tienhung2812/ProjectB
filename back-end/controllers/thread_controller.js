@@ -224,7 +224,7 @@ exports.thread_filter_get_data = function(req, res) {
     ON 1=1;`,
     (err, data) => {
       try {
-        res.send(data.rows);
+        res.json(data.rows);
       } catch (e) {
         console.log(e);
         res.status(400).send("Data not available");
