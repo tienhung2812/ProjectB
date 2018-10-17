@@ -39,7 +39,7 @@ exports.post_get = function(req, res) {
     var post_id = req.params.post_id;
     var values = [post_id];
     db.query(`WITH post_withuser AS(
-              SELECT p.id,u.avatar AS user_post
+              SELECT p.id,u.username,u.avatar AS user_post
               FROM post p
               LEFT JOIN public.user u
               ON p.userid = u.id
@@ -49,7 +49,7 @@ exports.post_get = function(req, res) {
               FROM post_withuser pu
               LEFT JOIN post_votes pv
               ON pu.id = pv.postid
-              GROUP BY(pu.id,pu.user_post)
+              GROUP BY(pu.id,pu.user_post,pu.username)
           )
           SELECT pv.*, p.content
           FROM post_withvote pv
