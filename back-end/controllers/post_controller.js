@@ -35,9 +35,35 @@ exports.post_get = function(req, res) {
   if (!req.isAuthenticated()) {
     // guest cannot see whether he voted this post or not
     // also whether whether he followed this sub-forum
-    res.send("guest");
     //res.send("to do!");
-    
+    var post_id = req.params.post_id;
+    var values = [post_id];
+    db.query(`WITH post_withuser AS(
+              SELECT p.id,u.avatar AS user_post
+              FROM post p
+              LEFT JOIN public.user u
+              ON p.userid = u.id
+			        WHERE p.id = $1
+          ), post_withvote AS (
+              SELECT pu.*, COUNT(pv.userid) AS vote_number
+              FROM post_withuser pu
+              LEFT JOIN post_votes pv
+              ON pu.id = pv.postid
+              GROUP BY(pu.id,pu.user_post)
+          )
+          SELECT pv.*, p.content
+          FROM post_withvote pv
+          INNER JOIN post p
+          ON pv.id = p.id;`
+          ,values
+          ,(err,data)=>{
+            try {
+              res.json(data.rows[0]);
+            } catch (e) {
+              console.log(e);
+              res.status(400).send("Data is not available");
+            }
+          });
   } else {
     var user_id = req.query.user;
     var post_id = req.params.post_id;
