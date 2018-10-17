@@ -35,7 +35,6 @@ exports.post_get = function(req, res) {
   if (!req.isAuthenticated()) {
     // guest cannot see whether he voted this post or not
     // also whether whether he followed this sub-forum
-    res.send("guest");
     //res.send("to do!");
     var post_id = req.params.post_id;
     var values = [post_id];
@@ -66,7 +65,8 @@ exports.post_get = function(req, res) {
             }
           });
   } else {
-    var user_id = req.query.user;
+    //var user_id = req.query.user;
+    var user_id = req.session.passport.user.id;
     var post_id = req.params.post_id;
     console.log(user_id);
     console.log(post_id);

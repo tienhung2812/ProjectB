@@ -74,14 +74,20 @@ exports.thread_create = function(req, res) {
   } else {
     var query = req.body;
     const text =
-      "INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) VALUES($1,$2,$3,$4,$5,$6)";
+      `WITH create_thread AS (
+        INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) 
+        VALUES($1,$2,$3,$4,$5,$6)
+        RETURNING creation_date,userid,id)
+        INSERT INTO post(content,creation_date,userid,threadid,pid) 
+        SELECT $7,creation_date,userid,id,null FROM create_thread;`;
     const values = [
       query.title,
-      query.userid,
+      req.session.passport.user.id,
       query.forumid,
       query.creation_date,
       query.thumbnail,
-      query.tagid
+      query.tagid,
+      query.content
     ];
     db.query(text, values, (err) => {
       if (err) {
