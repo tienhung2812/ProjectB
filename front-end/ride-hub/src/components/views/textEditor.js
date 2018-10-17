@@ -22,7 +22,8 @@ export default class TextEditor extends Component {
   constructor(props){
     super(props);
     this.state = {
-      disabledBtn:false
+      disabledBtn:false,
+      subforumID:""
     }
     this.handlePost = this.handlePost.bind(this);
     this.handleThread = this.handleThread.bind(this);
@@ -84,13 +85,14 @@ export default class TextEditor extends Component {
     this.setState({disabledBtn:true})
     var text = this.textInput.current.getEditor().getContents();
     var date = this.getDateTime()
+    var forumid = this.props.subforumID
     var tag = 1;
     var userid = 1;
     var title = "dadada";
     var body = JSON.stringify({
       title:title,
       userid:userid,
-      forumid:this.props.subforumID,
+      forumid:forumid,
       creation_date:null,
       thumbnail:null,
       tagid:tag,
