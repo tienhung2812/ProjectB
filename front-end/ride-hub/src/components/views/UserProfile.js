@@ -33,7 +33,7 @@ const styles = theme => ({
 
 class UserProfile extends Component {
   state = {
-    value: 0,
+    value: 0
   };
 
   handleChange = (event, value) => {

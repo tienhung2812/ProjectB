@@ -49,7 +49,9 @@ class AccountDropDown extends Component {
         })
       }).then(response => {
           if(response.status===200){
-              console.log(response.json()); 
+              const json = response.json();
+              console.log(json.status);
+              console.log(json.data)
               this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
 
           }else{
@@ -59,7 +61,16 @@ class AccountDropDown extends Component {
     }
   handleLogOut(){
       this.setState({isLogged:false,loggingin:false,open:false})
-      //Erease session sth
+      fetch('https://ride-hub.herokuapp.com/api/logout', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username
+        })
+      })
   }
 
   componentDidMount(){

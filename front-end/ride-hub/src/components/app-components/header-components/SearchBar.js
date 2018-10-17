@@ -4,6 +4,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import {Redirect,browserHistory} from 'react-router';
 import PropTypes from 'prop-types'
 import '../../stylesheet/Header.css';
+import { runInThisContext } from 'vm';
 
 const options = [
   { value: 'chocolate', label: 'Chocolate' },
@@ -11,12 +12,11 @@ const options = [
   { value: 'vanilla', label: 'Vanilla' }
 ];
 
-
-
+let timeout;
 class SearchBar extends Component {
   constructor(props,context){
     super(props,context);
-    this.state= {searchValue:'',displayResult:false,selectedOption: null}
+    this.state= {searchValue:'',displayResult:false,selectedOption: null,completed:true}
     this.searchInput = React.createRef();
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -30,32 +30,49 @@ class SearchBar extends Component {
   new Promise(resolve => {
     setTimeout(() => {
       resolve(this.getModelsAPI(inputValue));
-    }, 1000);
-    return options;
+    }, 2000);
   });
-  
-  getModelsAPI = (input) => {
-
+  filterOptions(options) {
+    return options;
+  }
+  getModelsAPI = (input,cb) => {
+    this.setState({completed:false})
     if (!input) {
-        return Promise.resolve({ options: [] });
+      this.setState({completed:true})
+      return Promise.resolve({ options: options });
+        
+    }else{
+      timeout = setTimeout(()=>{
+        var body = JSON.stringify({
+          text_search:input
+        })
+        fetch('https://ride-hub.herokuapp.com/api/thread/search', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: body
+        }).then(response=>
+          {
+            if(response.status===200){
+              response.json().then(
+                data=>{
+                  let options = []
+                  options = data.map((l) => ({
+                    value: l.tid,
+                    label: l.t_title,
+                  }))
+                  console.log({options:options})
+                  this.setState({completed:true})
+                  cb(options);
+                }
+              )
+            }
+            this.setState({completed:true})
+          })
+      },2000)
     }
-
-    // const url = `(...)?cmd=item_codes_json&term=${input}`;
-
-    // fetch(url, {credentials: 'include'})
-    //     .then((response) => {
-    //         return response.json();
-    //     })
-    //     .then((json) => {
-    //         const formatted = json.map((l) => {
-    //             return Object.assign({}, {
-    //                 value: l.value,
-    //                 label: l.label
-    //             });
-    //         })
-    //         return { options: formatted }
-    //     })
-    return options
 }
 
   handleChange = (selectedOption) => {
@@ -64,7 +81,7 @@ class SearchBar extends Component {
     console.log(`Option selected:`, selectedOption);
     
     //This will navigate to search page
-    //browserHistory.push('/thread/1')
+    browserHistory.push('/thread/'+selectedOption.value)
   }
   componentDidMount(){
     this.sampleResult = [];
@@ -89,8 +106,8 @@ class SearchBar extends Component {
     }
   }
 
-  handleRedirect(){
-   
+  filterOptions(options) {
+    return options;
   }
 
   render() {
@@ -111,8 +128,8 @@ class SearchBar extends Component {
           <form ref={this.searchInput}>
             <Select
               value={selectedOption}
-              // options={options}
-              loadOptions={this.promiseOptions}
+              //options={this.state.options}
+              loadOptions={this.getModelsAPI}
               onChange={this.handleChange}
               className="form-control"
               placeholder="Ask something..."

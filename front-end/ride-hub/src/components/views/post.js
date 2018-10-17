@@ -19,22 +19,25 @@ export default class Post extends Component {
 
   fetchData(id,userID){
     //fetch data
+    
     if(id!==11)
-    fetch('https://ride-hub.herokuapp.com/api/post/'+id+'?user='+userID)
+    fetch('https://ride-hub.herokuapp.com/api/post/'+id)
     .then(response => {
-        response.json().then(data => {
-            //Content
-            var cfg = {};
-            var converter = new QuillDeltaToHtmlConverter(data.content, cfg);
-            var html = converter.convert(); 
-            
-            this.setState({
-                voteNumber:data.vote_number,
-                likeStatus:data.user_vote_state,
-                data:html
-            })
-        });
-        
+        if(response.status===200){
+            console.log(response)
+            response.json().then(data => {
+                //Content
+                var cfg = {};
+                var converter = new QuillDeltaToHtmlConverter(data.content, cfg);
+                var html = converter.convert(); 
+                
+                this.setState({
+                    voteNumber:data.vote_number,
+                    likeStatus:data.user_vote_state,
+                    data:html
+                })
+            });
+        }
     })
     else
         console.log("ID 11 is error")
