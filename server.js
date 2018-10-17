@@ -22,11 +22,6 @@ var forumRouter = require("./back-end/routes/forum");
 
 require("./back-end/config/passport")(passport); // pass passport for configuration
 
-var ac = require('./back-end/config/access-control');
-
-const permission = ac.rideHubAC.can('guest').readAny('post');
-  console.log(permission.granted);
-  console.log(permission.attributes);
 
 // Create an Express application
 var app = express();
@@ -41,17 +36,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const db = require("./back-end/db");
-const cookieTimeLife = 5*60*1000;
+const cookieTimeLife = 10*60*1000;
 
 app.use(flash());
 
 app.use(
   session({
-     /* genid: req => {
-      console.log("Inside the session middleware");
-      console.log(req.sessionID);
+     genid: req => {
       return uuid(); // use UUIDs for session IDs
-    }, */
+    }, 
     store: new pgSession({
       pool : db.rideHubPool,                // Connection pool
       tableName : 'session'   // Use another table-name than the default "session" one
@@ -89,16 +82,17 @@ app.post('/api/login', function(req, res, next) {
     if (err) { return next(err); }
     if (!user) {
       res.status(401);
-      console.log(info.message);
       return res.status(401).send({
           "success": "false"
         });      
     }         
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      else {                
+      else {
         return res.send({
-          "success": "true"
+          "success": "true",
+          "role": req.session.passport.user.role,
+          "userid": req.session.passport.user.id
         });
       }
       

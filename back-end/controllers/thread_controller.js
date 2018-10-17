@@ -1,68 +1,22 @@
 // post_controller.js
 const db = require("../db");
 
-exports.thread_get_by_id = function(req, res) {
-  var id = req.params.thread_id;
-  console.log(req.params.thread_id);
-  //db.query('SELECT * FROM thread;').then(res => console.log("inserted")).catch(e => console.error(e.stack))
-  values = [id];
-  db.query(
-    `WITH thread_details AS(
-        SELECT t.id,t.title,t.thumbnail,tag.name AS tag
-        FROM thread t
-        LEFT JOIN tag 
-        ON t.tag_id = tag.id
-        WHERE t.id = $1
-        GROUP BY (t.id,t.title,t.thumbnail,tag.name)
-    )
-    SELECT td.*, string_agg(p.id::character varying, ',') AS child
-    FROM thread_details td
-    LEFT JOIN post p
-    ON td.id = p.threadid
-    GROUP BY (td.id,td.title,td.thumbnail,td.tag);`,
-    values,
-    (err, data) => {
-      try {
-        res.json(data.rows);
-      } catch (e) {
-        console.log(e);
-        res.status(400).send("Data is not available");
-      }
-    }
-  );
-};
-
-exports.thread_create = function(req, res) {
-  var query = req.body;
-  const text =
-    "INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) VALUES($1,$2,$3,$4,$5,$6)";
-  const values = [
-    query.title,
-    query.userid,
-    query.forumid,
-    query.creation_date,
-    query.thumbnail,
-    query.tagid
-  ];
-  db.query(text, values)
-  .then(res.json("Create successfully!"))
-  .catch(res.json("Create failed!"));
-};
-
-exports.thread_delete = function(req, res) {
+function deleteThread(req, res) {
   var query = req.params;
   const text =
     `DELETE FROM thread where id = $1`;
-  const values = [
-    query.thread_id
-  ];
+  const values = [query.thread_id];
   db
-    .query(text, values)
-    .then(res.json("Delete successfully!"))
-    .catch(res.json("Delete failed!"));
-};
+    .query(text, values, (err)=>{
+      if (err) {
+        res.status(400).send({"message":"Delete failed!"})
+      } else {
+        res.status(200).send({"message":"Delete successfully!"});
+      }
+    })
+}
 
-exports.thread_update = function(req, res) {
+function updateThread(req, res) {
   var query = req.body;
   var query2 = req.params;
   const text =
@@ -76,9 +30,137 @@ exports.thread_update = function(req, res) {
     query.tagid
   ];
   db
-    .query(text, values)
-    .then(res.json("Update successfully!"))
-    .catch(res.json("Update failed!"));
+    .query(text, values, (err) => {
+      if (err) {
+        res.send({"message":"Update failed!"});
+      } else 
+      res.send({"message":"Update successfully!"});
+    })
+}
+
+exports.thread_get_by_id = function(req, res) {
+  if (!req.isAuthenticated()) {
+    // guest
+    var id = req.params.thread_id;  
+    values = [id];
+    db.query(
+      `WITH thread_details AS(
+          SELECT t.id,t.title,t.thumbnail,tag.name AS tag
+          FROM thread t
+          LEFT JOIN tag 
+          ON t.tag_id = tag.id
+          WHERE t.id = $1
+          GROUP BY (t.id,t.title,t.thumbnail,tag.name)
+      )
+      SELECT td.*, string_agg(p.id::character varying, ',') AS child
+      FROM thread_details td
+      LEFT JOIN post p
+      ON td.id = p.threadid
+      GROUP BY (td.id,td.title,td.thumbnail,td.tag);`,
+      values,
+      (err, data) => {
+        try {
+          res.json(data.rows);
+        } catch (e) {
+          console.log(e);
+          res.status(400).send("Data is not available");
+        }
+      }
+    );
+  } else {
+    // need to return user_following_state
+    res.send("to do");
+  }
+
+};
+
+exports.thread_create = function(req, res) {
+  if (!req.isAuthenticated()) {
+    // guest cannot create thread
+    res.status(403).send({"message":"Guest cannot create new thread."});
+  } else {
+    var query = req.body;
+    const text =
+      "INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) VALUES($1,$2,$3,$4,$5,$6)";
+    const values = [
+      query.title,
+      query.userid,
+      query.forumid,
+      query.creation_date,
+      query.thumbnail,
+      query.tagid
+    ];
+    db.query(text, values, (err) => {
+      if (err) {
+        res.status(400).send({"message":"Create failed!"});
+      } else {
+        res.status(200).send({"message":"Create successfully!"});
+      }
+    })
+  }
+
+};
+
+exports.thread_delete = function(req, res) {
+  if (!req.isAuthenticated()) {
+    // guest cannot delete threads
+    res.status(403).send({"message":"Guest cannot delete thread"});
+  } 
+  else if (req.session.passport.user.role == "Admin" || req.session.passport.user.role == "Moderator"){
+    deleteThread(req, res);
+  } else {
+    // Role User. 
+    // Only the one who created can delete!
+    db.query(`SELECT id, userid FROM public.thread WHERE id=$1 AND userid=$2`, 
+    [req.params.thread_id, req.session.passport.user.id], (err, result) => {
+      console.log(result);
+      if (err) {
+        console.log(err);
+        res.status(403).send({"message":"Something went wrong"});
+        // res.status(400).send({"message":"error"});
+      } else {
+          // if query is fine
+          if (result.rows.length == 0) {
+            // user does not own the post with the given id
+            res.status(403).send({"message":"User does not have permission to delete the thread Or Thread does not exist!"});
+          } else {
+            // user own the post, now he can delete it!
+            deleteThread(req, res);
+          }
+        }
+    });
+  }
+};
+
+exports.thread_update = function(req, res) {
+  if (!req.isAuthenticated()) {
+    // guest cannot delete threads
+    res.status(403).send({"message":"Guest cannot update thread"});
+  } 
+  else if (req.session.passport.user.role == "Admin" || req.session.passport.user.role == "Moderator"){
+    updateThread(req, res);
+  } else {
+    // Role User. 
+    // Only the one who created can delete!
+    db.query(`SELECT id, userid FROM public.thread WHERE id=$1 AND userid=$2`, 
+    [req.params.thread_id, req.session.passport.user.id], (err, result) => {
+      console.log(result);
+      if (err) {
+        console.log(err);
+        res.status(403).send({"message":"Something went wrong"});
+        // res.status(400).send({"message":"error"});
+      } else {
+          // if query is fine
+          if (result.rows.length == 0) {
+            // user does not own the post with the given id
+            res.status(403).send({"message":"User does not have permission to delete the thread Or Thread does not exist!"});
+          } else {
+            // user own the post, now he can delete it!
+            updateThread(req, res);
+          }
+        }
+    });
+  }
 };
 
 exports.thread_search = function(req, res) {
