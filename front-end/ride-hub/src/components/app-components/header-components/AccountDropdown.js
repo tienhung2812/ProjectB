@@ -50,8 +50,6 @@ class AccountDropDown extends Component {
       }).then(response => {
           if(response.status===200){
               const json = response.json();
-              console.log(json.status);
-              console.log(json.data)
               this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
 
           }else{
