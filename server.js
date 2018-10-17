@@ -42,9 +42,9 @@ app.use(flash());
 
 app.use(
   session({
-     genid: req => {
-      return uuid(); // use UUIDs for session IDs
-    }, 
+    //  genid: req => {
+    //   return uuid(); // use UUIDs for session IDs
+    // }, 
     store: new pgSession({
       pool : db.rideHubPool,                // Connection pool
       tableName : 'session'   // Use another table-name than the default "session" one
