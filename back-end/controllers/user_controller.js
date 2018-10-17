@@ -5,7 +5,7 @@ exports.user_details_get = function(req, res) {
     var user_id = req.params.user_id;
     var values = [user_id];
     db.query(
-        `SELECT username, password, avatar, point, g.type AS gender, address,phone, description, birthday
+        `SELECT username, avatar, point, g.type AS gender, address,phone, description, birthday
         FROM public.user u
         INNER JOIN gender g
         ON u.gender_id = g.id
