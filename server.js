@@ -11,7 +11,7 @@ var passport = require("passport");
 var flash = require("connect-flash");
 //const FileStore = require("session-file-store")(session);
 var pgSession = require('connect-pg-simple')(session);
-
+var cookieParser = require('cookie-parser');
 const uuid = require("uuid/v4");
 
 // import custom modules
@@ -30,7 +30,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//app.use(cookieParser()); // read cookies (needed for auth)
+app.use(cookieParser()); // read cookies (needed for auth)
 // bodyParse is required to get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -42,16 +42,16 @@ app.use(flash());
 
 app.use(
   session({
-    //  genid: req => {
-    //   return uuid(); // use UUIDs for session IDs
-    // }, 
+     genid: req => {
+      return uuid(); // use UUIDs for session IDs
+    }, 
     store: new pgSession({
       pool : db.rideHubPool,                // Connection pool
       tableName : 'session'   // Use another table-name than the default "session" one
     }),
     secret: "JeNX5lMRkF3DAkXc65oboQWk0z6pCE00", //a random value for hashing  session id
-    resave: true,
-    saveUninitialized: false,
+    resave: false,
+    saveUninitialized: true,
     cookie: {maxAge: cookieTimeLife, 
              expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
