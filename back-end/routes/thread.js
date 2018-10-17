@@ -3,8 +3,8 @@ var express = require('express');
 var router = express.Router();
 var thread_controller = require('../controllers/thread_controller');
 
-// Update thread
-router.put('/:thread_id',thread_controller.thread_update);
+// get thread filter data
+router.get('/filter_data',thread_controller.thread_filter_get_data);
 
 // GET thread 
 router.get('/:thread_id', thread_controller.thread_get_by_id);
@@ -18,7 +18,6 @@ router.delete('/:thread_id',thread_controller.thread_delete);
 // Search thread
 router.post('/search',thread_controller.thread_search);
 
-// get thread filter data
-router.get('/filterdata',thread_controller.thread_filter_get_data);
+
 
 module.exports = router;
