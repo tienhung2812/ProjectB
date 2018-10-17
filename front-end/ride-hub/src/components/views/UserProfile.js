@@ -53,7 +53,7 @@ class UserProfile extends Component {
     this.uid = cookie.get('userid');
     this.child;
     if(this.uid==null){
-      alert("You must log in to use this function");
+      //alert("You must log in to use this function");
       browserHistory.push('/');
     }else{
       console.log(this.uid)
