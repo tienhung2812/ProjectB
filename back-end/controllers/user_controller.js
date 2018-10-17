@@ -7,7 +7,7 @@ exports.user_details_get = function(req, res) {
     db.query(
         `SELECT username, avatar, point, g.type AS gender, address,phone, description, birthday
         FROM public.user u
-        INNER JOIN gender g
+        LEFT JOIN gender g
         ON u.gender_id = g.id
         WHERE u.id = ($1)`, 
         values,
