@@ -77,7 +77,7 @@ exports.thread_create = function(req, res) {
       "INSERT INTO thread(title,userid,forumid,creation_date,thumbnail,tag_id) VALUES($1,$2,$3,$4,$5,$6)";
     const values = [
       query.title,
-      query.userid,
+      req.session.session.user.id,
       query.forumid,
       query.creation_date,
       query.thumbnail,
