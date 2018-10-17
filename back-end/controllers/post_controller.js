@@ -65,7 +65,8 @@ exports.post_get = function(req, res) {
             }
           });
   } else {
-    var user_id = req.query.user;
+    //var user_id = req.query.user;
+    var user_id = req.session.passport.user.id;
     var post_id = req.params.post_id;
     console.log(user_id);
     console.log(post_id);
