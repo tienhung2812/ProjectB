@@ -51,6 +51,7 @@
 
 .subsubforum div .btn-subforum{
     height:60px;
+    font-weight:normal;
 }
 
 .subsubforum div .btn-subforum:hover{

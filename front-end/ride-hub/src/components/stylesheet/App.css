@@ -55,6 +55,9 @@ body {
   transform: translate3d(48%, 0px, 0px);
 }
 
+button:focus{
+  outline: none;
+}
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
   .body .content .sidebar{
