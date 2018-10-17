@@ -91,6 +91,7 @@ exports.thread_create = function(req, res) {
     ];
     db.query(text, values, (err) => {
       if (err) {
+        console.log(err);
         res.status(400).send({"message":"Create failed!"});
       } else {
         res.status(200).send({"message":"Create successfully!"});
