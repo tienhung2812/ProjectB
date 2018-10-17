@@ -31,11 +31,12 @@ function updatePost(req, res) {
 
 // Get Post - Anyone can get posts
 exports.post_get = function(req, res) {
+  console.log(req.session);
   if (!req.isAuthenticated()) {
     // guest cannot see whether he voted this post or not
     // also whether whether he followed this sub-forum
     res.send("guest");
-    res.send("to do!");
+    //res.send("to do!");
     
   } else {
     var user_id = req.query.user;
