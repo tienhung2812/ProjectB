@@ -9,7 +9,7 @@ import './view-stylesheet/post.css';
 export default class Post extends Component {
   constructor(props){
     super(props);
-    this.state = {postID:null,likeStatus:false,data:null,voteNumber:0,userid:1}
+    this.state = {postID:null,likeStatus:false,data:null,voteNumber:0,userid:1,username:'anonymous',postTime:'loading'}
     //Props url
     //home: display in HOMEPAGE
     //subforum: display in SUB-FORUM PAGE
@@ -19,28 +19,28 @@ export default class Post extends Component {
 
   fetchData(id,userID){
     //fetch data
-    
-    if(id!==11)
+
     fetch('https://ride-hub.herokuapp.com/api/post/'+id)
     .then(response => {
         if(response.status===200){
-            console.log(response)
             response.json().then(data => {
                 //Content
                 var cfg = {};
                 var converter = new QuillDeltaToHtmlConverter(data.content, cfg);
                 var html = converter.convert(); 
-                
+                //Time
+                var time = this.parseDateTime(data["creation_date"]);
                 this.setState({
                     voteNumber:data.vote_number,
                     likeStatus:data.user_vote_state,
-                    data:html
+                    data:html,
+                    username:data.username,
+                    postTime:time
                 })
             });
         }
     })
-    else
-        console.log("ID 11 is error")
+
   }
 
   componentDidMount() {
@@ -68,12 +68,44 @@ export default class Post extends Component {
     }
   }
 
+  parseDateTime(timeString){
+    let months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+        ];
+    console.log(timeString)
+    let year = Number(timeString.substring(0,4))
+    let month = Number(timeString.substring(5,7))
+    let date = Number(timeString.substring(8,10))
+    let h = Number(timeString.substring(11,13))
+    let m = timeString.substring(14,16); 
+    let od;
+    if(date>3)
+        od="th"
+    else if(date===3)
+        od = "rd"
+    else if(date===2)
+        od = "nd"
+    else if(date===1)
+        od = "st"
+    let result = h+":"+m+ " "+months[month-1]+" "+date+od+" "+year;
+    return result;
+  }
+
   render() {
     //Variable
     //Default variable
-    this.username = 'Username';
     this.profilePicture = defaultavatar;
-    this.postTime = '4:53 4th July 2018';
     if(this.state.data!==null){
         this.content =<td dangerouslySetInnerHTML={{__html: this.state.data}} />
     }else{
@@ -99,10 +131,10 @@ export default class Post extends Component {
                 </div>
                 <div className="post-info">
                     <div className="username">
-                        {this.username}
+                        {this.state.username}
                     </div>
                     <div className="post-time">
-                        {this.postTime}
+                        {this.state.postTime}
                     </div>
                 </div>
                 <div className={"like-btn"}>
