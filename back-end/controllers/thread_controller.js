@@ -227,7 +227,7 @@ exports.thread_filter_get_data = function(req, res) {
         res.json(data.rows);
       } catch (e) {
         console.log(e);
-        res.status(400).send("Data is not available");
+        res.status(400).send("Data not available");
       }
     }
   );

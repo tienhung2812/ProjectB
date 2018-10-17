@@ -111,7 +111,7 @@ class AccountDropDown extends Component {
       cookie.remove("role");
       cookie.remove("userid");
       cookie.remove('connect.sid');
-      browserHistory.push('/UserProfile');
+      browserHistory.push('/');
   }
 
   setCookie(data){
