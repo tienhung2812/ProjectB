@@ -24,7 +24,7 @@ const styles = theme => ({
 export default class FilterSearch extends Component {
   constructor(props){
     super(props);
-    this.state = {threadID:null,postID:null,likeStatus:false,open:false,brand:-1,model:-1,year:-1,issue:-1}
+    this.state = {threadID:null,postID:null,likeStatus:false,open:false,brand:-1,model:-1,year:-1,issue:-1,tagdata:null,bikedata:null}
     //Props url
     this.handleChange = this.handleChange.bind(this);
   }
@@ -33,12 +33,22 @@ export default class FilterSearch extends Component {
     this.model=[];
     this.year = [];
     this.issues = [];
-    for(let i=0;i<ScooterData.length;i++){
-        this.brand.push(<MenuItem value={i}>{ScooterData[i].brand}</MenuItem>)
-    }
-    for(let i =0;i<IssueData.length;i++){
-        this.issues.push(<MenuItem value={i}>{IssueData[i].issueName}</MenuItem>)
-    }
+
+
+
+    fetch('https://ride-hub.herokuapp.com/api/thread/filter_data')
+    .then(response => {
+        if(response.status===200){
+            response.json().then(data => {
+                //Content
+                data=data[0];
+                this.setState({
+                    tagdata:data.tags,
+                    bikedata:data.brands
+                })
+            });
+        }
+    })
 
   }
   handleChange = event => {
@@ -49,26 +59,39 @@ export default class FilterSearch extends Component {
         this.year = []
         this.setState({model:-1,year:-1})
         if(event.target.value>=0){
-            for(let i=0;i<ScooterData[event.target.value].model.length;i++){
-                this.model.push(<MenuItem value={i}>{ScooterData[event.target.value].model[i].name}</MenuItem>)
+            for(let i=0;i<this.state.bikedata[event.target.value].models.length;i++){
+                this.model.push(<MenuItem value={i}>{this.state.bikedata[event.target.value].models[i]}</MenuItem>)
             }
             
         }
     }
-    if(event.target.name=="model"){
-        this.year = []
-        this.setState({year:-1})
-        if(event.target.value>=0){
-            for(let i=0;i<ScooterData[this.state.brand].model[event.target.value].year.length;i++){
-                this.year.push(<MenuItem value={i}>{ScooterData[this.state.brand].model[event.target.value].year[i]}</MenuItem>)
-            } 
-        }
-    }
+    // if(event.target.name=="model"){
+    //     this.year = []
+    //     this.setState({year:-1})
+    //     if(event.target.value>=0){
+    //         for(let i=0;i<this.state.bikedata[this.state.brand].model[event.target.value].year.length;i++){
+    //             this.year.push(<MenuItem value={i}>{ScooterData[this.state.brand].model[event.target.value].year[i]}</MenuItem>)
+    //         } 
+    //     }
+    // }
   }
 
   render() {
     if(this.content===null){
         this.content= <Loader/>
+    }
+
+    if(this.state.tagdata!==null){
+        this.issues=[]
+        for(let i=0;i<this.state.tagdata.length;i++){
+            this.issues.push(<MenuItem value={this.state.tagdata[i].tag_id}>{this.state.tagdata[i].tag_name}</MenuItem>)
+        }
+    }
+    if(this.state.bikedata!==null){
+        this.brand=[]
+        for(let i=0;i<this.state.bikedata.length;i++){
+            this.brand.push(<MenuItem value={i}>{this.state.bikedata[i].brand_name}</MenuItem>)
+        }
     }
 
     return(
@@ -98,7 +121,7 @@ export default class FilterSearch extends Component {
                             {this.brand}
                         </Select>
                     </FormControl>
-                    <FormControl style={{width:"60%"}}>
+                    <FormControl style={{width:"100%",paddingBottom:"10px"}}>
                         <InputLabel shrink>
                             Model
                         </InputLabel>
@@ -114,7 +137,7 @@ export default class FilterSearch extends Component {
                             {this.model}
                         </Select>
                     </FormControl>
-                    <FormControl style={{width:"35%",marginLeft:"5px"}}>
+                    {/* <FormControl style={{width:"35%",marginLeft:"5px"}}>
                         <InputLabel shrink>
                             Year
                         </InputLabel>
@@ -129,7 +152,7 @@ export default class FilterSearch extends Component {
                             </MenuItem>
                             {this.year}
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                     <FormControl style={{width:"100%"}}>
                         <InputLabel shrink>
                             Issue

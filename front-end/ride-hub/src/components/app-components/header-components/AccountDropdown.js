@@ -274,6 +274,9 @@ class AccountDropDown extends Component {
         );
     }else{
         this.childcontent = []
+        if(cookie.get('role')==='Admin'){
+            this.childcontent.push(<button className="dropdown-item" type="button" > <ReactLink to={'/'}>Admin Page </ReactLink></button>)
+        }
         this.childcontent.push(
            
             <button className="dropdown-item" type="button" > <ReactLink to={'/UserProfile/'} params={{ uid:cookie.get('userid') }}>My Account </ReactLink></button>
@@ -282,9 +285,7 @@ class AccountDropDown extends Component {
         this.childcontent.push(
             <button className="dropdown-item" type="button" onClick={this.handleLogOut}>Log out</button>
         );
-        if(cookie.get('role')==='Admin'){
-            this.childcontent.push(<button className="dropdown-item" type="button" > <ReactLink to={'/'}>Admin Page </ReactLink></button>)
-        }
+        
     }
 
     var username;

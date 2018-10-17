@@ -8,6 +8,10 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const theme = createMuiTheme({
   palette: {
@@ -23,10 +27,13 @@ export default class TextEditor extends Component {
     super(props);
     this.state = {
       disabledBtn:false,
-      subforumID:""
+      subforumID:"",
+      tag:0,
+      tagdata:null
     }
     this.handlePost = this.handlePost.bind(this);
     this.handleThread = this.handleThread.bind(this);
+    this.handleTagChange = this.handleTagChange.bind(this);
     this.textInput = React.createRef();
     this.titleInput = React.createRef();
     
@@ -48,6 +55,20 @@ export default class TextEditor extends Component {
         'list', 'bullet', 'indent',
         'link', 'image'
       ]
+
+      //Fetch tag
+    fetch('https://ride-hub.herokuapp.com/api/thread/filter_data')
+    .then(response => {
+        if(response.status===200){
+            response.json().then(data => {
+                //Content
+                data=data[0];
+                this.setState({
+                    tagdata:data.tags
+                })
+            });
+        }
+    })
   }
 
   handlePost(){
@@ -101,7 +122,7 @@ export default class TextEditor extends Component {
     }
     var date = this.getDateTime()
     var forumid = this.props.subforumID
-    var tag = 1;
+    var tag = this.state.tag;
     var userid = 1;
     var title = this.props.title;
     var body = JSON.stringify({
@@ -144,6 +165,9 @@ export default class TextEditor extends Component {
       })
   }
 
+  handleTagChange(event){
+    this.setState({tag:event.target.value})
+  }
   getDateTime(){
     let currentdate = new Date(); 
     let a =  currentdate.getFullYear()+ "-"+ (currentdate.getMonth()+1) + "-"+ currentdate.getDate() + " "+ currentdate.getHours() + ":"  + currentdate.getMinutes() + ":"  + currentdate.getSeconds();
@@ -182,6 +206,14 @@ export default class TextEditor extends Component {
       </React.Fragment>  
       );
     }else{
+      //For Add Thread page
+      
+      if(this.state.tagdata!==null){
+        this.tag=[];
+        for(let i=0;i<this.state.tagdata.length;i++){
+          this.tag.push(<MenuItem value={this.state.tagdata[i].tag_id}>{this.state.tagdata[i].tag_name}</MenuItem>)
+      }
+      }
       return (
       <React.Fragment>
       <CssBaseline />
@@ -197,13 +229,22 @@ export default class TextEditor extends Component {
           />
         </Grid>
         <Grid item xs={2}>
-          <TextField
-          
-            label="Add Tag(s)"
-            placeholder="#Tag"
-            fullWidth
-            error
-          />
+          <FormControl style={{width:"100%",paddingBottom:"10px", color:"#ff5722"}} >
+              <InputLabel shrink>
+                  Tag
+              </InputLabel>
+              <Select
+                  value={this.state.tag}
+                  onChange={this.handleTagChange}
+                  displayEmpty
+                  name="model"
+              >
+                  <MenuItem value={0}>
+                  <em>Choose your tag</em>
+                  </MenuItem>
+                  {this.tag}
+              </Select>
+          </FormControl>
         </Grid>
         <Grid item xs align="right">
           <MuiThemeProvider theme={theme}>
