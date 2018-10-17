@@ -9,14 +9,10 @@ router.get('/:user_id/details', user_controller.user_details_get)
 // GET user summary information
 router.get('/:user_id/summary', user_controller.user_summary_get)
 
-// Create user
+router.delete('/:username', user_controller.user_delete)
 
-/* router.post('/signup', passport.authenticate('local-signup', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/signup', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
-}));
- */
+router.put('/', user_controller.user_update)
+
 
 module.exports = router;
 

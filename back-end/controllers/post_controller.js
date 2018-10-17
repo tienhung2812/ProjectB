@@ -130,7 +130,7 @@ exports.post_create = function(req, res) {
      "INSERT INTO post(content,creation_date,userid,threadid,pid) VALUES ($1, $2, $3, $4, $5)";
      db.query(text, [post.content, post.creation_date, req.session.passport.user.id, post.threadid, post.pid], (err, result) => {
       if (err) {
-        res.send({"message":"Create post failed!"})        
+        res.status(400).send({"message":"Create post failed!"})        
       }
       else {
         res.send({"message":"Create post successfully!"})

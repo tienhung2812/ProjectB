@@ -7,6 +7,9 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import { withStyles, MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
 import maxresdefault from '../../maxresdefault.jpg'
+import Cookies from "universal-cookie";
+
+const cookie = new Cookies();
 
 const theme = createMuiTheme({
     palette: {
@@ -29,7 +32,7 @@ function Profile (props) {
   return (
     <React.Fragment>
         <Typography variant="h6" gutterBottom>
-        Your Ridehub information
+        Ridehuber information
         </Typography>
         <Divider/>
         <br/>
@@ -46,13 +49,14 @@ function Profile (props) {
             <Grid item xs={6}>
                     <TextField
                     fullWidth
-                    defaultValue="Vintama"
+                    defaultValue={props.data.username}
                     label="User name"
                     />
             </Grid>
             <Grid item xs={6}>
             <TextField
-            defaultValue="025729274"
+            defaultValue={cookie.get('userid')}
+            disabled={true}
             label="ID"
             variant="outlined"
             />
@@ -60,11 +64,11 @@ function Profile (props) {
             <Grid item xs={6}>
                     <TextField
                     fullWidth
-                    defaultValue="Moderator"
+                    defaultValue={cookie.get('role')}
                     label="Role" 
                     />
             </Grid>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
                     <TextField
                     fullWidth
                     defaultValue="16/10/2015"
@@ -84,32 +88,32 @@ function Profile (props) {
                     defaultValue="Tamari"
                     label="Last name" 
                     />
-            </Grid>
+            </Grid> */}
             <Grid item xs={6}>
                     <TextField
                     fullWidth
-                    defaultValue="Apache Helicopter"
+                    defaultValue={props.data.gender}
                     label="Gender" 
                     />
             </Grid>
             <Grid item xs={6}>
                     <TextField
                     fullWidth
-                    defaultValue="19/11/1997"
+                    defaultValue={props.data.birthday}
                     label="Birth date" 
                     />
             </Grid>
             <Grid item xs={6}>
                     <TextField
                     fullWidth
-                    defaultValue="1st Somewhere Str."
+                    defaultValue={props.data.address}
                     label="Address" 
                     />
             </Grid>
             <Grid item xs={6}>
                     <TextField
                     fullWidth
-                    defaultValue="0123456789"
+                    defaultValue={props.data.phone}
                     label="Phone number" 
                     />
             </Grid>
