@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const db = require("./back-end/db");
-const cookieTimeLife = 10*60*1000;
+const cookieTimeLife = 45*60*1000;
 
 app.use(flash());
 
@@ -50,10 +50,13 @@ app.use(
       tableName : 'session'   // Use another table-name than the default "session" one
     }),
     secret: "JeNX5lMRkF3DAkXc65oboQWk0z6pCE00", //a random value for hashing  session id
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {maxAge: cookieTimeLife, 
-             expires: new Date(Date.now() + cookieTimeLife)}
+             expires: new Date(Date.now() + cookieTimeLife),
+             httpOnly: false,
+             secure: false
+            }
   })
 );
 
