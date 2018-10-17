@@ -214,7 +214,7 @@ exports.thread_filter_get_data = function(req, res) {
     ), json_tag AS(
       SELECT array_to_json(array_agg(row_to_json(tag))) AS tags
       FROM (
-        SELECT name AS tag_name
+        SELECT name AS tag_name , id AS tag_id
         FROM tag
       ) tag
     ) 
