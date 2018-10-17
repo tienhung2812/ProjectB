@@ -52,22 +52,30 @@ export default class TextEditor extends Component {
 
   handlePost(){
     this.setState({disabledBtn:true})
-    var text = this.textInput.current.getEditor().getContents();
+    var rawtext = this.textInput.current.getEditor().getContents();
+    var text = [];
+    for(let i=0;i<rawtext.ops.length;i++){
+      text.push(rawtext.ops[i])
+    }
     var date = this.getDateTime()
-    
+    var body = JSON.stringify({
+      content: text,
+      creation_date : date,
+      threadid : this.props.threadid,
+      pid : this.props.pid})
+    console.log(body)
+    if(this.textInput.current.getEditor().getText().length<2){
+      alert("Comment can't be null");
+      return null;
+    }
     fetch('https://ride-hub.herokuapp.com/api/post', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        content: text,
-        creation_date : date,
-        userid : this.props.userid,
-        threadid : this.props.threadid,
-        pid : this.props.pid
-      })}).then(response=>{
+      body: body
+      }).then(response=>{
         console.log("Reponse status: "+response.status)
         if(response.status===200){
           ///Post ok
@@ -75,7 +83,10 @@ export default class TextEditor extends Component {
           this.textInput.current.getEditor().setContents([{ insert: '\n' }]);;
         }else{
           //Post not ok
-          alert("Comment failed")
+          if(response.status==403){
+            alert("You must log in to use this feature")
+          }else
+            alert("Comment failed")
         }
         this.setState({disabledBtn:false})
       })
@@ -124,7 +135,10 @@ export default class TextEditor extends Component {
           this.textInput.current.getEditor().setContents([{ insert: '\n' }]);;
         }else{
           //Post not ok
-          alert("Post failed")
+          if(response.status==403){
+            alert("You must log in to use this feature")
+          }else
+            alert("Post failed")
         }
         this.setState({disabledBtn:false})
       })
