@@ -154,7 +154,9 @@ a{
     font-size: 0.8rem;
     text-align: center;
     margin: 10px 0px;
-    
+    padding: 0 10px;
+    width:auto;
+    display:inline-block;
 }
 
 .main-thread-content .title-wrapper .thread-image{

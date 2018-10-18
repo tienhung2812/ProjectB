@@ -3,6 +3,12 @@ var express = require('express');
 var router = express.Router();
 var thread_controller = require('../controllers/thread_controller');
 
+<<<<<<< HEAD
+=======
+// Filter thread
+router.post('/filter',thread_controller.thread_filter)
+
+>>>>>>> d2f7b0a51e9e4b0cbbdc4dda2e994ca7465b74dd
 // get thread filter data
 router.get('/filter_data',thread_controller.thread_filter_get_data);
 

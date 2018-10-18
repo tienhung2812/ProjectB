@@ -166,7 +166,7 @@ exports.thread_update = function(req, res) {
 exports.thread_search = function(req, res) {
   var text = req.body.text_search;
   console.log(req.params.text_search);
-  values = [text.replace(/ +/g,"&").trim()];
+  values = [text.trim().replace(/ +/g,"&")];
   db.query(
     `SELECT tid, t_title
     FROM (SELECT thread.id as tid,
@@ -214,7 +214,7 @@ exports.thread_filter_get_data = function(req, res) {
     ), json_tag AS(
       SELECT array_to_json(array_agg(row_to_json(tag))) AS tags
       FROM (
-        SELECT name AS tag_name
+        SELECT name AS tag_name , id AS tag_id
         FROM tag
       ) tag
     ) 
@@ -228,6 +228,57 @@ exports.thread_filter_get_data = function(req, res) {
       } catch (e) {
         console.log(e);
         res.status(400).send("Data not available");
+      }
+    }
+  );
+};
+
+exports.thread_filter = function(req, res) {
+  var pgquery = 
+  `SELECT tid, t_title
+  FROM (SELECT thread.id as tid,
+               thread.title as t_title,
+               setweight(to_tsvector('english', f.title), 'A') || 
+               setweight(to_tsvector('english', sf.title), 'B') ||
+               setweight(to_tsvector('english', t.name), 'C') as document
+        FROM forum f
+      JOIN forum sf ON f.id = sf.pid
+      JOIN thread ON thread.forumid = sf.id
+        JOIN tag t ON t.id = thread.tag_id
+        GROUP BY (tid,f.title,sf.title,t.name)) t_search`;
+  var brand = req.body.brand;
+  var model = req.body.model;
+  var issue = req.body.issue;
+  if(typeof brand != 'undefined' || typeof model != 'undefined' || typeof issue != 'undefined'){
+    pgquery += ` WHERE `;
+    if(typeof brand != 'undefined'){
+      pgquery += `t_search.document @@ to_tsquery('english','` + brand.trim().replace(/ +/g,"&") + `')`;
+      if(typeof model != 'undefined'){
+        pgquery +=` AND t_search.document @@ to_tsquery('english','` + model.trim().replace(/ +/g,"&") + `')`;
+      }
+      if(typeof issue != 'undefined'){
+        pgquery +=` AND t_search.document @@ to_tsquery('english','` + issue.trim().replace(/ +/g,"&") + `')`;
+      }
+    } else if(typeof model != 'undefined'){
+      pgquery += `t_search.document @@ to_tsquery('english','` + model.trim().replace(/ +/g,"&") + `')`;
+      if(typeof issue != 'undefined'){
+        pgquery +=` AND t_search.document @@ to_tsquery('english','` + issue.trim().replace(/ +/g,"&") + `')`;
+      }
+    } else {
+      pgquery +=`t_search.document @@ to_tsquery('english','` + issue.trim().replace(/ +/g,"&") + `')`;
+    }
+  }
+
+  pgquery += `;`;
+
+  db.query(
+    pgquery,
+    (err, data) => {
+      try {
+         res.json(data.rows);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
       }
     }
   );
