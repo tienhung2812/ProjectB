@@ -11,7 +11,10 @@ router.get('/:user_id/summary', user_controller.user_summary_get)
 
 router.delete('/:username', user_controller.user_delete)
 
+router.put('/modify/role', user_controller.user_modify_role);
+
 router.put('/', user_controller.user_update)
+
 
 
 module.exports = router;

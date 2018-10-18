@@ -69,16 +69,50 @@ exports.user_update = function(req, res) {
     // guest cannot update threads
     res.status(403).send({"message":"Guest cannot update user account"});
   } 
-  else if (req.session.passport.user.role == "User"){ //&& req.session.passport.user.username == req.params.username){
+  else /* if (req.session.passport.user.role == "User") */{ //&& req.session.passport.user.username == req.params.username){
     // Moderator is not allowed to update user account
     // Role User. 
     // Only the owner can update!
     updateAccount(req, res);
-  } else {
+  } 
+/*     else {
     res.status(403).send({"message":"You cannot update this user account"});
-  }
+  } */
 };
 
+
+// Modify user role - Admin only
+exports.user_modify_role = function(req, res) {
+  if (req.isAuthenticated() && req.session.passport.user.role == "Admin") {
+    let role = req.body.role;
+    var role_id;
+    switch (role) {
+      case 'Admin':
+        role_id = '1';
+        break;
+      case 'Moderator':
+        role_id = '2';
+        break;
+      case 'User':
+        role_id = '3';
+        break;
+      default:
+        role_id = '0';
+    }
+    if (role_id ==0) {
+      res.status(400).send({"message":"Role doest not exists"});
+    } else {
+      let username = req.body.username;
+      // Must check if username really exists!
+      db.query(`UPDATE public.user SET role_id=$2 WHERE username=$1`, [username, role_id], function(err, result){
+        if (err) res.status(400).send({"Message":"Error occured during modifying user role"});
+        else res.status(200).send({"Message":"Modify user role successfully"});
+      });      
+    }
+  } else {
+    res.status(403).send({"message":"You are not authourized to modify role of any users"});
+  }
+}
 
 
 function deleteAccount(req, res) {
@@ -102,15 +136,22 @@ function updateAccount(req, res) {
   var id = req.session.passport.user.id;
   let gender_id = req.body.gender == "Male"? "1":"2";
   console.log(req.body);
-  console.log(gender); 
+  console.log(gender_id); 
   db.query(
     `
-    UPDATE public.user SET (AVATAR, gender_id, address, phone, description, birthday)
-    VALUES ($1, $2, $3, $4, $5, $6) WHERE public.user.id = $7;
+    UPDATE public.user SET avatar = $1, 
+                           gender_id = $2, 
+                           address=$3, 
+                           phone=$4, 
+                           description=$5, 
+                           birthday=$6, 
+                           email=$7
+      WHERE public.user.id = $8;
     `,
-    [req.body.avatar, gender_id, req.body.address, req.body.phone, req.body.description, req.body.birthday, id],
+    [req.body.avatar, gender_id, req.body.address, req.body.phone, req.body.description, req.body.birthday, req.body.email, id],
     (err) => {
       if (err) {
+        console.log(err);
         res.status(400).send({"message":"Error occured during update account"});
       } else {
         res.status(200).send({"message":"Update user successfully"});

@@ -22,7 +22,7 @@ module.exports = function(passport) {
 
   // deserialize the user
   passport.deserializeUser(function(id, done) {
-    console.log("deserialze user for login");
+    // console.log("deserialze user for login");
     var values = [id];
     //const user = users[0].id === id ? users[0] : false;
     db.query(
@@ -40,9 +40,9 @@ module.exports = function(passport) {
   passport.use(
     "signin",
     new LocalStrategy(function(username, password, done) {
-      console.log("authenticate user");
+      // console.log("authenticate user");
       var values = [username];
-      console.log(values);
+      // console.log(values);
       // promise
       db.query(
         `select u.id, u.username, u.password , ur.name as role
@@ -101,7 +101,7 @@ module.exports = function(passport) {
       )
         .then(res => {
           if (res.rows[0] != null) {
-            console.log('err');
+            // console.log('err');
             //return done(null, false, { message: "Username already exists." });
             return done(null, false, req.flash( "Username already exists."));
           } else {
