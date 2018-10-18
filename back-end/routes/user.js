@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var user_controller = require('../controllers/user_controller');
 
+router.get('/billboard',user_controller.billboard);
 // GET user detail information
 router.get('/:user_id/details', user_controller.user_details_get)
 
@@ -11,7 +12,10 @@ router.get('/:user_id/summary', user_controller.user_summary_get)
 
 router.delete('/:username', user_controller.user_delete)
 
+router.put('/modify/role', user_controller.user_modify_role);
+
 router.put('/', user_controller.user_update)
+
 
 
 module.exports = router;
