@@ -45,6 +45,7 @@ exports.user_summary_get = function(req, res) {
    
 };
 
+// Delete User Account
 exports.user_delete = function(req, res) {
   if (!req.isAuthenticated()) {
     // guest cannot delete account
@@ -62,6 +63,7 @@ exports.user_delete = function(req, res) {
   }
 };
 
+// Update User Account - Only Owner can do!
 exports.user_update = function(req, res) {
   if (!req.isAuthenticated()) {
     // guest cannot update threads

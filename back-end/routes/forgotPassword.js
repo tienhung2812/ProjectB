@@ -51,7 +51,7 @@ router.post("/", function(req, res, next) {
     // Then Send reset email to user
     function(user, token) {
         sendResetPasswordEmail(token, user, req);
-        res.send({"message":"ess"});
+        res.send({"message":"Send reset password email"});
     }
   ], function (err){
       if (err) return next(err);
