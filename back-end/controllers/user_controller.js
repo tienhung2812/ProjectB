@@ -159,3 +159,17 @@ function updateAccount(req, res) {
     }
   );
 }
+
+exports.billboard = function(req, res) {
+  db.query(
+    `SELECT id,username,point FROM public.user ORDER BY point DESC LIMIT 3`,
+    (err, data) => {
+      try {
+         res.json(data.rows);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
+      }
+    }
+  );
+};

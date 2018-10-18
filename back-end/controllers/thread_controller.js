@@ -284,7 +284,6 @@ exports.thread_filter = function(req, res) {
   );
 };
 
-
 exports.latest = function(req, res) {
   db.query(
     `SELECT t_id,t_title FROM thread ORDER BY creation_date DESC LIMIT 3`,
