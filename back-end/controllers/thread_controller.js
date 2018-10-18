@@ -297,3 +297,4 @@ exports.latest = function(req, res) {
     }
   );
 };
+
