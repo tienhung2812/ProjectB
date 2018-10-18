@@ -1,5 +1,33 @@
 define({ "api": [
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "task-api/doc/main.js",
+    "group": "D__task_api_doc_main_js",
+    "groupTitle": "D__task_api_doc_main_js",
+    "name": ""
+  },
+  {
     "type": "delete",
     "url": "/subforum/:forumid",
     "title": "[DELETE] Delete Subforum",
@@ -438,34 +466,6 @@ define({ "api": [
     "name": "PutSubforumForumid"
   },
   {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "task-api/doc/main.js",
-    "group": "G__ride_hubtest_task_api_doc_main_js",
-    "groupTitle": "G__ride_hubtest_task_api_doc_main_js",
-    "name": ""
-  },
-  {
     "type": "delete",
     "url": "/post/:post_id",
     "title": "[DELETE] Delete post",
@@ -823,6 +823,78 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/thread/filter_data",
+    "title": "[Get] Thread information for filtering",
+    "group": "Thread",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json[]",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>list of tags</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "tag_name",
+            "description": "<p>tag name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "tag_id",
+            "description": "<p>tag id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json[]",
+            "optional": false,
+            "field": "brands",
+            "description": "<p>list of brands</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "brand_name",
+            "description": "<p>brand name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json[]",
+            "optional": false,
+            "field": "models",
+            "description": "<p>list of models</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Thread not found",
+          "content": "HTTP/1.1 404 Not Found",
+          "type": "json"
+        }
+      ]
+    },
+    "sampleRequest": [
+      {
+        "url": "http://ride-hub.herokuapp.com/api/thread/:thread_id"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Thread",
+    "name": "GetThreadFilter_data"
+  },
+  {
+    "type": "get",
     "url": "/thread/:thread_id",
     "title": "[Get] Thread information",
     "group": "Thread",
@@ -1006,6 +1078,84 @@ define({ "api": [
     "filename": "task-api/index.js",
     "groupTitle": "Thread",
     "name": "PostThread"
+  },
+  {
+    "type": "post",
+    "url": "/thread/filter",
+    "title": "[POST] Thread Filter",
+    "group": "Thread",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brand",
+            "description": "<p>brand to search</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "model",
+            "description": "<p>model to search</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "issue",
+            "description": "<p>issue to search</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "   {\n     \"brand\":\"Honda\",\n\t\t\"model\":\"SH Mode\",\n\t\t\"issue\":\"Battery\"\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "tid",
+            "description": "<p>thread id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "t_title",
+            "description": "<p>thread title</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "thread list not found",
+          "content": "HTTP/1.1 404 Not Found",
+          "type": "json[]"
+        }
+      ]
+    },
+    "sampleRequest": [
+      {
+        "url": "http://ride-hub.herokuapp.com/api/thread/filter"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "Thread",
+    "name": "PostThreadFilter"
   },
   {
     "type": "post",

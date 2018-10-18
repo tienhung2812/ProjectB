@@ -278,6 +278,26 @@ app.get('/thread/:thread_id', function(req, res) {
 });
 
 /**
+ * @api {get} /thread/filter_data [Get] Thread information for filtering
+ * @apiGroup Thread
+ * @apiSuccess {json[]} tags list of tags
+ * @apiSuccess {String} tag_name tag name
+ * @apiSuccess {Number} tag_id tag id
+ * @apiSuccess {json[]} brands list of brands
+ * @apiSuccess {String} brand_name brand name 
+ * @apiSuccess {json[]} models list of models
+ 
+ * @apiErrorExample {json} Thread not found
+ *    HTTP/1.1 404 Not Found
+ * @apiSampleRequest http://ride-hub.herokuapp.com/api/thread/:thread_id
+ *
+ */
+app.get('/thread/filter_data', function(req, res) {  
+
+});
+
+
+/**
  * @api {post} /thread [POST] Create new Thread
  * @apiGroup Thread
  * @apiParam {String} title Thread title
@@ -472,6 +492,28 @@ app.post('/thread/search', function(req, res) {
 
 });
 
+/**
+ * @api {post} /thread/filter [POST] Thread Filter 
+ * @apiGroup Thread
+ * @apiParam {String} brand brand to search
+ * @apiParam {String} model model to search
+ * @apiParam {String} issue issue to search
+ * @apiParamExample {json} Input
+ *    {
+ *      "brand":"Honda",
+ * 		"model":"SH Mode",
+ * 		"issue":"Battery"
+ *    }
+ * @apiSuccess {Number} tid thread id
+ * @apiSuccess {String} t_title thread title
+ * @apiErrorExample {json[]} thread list not found
+ *    HTTP/1.1 404 Not Found
+ * @apiSampleRequest http://ride-hub.herokuapp.com/api/thread/filter
+ *
+ */
+app.post('/thread/filter', function(req, res) {  
+
+});
 
 /**
  * @api {delete} /thread/:thread_id [DELETE] Delete Thread
