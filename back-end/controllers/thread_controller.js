@@ -284,4 +284,17 @@ exports.thread_filter = function(req, res) {
   );
 };
 
+exports.latest = function(req, res) {
+  db.query(
+    `SELECT id as t_id,title as t_title FROM thread ORDER BY creation_date DESC LIMIT 3`,
+    (err, data) => {
+      try {
+         res.json(data.rows);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
+      }
+    }
+  );
+};
 

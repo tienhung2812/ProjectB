@@ -3,10 +3,10 @@ var express = require('express');
 var router = express.Router();
 var thread_controller = require('../controllers/thread_controller');
 
-
 // Filter thread
-router.post('/filter',thread_controller.thread_filter)
+router.post('/filter',thread_controller.thread_filter);
 
+router.get('/latest',thread_controller.latest);
 
 // get thread filter data
 router.get('/filter_data',thread_controller.thread_filter_get_data);
