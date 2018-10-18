@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var user_controller = require('../controllers/user_controller');
 
+router.get('/billboard',user_controller.billboard);
 // GET user detail information
 router.get('/:user_id/details', user_controller.user_details_get)
 
