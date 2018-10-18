@@ -321,6 +321,18 @@ a:hover{
     text-decoration: none!important;
 }
 
+.main-subforum-content.filterSearchPage{
+    padding:20px
+}
+
+.filterseach-notfound{
+    text-align: center;
+    padding:50px;
+    width:100%;
+    font-size: 2rem;
+
+}
+
 @media only screen and (max-width: 500px) {
     .main-subforum-content .title-wrapper .title .subforum-name{
         font-size: 1.2rem;

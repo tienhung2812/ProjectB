@@ -4,11 +4,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import { browserHistory } from 'react-router';
 import {Link as ReactLink} from 'react-router';
 import headimg from '../../../filtersearch-bg.jpg';
 import Loader from '../Loader';
-import ScooterData from '../../../scooterdata.json';
-import IssueData from '../../../issuesdata.json';
 
 const styles = theme => ({
     button: {
@@ -24,9 +23,10 @@ const styles = theme => ({
 export default class FilterSearch extends Component {
   constructor(props){
     super(props);
-    this.state = {threadID:null,postID:null,likeStatus:false,open:false,brand:-1,model:-1,year:-1,issue:-1,tagdata:null,bikedata:null}
+    this.state = {disable:true,open:false,brand:-1,model:-1,year:-1,issue:-1,tagdata:null,bikedata:null,searchData:null}
     //Props url
     this.handleChange = this.handleChange.bind(this);
+   
   }
   componentDidMount() {
     this.brand=[];
@@ -53,7 +53,6 @@ export default class FilterSearch extends Component {
   }
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
-    
     if(event.target.name=="brand"){
         this.model=[]
         this.year = []
@@ -65,17 +64,93 @@ export default class FilterSearch extends Component {
             
         }
     }
-    // if(event.target.name=="model"){
-    //     this.year = []
-    //     this.setState({year:-1})
-    //     if(event.target.value>=0){
-    //         for(let i=0;i<this.state.bikedata[this.state.brand].model[event.target.value].year.length;i++){
-    //             this.year.push(<MenuItem value={i}>{ScooterData[this.state.brand].model[event.target.value].year[i]}</MenuItem>)
-    //         } 
-    //     }
-    // }
+    //Searchdata
+    let brandname=null;
+    let modelname=null;
+    let issuename = null;
+
+    //Filter data
+    if(this.state.brand>-1){
+        brandname=this.state.bikedata[this.state.brand].brand_name;
+    }
+    if(this.state.model>-1){
+        modelname = this.state.bikedata[this.state.brand].models[this.state.model]
+    }
+    if(this.state.issue>-1){
+        for(let i=0;i<this.state.tagdata.length;i++){
+            if(this.state.tagdata[i].tag_id===this.state.issue){
+                issuename = this.state.tagdata[i].tag_name;
+                break;
+            }
+        }
+    }
+    if(event.target.name=="brand"){
+        if(event.target.value!=null){
+            if(event.target.value>-1){
+                brandname=this.state.bikedata[event.target.value].brand_name;
+            }else{
+                brandname=null
+            }
+        }           
+    }
+    if(event.target.name=="model"){
+        if(event.target.value!=null){
+            if(event.target.value>-1){
+                modelname = this.state.bikedata[this.state.brand].models[event.target.value]
+            }else{
+                modelname=null
+            }
+        }   
+    }
+    if(event.target.name=="issue"){
+        if(event.target.value!=null){
+            if(event.target.value>=0){
+                for(let i=0;i<this.state.tagdata.length;i++){
+                    if(this.state.tagdata[i].tag_id===event.target.value){
+                        issuename = this.state.tagdata[i].tag_name;
+                        break;
+                    }
+                }
+            }else{
+                issuename=null
+            }
+        }
+        
+    }
+
+    //Push data to search data
+    let searchFilterString='{';
+    if(brandname!=null){
+        searchFilterString+='"brand":"'+brandname+'"'
+    }
+    if(modelname!=null){
+        if(searchFilterString.length>2){
+            searchFilterString+=",";
+        }
+        searchFilterString+='"model":"'+modelname+'"'
+    }
+    if(issuename!=null){
+        if(searchFilterString.length>2){
+            searchFilterString+=",";
+        }
+        searchFilterString+='"issue":"'+issuename+'"'
+    }
+    searchFilterString+="}";
+    if(searchFilterString.length>2){
+        this.setState({disable:false})
+    }else{
+        this.setState({disable:true})
+    }
+    this.setState({searchData:JSON.parse(searchFilterString)});
+
   }
 
+  handleFilterSearch = ()=>{
+    this.props.history.push({
+        pathname: '/filterSearch',
+        searchData:this.state.searchData
+      })
+  }
   render() {
     if(this.content===null){
         this.content= <Loader/>
@@ -169,8 +244,10 @@ export default class FilterSearch extends Component {
                             {this.issues}
                         </Select>
                     </FormControl>
-                    <Button variant="contained" onClick={this.handleThread} className="searchbtn">
-                    SEARCH
+                    <Button variant="contained"  className="searchbtn" disabled={this.state.disable}>
+                        <ReactLink to={ '/filterSearch/'+JSON.stringify(this.state.searchData)}>
+                            SEARCH
+                        </ReactLink>
                     </Button>
                 </form>
             </div>

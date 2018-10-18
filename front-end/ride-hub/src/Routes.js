@@ -7,6 +7,7 @@ import Thread from './components/views/thread';
 import AddThread from './components/views/addthread';
 import SignUp from './components/views/signup';
 import UserProfile from './components/views/UserProfile';
+import FilterSearchPage from './components/views/filterSearchPage';
 import App from './components/App';
 
 export default (
@@ -17,6 +18,7 @@ export default (
     <HashRouter path={'/addthread/:subforumID'} component={AddThread}/>
     <HashRouter path={'/signup'} component={SignUp}/>
     <HashRouter path={'/UserProfile'} component={UserProfile}/>
+    <HashRouter path={'/filterSearch/:data'} component={FilterSearchPage}/>
     <HashRouter path={'*'} component={Home} />
   </HashRouter>
 );

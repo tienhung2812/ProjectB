@@ -30,13 +30,31 @@ const theme = createMuiTheme({
 class AccountDropDown extends Component {
   constructor(props){
     super(props);
-    this.state= {isLogged:false, username:"anoymous", point:0,gender:null,address:null,phone:null,description:null,birthday:null,pw:null,loggingin:false,loginSucess:true}
+    this.state= {forgotPW:false,
+        forgotBtnTitle:"FORGOT PASSWORD",
+        signinBtnTitle:"SIGN IN",
+        isLogged:false, 
+        username:"anoymous", 
+        email:null,
+        point:0,
+        gender:null,
+        address:null,
+        phone:null,
+        description:null,
+        birthday:null,
+        pw:null,
+        loggingin:false,
+        loginSucess:true}
     this.handleSignIn = this.handleSignIn.bind(this)
     this.handleUsername =this.handleUsername.bind(this)
     this.handlePasswordChange = this.handlePasswordChange.bind(this)
+    this.handleEmailChange = this.handleEmailChange.bind(this)
     this.handleLogOut = this.handleLogOut.bind(this)
     this.setCookie = this.setCookie.bind(this);
     this.fetchUserSummaryInfo = this.fetchUserSummaryInfo.bind(this);
+    this.handleBtnForgetPassword = this.handleBtnForgetPassword.bind(this);
+    this.handleBtnSignIn = this.handleBtnSignIn.bind(this);
+    this.handleForgetPassword = this.handleForgetPassword.bind(this);
     if(cookie.get("userid")==null){
         this.setState({isLogged:false});
         this.setState({username:"anoymous", point:0})
@@ -123,9 +141,29 @@ class AccountDropDown extends Component {
       console.log(new Date(new Date().getTime()+1000*minutes).toUTCString())
     return new Date(new Date().getTime()+1000*minutes).toUTCString()
 }
+
+    handleBtnForgetPassword(){
+        if(this.state.forgotPW)
+            this.setState({forgotPW:false,forgotBtnTitle:"FORGOT PASSWORD",signinBtnTitle:"SIGN IN"})
+        else{
+            this.setState({forgotPW:true,forgotBtnTitle:"BACK TO SIGN IN",signinBtnTitle:"GET PASSWORD"})
+        }
+    }
+
+    handleBtnSignIn(){
+        if(this.state.forgotPW){
+            this.handleForgetPassword()
+        }else{
+            this.handleSignIn();
+        }
+    }
+
+    handleForgetPassword(){
+
+    }
   componentDidMount(){
     this.childcontent=[];
-    
+    this.signin = 
     this.defaultSignInDialogContent=[
         <Grid item xs={12}>
             <TextField
@@ -159,32 +197,21 @@ class AccountDropDown extends Component {
         }}
         />
         </Grid>
-        ,
-        <Grid item xs={6}>
-        <MuiThemeProvider theme={theme}>
-            <Button onClick={this.handleSignIn} variant="contained" color="primary" size="large" fullWidth >
-            SIGN IN
-            </Button>
-        </MuiThemeProvider>
+    ]
+    this.defaultForgotDialogContent=[
+        <Grid item xs={12}>
+            <TextField
+            fullWidth
+            label="Email"
+            variant="outlined"
+            onChange={this.handleEmailChange}
+            inputProps={{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", title:"Invalid Email"}}
+            />
+        </Grid>
         
-        </Grid>
-        ,
-        <Grid item xs={7}></Grid>
-        ,
-        <Grid item xs={6}>
-            New to Ride hub ?
-            <ReactLink to={'/signup'}>
-            <MuiThemeProvider theme={theme}>
-            <Button color="primary" onClick={this.handleClose}>SIGN UP</Button>
-            </MuiThemeProvider>
-            </ReactLink>
-        </Grid>
-        ,
-        <Grid item xs={6}  align="right">
-        <MuiThemeProvider theme={theme}>
-        <Button color="primary">FORGOT PASSWORD</Button>
-        </MuiThemeProvider>
-        </Grid>
+        
+        
+        
     ]
   }
   state = {
@@ -199,6 +226,10 @@ class AccountDropDown extends Component {
 
   handlePasswordChange = (event) => {
     this.setState({ pw: event.target.value });
+  };
+
+  handleEmailChange = (event) => {
+    this.setState({ email: event.target.value });
   };
 
   handleClickShowPassword = () => {
@@ -229,6 +260,8 @@ class AccountDropDown extends Component {
         <div style={{width:"568px"}}>
             <Loader/>
         </div>
+    }else if(this.state.forgotPW){
+        signInDialogContent = this.defaultForgotDialogContent
     }else{
         signInDialogContent = this.defaultSignInDialogContent
     }
@@ -258,7 +291,31 @@ class AccountDropDown extends Component {
                 </Grid>
                 {status}
                 {signInDialogContent}
-              
+                <Grid item xs={6}>
+                    <MuiThemeProvider theme={theme}>
+                        <Button onClick={this.handleBtnSignIn} variant="contained" color="primary" size="large" fullWidth >
+                        {this.state.signinBtnTitle}
+                        </Button>
+                    </MuiThemeProvider>
+                    
+                    </Grid>
+                    
+                    <Grid item xs={7}></Grid>
+                    
+                    <Grid item xs={6}>
+                        New to Ride hub ?
+                        <ReactLink to={'/signup'}>
+                        <MuiThemeProvider theme={theme}>
+                        <Button color="primary" onClick={this.handleClose}>SIGN UP</Button>
+                        </MuiThemeProvider>
+                        </ReactLink>
+                    </Grid>
+                    ,
+                    <Grid item xs={5}  align="right">
+                    <MuiThemeProvider theme={theme}>
+                    <Button color="primary" onClick={this.handleBtnForgetPassword}>{this.state.forgotBtnTitle}</Button>
+                    </MuiThemeProvider>
+                    </Grid>
             </Grid>
             </form>     
             </DialogContent>

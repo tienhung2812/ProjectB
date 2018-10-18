@@ -6,36 +6,51 @@ import headimg from '../../../billboard-bg.jpg'
 export default class Billboard extends Component {
   constructor(props){
     super(props);
-    this.state = {threadID:null,postID:null,likeStatus:false}
+    this.state = {data:null,loaded:false}
     //Props url
 
   }
   componentDidMount() {
     this.content = []
-
-    for(var i=0; i <3 ; i++){
-        this.content.push(
-            <div className="child">
-                <div className="order">
-                    {"#"+(i+1)}
-                </div>
-                <div className="username">
-                    <ReactLink to={"/user/username"}>
-                        @username
-                    </ReactLink>
-                </div>
-                <div className="point">
-                    {((10-i)*100)+" pts"}
-                </div>
-            </div>
-        )
-    }
-    
+    fetch('https://ride-hub.herokuapp.com/api/user/billboard')
+    .then(response => {
+        if(response.status===200){
+            response.json().then(
+                data=>{
+                    this.setState({data:data})
+                }
+            )
+        }else{
+            console.log("Load billboard error: "+response.status)
+        }
+    });
   }
 
+  
 
   render() {
-    if(this.content===null){
+    if(this.state.data!=null&&!this.state.loaded){
+        for(var i=0; i <3 ; i++){
+            this.content.push(
+                <div className="child">
+                    <div className="order">
+                        {"#"+(i+1)}
+                    </div>
+                    <div className="username">
+                        <ReactLink to={"/user/"+this.state.data[i].id}>
+                            {'@'+this.state.data[i].username}
+                        </ReactLink>
+                    </div>
+                    <div className="point">
+                        {this.state.data[i].point+" pts"}
+                    </div>
+                </div>
+            )
+        }
+        this.setState({loaded:true})
+    }
+
+    if(this.content==null){
         this.content = <Loader/>
     }
 
