@@ -19,7 +19,8 @@ var userRouter = require("./back-end/routes/user");
 var postRouter = require("./back-end/routes/post");
 var threadRouter = require("./back-end/routes/thread");
 var forumRouter = require("./back-end/routes/forum");
-
+var forgotPasswordRouter = require('./back-end/routes/forgotPassword');
+var resetPasswordRouter = require('./back-end/routes/resetPassword');
 require("./back-end/config/passport")(passport); // pass passport for configuration
 
 
@@ -77,6 +78,9 @@ app.use("/api/user", userRouter);
 app.use("/api/thread", threadRouter);
 app.use("/api/post", postRouter);
 app.use("/api/subforum", forumRouter);
+app.use("/api/forgot-password", forgotPasswordRouter);
+app.use("/api/reset-password", resetPasswordRouter);
+
 app.use("/api/Help", express.static(path.join(__dirname, "API", "apidoc")));
 
 // create the login get and post routes
