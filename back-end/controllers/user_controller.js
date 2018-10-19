@@ -176,7 +176,7 @@ exports.billboard = function(req, res) {
 
 exports.latest_activity = function(req, res) {
   db.query(
-    `SELECT p.creation_date ,p.userid,p.username ,p.threadid::text, p.thread_title ,null as forumid, null as forum_title,true as is_create_post,false as is_create_thread,false as is_vote_post, false as is_follow_forum
+    `SELECT p.creation_date ,p.userid,p.username ,p.threadid::text, p.thread_title,null as forumid, null as forum_title, ' comments in thread ' as tag_activity
     FROM(
       SELECT p.*,t.title as thread_title
         FROM (
@@ -192,7 +192,7 @@ exports.latest_activity = function(req, res) {
         ON p.threadid = t.id
     )p
     UNION ALL 
-    SELECT t.creation_date,t.userid ,t.username ,t.id::text as threadid,t.title as thread_title,null as forumid, null as forum_title,false as is_create_post, true as is_create_thread,false as is_vote_post, false as is_follow_forum
+    SELECT t.creation_date,t.userid ,t.username ,t.id::text as threadid,t.title as thread_title,null as forumid, null as forum_title,' create new thread ' as tag_activity
     FROM (
       SELECT t.*, u.username
       FROM thread t
@@ -200,7 +200,7 @@ exports.latest_activity = function(req, res) {
       ON t.userid = u.id
     ) t 
     UNION ALL 
-    SELECT pv.creation_date, pv.userid,pv.username,pv.threadid::text, pv.thread_title,null as forumid, null as forum_title,false as is_create_post,false as is_create_thread,true as is_vote_post,false as is_follow_forum
+    SELECT pv.creation_date, pv.userid,pv.username,pv.threadid::text, pv.thread_title,null as forumid, null as forum_title,' votes a post in thread' as tag_activity
     FROM (
       SELECT pv.userid, u.username, p.threadid,t.title as thread_title, pv.creation_date	
       FROM post p 
@@ -212,7 +212,7 @@ exports.latest_activity = function(req, res) {
       ON p.threadid = t.id
     ) pv
     UNION ALL 
-    SELECT ff.creation_date, ff.userid, ff.username, null as threadid, null as thread_title,ff.forumid::text,ff.forum_title,false as is_create_post,false as is_create_thread,true as is_vote_post,true as is_follow_forum
+    SELECT ff.creation_date, ff.userid, ff.username, null as threadid, null as thread_title,ff.forumid::text,ff.forum_title,' follows forum ' as tag_activity
     FROM (
       SELECT ff.creation_date,ff.userid,u.username,ff.forumid,f.title as forum_title 
       FROM forum_followers ff
@@ -221,7 +221,7 @@ exports.latest_activity = function(req, res) {
       LEFT JOIN forum f
       ON ff.forumid = f.id
     )ff
-    ORDER BY creation_date LIMIT 3;
+    ORDER BY creation_date DESC LIMIT 3;
     `,
     (err, data) => {
       try {
