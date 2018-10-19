@@ -166,7 +166,7 @@ exports.forum_update = function(req, res) {
   exports.getpath = function(req,res){
     const values = [req.params.subforum_id];
     db.query(
-      `SELECT  coalesce(f.title , '') || ' > ' ||coalesce(sf.title , '')  AS path
+      `SELECT  f.id as parent_id, f.title as parent_title,sf.id as child_id, sf.title as child_title
       FROM forum f
       LEFT JOIN forum sf
       ON f.id = sf.pid

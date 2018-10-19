@@ -117,23 +117,27 @@ app.post('/api/signup', function(req, res, next) {
   passport.authenticate('signup', function(err, user, info) {
     if (err) { return next(err); }
     if (!user) {
-      res.status(401);
+      // res.status(401);
       //console.log(info.message);
       return res.status(401).send({
           "message": "username already exists",
           "success": "false"
         });      
-    }         
-    req.login(user, function(err) {
+    }
+    return res.status(200).send({
+      "message": "new account is created successfully",
+      "success": "true"
+    });         
+/*     req.login(user, function(err) {
       if (err) { return next(err); }
       //else {                
-        return res.send({
+        return res.status(200).send({
           "message": "new account is created successfully",
           "success": "true"
         });
       //}
       
-    });
+    }); */
   })(req, res, next);
 });
 
