@@ -229,12 +229,12 @@ exports.post_vote = function(req, res) {
     var vote_query = ``;
     var values = [];
     if(is_vote){
-      values = [req.session.user.passport.id
+      values = [req.session.passport.user.id
         ,req.body.post_id
         ,req.body.creation_date];
       vote_query = `INSERT INTO post_votes VALUES($1,$2,$3);`;
     }else{
-      values = [req.session.user.passport.id
+      values = [req.session.passport.user.id
         ,req.body.post_id];
       vote_query = `DELETE FROM post_votes WHERE userid = $1 AND postid = $2;`;  
     }
