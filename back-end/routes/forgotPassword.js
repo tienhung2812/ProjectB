@@ -6,6 +6,9 @@ var express = require("express");
 var router = express.Router();
 var async = require("async");
 
+const emaiAddress = process.env.EMAIL;
+const emailPassword = process.env.EMAIL_PASSWORD;
+
 router.post("/", function(req, res, next) {
   // generate token
   async.waterfall([
@@ -65,8 +68,8 @@ function sendResetPasswordEmail(token, user, req) {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "ridehubteam@gmail.com",
-      pass: "rideHub123@"
+      user: emaiAddress,
+      pass: emailPassword
     }
   });
   var mailOptions = {

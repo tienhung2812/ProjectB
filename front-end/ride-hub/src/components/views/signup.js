@@ -84,6 +84,7 @@ class SignUp extends Component {
     super(props);
     this.state={activeStep:0,email:null,username:null,password:null,confirmpassword:null,validatePw:false,useralready:false,successful:false}
     this.signUp = this.signUp.bind(this);
+    this.checkExistEmail = this.checkExistEmail.bind(this)
   }
   componentDidMount() {
     browserHistory.push('/signup');
@@ -98,16 +99,31 @@ class SignUp extends Component {
       },
       body: JSON.stringify({
         username: this.state.username,
-        password: this.state.password
+        password: this.state.password,
+        email:this.state.email
       })
     }).then(response =>{
-      if(response.status!==200){
-        //User already
-        this.setState({useralready:true,successful:false})
+      let a =response.ok
+      console.log(a)
+      if(!a){
+        if(response.status==401){
+          //User already
+          this.setState({useralready:true,successful:false})
+          this.setState({ open: true, message: "Username already taken" });
+          this.setState(state => ({
+            activeStep: state.activeStep - 1,
+          }))
+        }else{
+          alert("Error: "+response.status)
+        }
+          
         return false;
       }else{
         //Successful
         this.setState({useralready:false,successful:true})
+        this.setState(state => ({
+          activeStep: state.activeStep + 1,
+        }))
         return true;
       }
     })
@@ -129,6 +145,31 @@ class SignUp extends Component {
   state = {
     open: false
   };
+
+  checkExistEmail(){
+    fetch('https://ride-hub.herokuapp.com/api/signup/checkemail', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.state.email
+      })
+    }).then(response =>{
+      if(response.status==200){
+        console.log("Email OK")
+        this.setState(state => ({
+          activeStep: state.activeStep + 1,
+        }));
+        return true;
+      }else{
+        //User already
+        alert("Email existed")
+        return false;
+      }
+    })
+  }
 
   handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -163,9 +204,7 @@ class SignUp extends Component {
     //Check Correct Email on state 0
     if(this.state.activeStep===0){
       if(validateEmail(this.state.email)){
-        this.setState(state => ({
-          activeStep: state.activeStep + 1,
-        }));
+        this.checkExistEmail()
       }else{
         this.setState({ open: true, message: "Invalid Email" });
       }
@@ -187,14 +226,9 @@ class SignUp extends Component {
     else if(this.state.activeStep===2){
       this.setState({ open: true, message: "Signing up" });
       if(this.signUp()){
-        this.setState(state => ({
-          activeStep: state.activeStep + 1,
-        }))
-      }else{
-        this.setState({ open: true, message: "Username already taken" });
-        this.setState(state => ({
-          activeStep: state.activeStep - 1,
-        }))
+        
+      }else if(this.state.useralready){
+        
       }
     }
     

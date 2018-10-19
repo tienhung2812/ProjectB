@@ -356,6 +356,7 @@ class AccountDropDown extends Component {
                     </Grid>
             </Grid>
             </form>     
+            <Typography variant="caption" gutterBottom>By signing in, you agree to our use of cookies.</Typography>
             </DialogContent>
             </Dialog>
             </div>
