@@ -46,8 +46,8 @@ GROUP BY (ft.id,ft.title,ft.description,ft.user_following_state,ft.followers,ft.
 };
 
 exports.subsubforum_get = function(req, res) {
-    var subsubforum_id = req.params.subforum_id;
-    var values = [subsubforum_id];    
+    var values = [req.params.subforum_id
+                ,req.session.passport.user.id];    
     db.query(
       `WITH forum_details AS(
 	SELECT f.id, f.title, f.description, string_agg(sf.id::character varying, ',') AS child,
@@ -58,7 +58,7 @@ exports.subsubforum_get = function(req, res) {
 	LEFT JOIN forum sf
 	ON f.id = sf.pid
 	LEFT JOIN forum_followers ff
-	ON f.id = ff.forumid AND ff.userid = 2
+	ON f.id = ff.forumid AND ff.userid = $2
 	WHERE f.id = $1
 	GROUP BY (f.id, f.title, f.description,ff.userid)
 ), forum_withtype AS(
