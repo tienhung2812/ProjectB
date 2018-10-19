@@ -213,5 +213,3 @@ exports.post_update = function(req, res) {
   })
   }
 };
-
-

@@ -48,7 +48,7 @@ GROUP BY (ft.id,ft.title,ft.description,ft.user_following_state,ft.followers,ft.
 exports.subsubforum_get = function(req, res) {   
     var getquery = ``;
     var values = [];
-    if (!req.isAuthenticated()) {
+    if (req.isAuthenticated()) {
         values = [req.params.subforum_id
         ,req.session.passport.user.id];
         getquery = `WITH forum_details AS(
