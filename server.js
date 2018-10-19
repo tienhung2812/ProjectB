@@ -53,12 +53,12 @@ app.use(
       tableName : 'session'   // Use another table-name than the default "session" one
     }),
     secret: "JeNX5lMRkF3DAkXc65oboQWk0z6pCE00", //a random value for hashing  session id
-    resave: false,
-    saveUninitialized: true,
+    resave: false, // Dont' force the session to be saved back to the session store, as specified by connect-pg-simple
+    saveUninitialized: false, // must make it false, otherwise, every request to website without login will make a new session
     cookie: {maxAge: cookieTimeLife, 
              expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
-             secure: false,
+             secure: true,  // make cookie only available on  HTTPS site
              domain: "ride-hub.herokuapp.com"
             }
   })
