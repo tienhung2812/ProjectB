@@ -147,9 +147,6 @@ export default class TextEditor extends Component {
     }
   }
 
-  cloundinaryPostNewsImage(data){
-    return 'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg'
-  }
   handlePost(){
     this.setState({disabledBtn:true})
     var rawtext = this.textInput.current.getEditor().getContents();
