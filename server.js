@@ -57,7 +57,7 @@ app.use(
              expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
              secure: false,
-            //  domain: "ride-hub.herokuapp.com"
+             domain: "ride-hub.herokuapp.com"
             }
   })
 );

@@ -76,9 +76,9 @@ function sendResetPasswordEmail(token, user, req) {
     text:
       "We have received a request from you (or maybe someone else) to reset your password for RideHub Forum account.\n\n" +
       "If you really wish to reset your password. Follow the link below:\n\n" +
-      "http://" +
+      "https://" +
       req.headers.host +
-      "/api/reset-password/" +
+      "/resetpassword/" +
       token +
       "\n\n" +
       "If you don't wish to reset your password, disregard this email.\n\n" +
