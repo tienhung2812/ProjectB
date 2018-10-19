@@ -123,8 +123,12 @@ app.post('/api/signup', function(req, res, next) {
           "message": "username already exists",
           "success": "false"
         });      
-    }         
-    req.login(user, function(err) {
+    }
+    return res.status(200).send({
+      "message": "new account is created successfully",
+      "success": "true"
+    });         
+/*     req.login(user, function(err) {
       if (err) { return next(err); }
       //else {                
         return res.status(200).send({
@@ -133,7 +137,7 @@ app.post('/api/signup', function(req, res, next) {
         });
       //}
       
-    });
+    }); */
   })(req, res, next);
 });
 
