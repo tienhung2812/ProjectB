@@ -213,3 +213,59 @@ exports.post_update = function(req, res) {
   })
   }
 };
+
+// Vote existing post
+exports.post_vote = function(req, res) {
+  var values = [];
+  if (!req.isAuthenticated()) {
+    return res
+      .status(403)
+      .send({
+        message: "Guests are not allowed to vote posts. Please sign in"
+      });
+  } else {
+    values = [req.params.userid
+            ,req.params.post_id
+            ,req.params.creation_date];
+    db.query(
+      `INSERT INTO post_votes VALUES($1,$2,$3);`,
+      values,
+      (err, data) => {
+        try {
+          res.json(data.rows);
+        } catch (e) {
+          console.log(e);
+          res.status(400).send("Data is not available");
+        }
+      }
+    );
+  }
+};
+
+
+// Vote existing post
+exports.post_unvote = function(req, res) {
+  var values = [];
+  if (!req.isAuthenticated()) {
+    return res
+      .status(403)
+      .send({
+        message: "Guests are not allowed to unvote posts. Please sign in"
+      });
+  } else {
+    values = [req.params.userid
+            ,req.params.post_id];
+    db.query(
+      `DELETE FROM post_votes WHERE userid = $1 AND postid = $2;`,
+      values,
+      (err, data) => {
+        try {
+          res.json(data.rows);
+        } catch (e) {
+          console.log(e);
+          res.status(400).send("Data is not available");
+        }
+      }
+    );
+  }
+};
