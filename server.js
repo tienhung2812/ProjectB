@@ -58,7 +58,7 @@ app.use(
     cookie: {maxAge: cookieTimeLife, 
              expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
-             secure: true,  // make cookie only available on  HTTPS site
+             secure: false,  // make cookie only available on  HTTPS site
              domain: "ride-hub.herokuapp.com"
             }
   })
