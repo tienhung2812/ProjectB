@@ -59,13 +59,46 @@ export default class Post extends Component {
           this.fetchData(this.props.postID,this.state.userid)
       }
   }
-
+  getDateTime(){
+    let currentdate = new Date(); 
+    let a =  currentdate.getFullYear()+ "-"+ (currentdate.getMonth()+1) + "-"+ currentdate.getDate() + " "+ currentdate.getHours() + ":"  + currentdate.getMinutes() + ":"  + currentdate.getSeconds();
+    return a;
+  }
   handleLikeBtn(){
+      let is_vote;
+      let voteNum = Number(this.state.voteNumber);
     if(this.state.likeStatus){
-        this.setState({likeStatus:false})
+        voteNum-=1;
+        this.setState({likeStatus:false,voteNumber:voteNum})
+        is_vote=false;
     }else{
-        this.setState({likeStatus:true})
+        voteNum+=1
+        this.setState({likeStatus:true,voteNumber:voteNum})
+        is_vote=true;
     }
+    fetch('https://ride-hub.herokuapp.com/api/post/vote', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          is_vote:is_vote,
+          post_id:this.state.postID,
+          creation_date:this.getDateTime()
+      })
+      }).then(response=>{
+        if(!response.ok){
+            console.log('Error: '+response.status);
+            is_vote=!is_vote;
+            voteNum-=1;
+            this.setState({likeStatus:is_vote,voteNumber:voteNum})
+            if(response.status===403){
+                alert('You must log in to use this function')
+            }
+        }
+      }
+      )
   }
 
   parseDateTime(timeString){

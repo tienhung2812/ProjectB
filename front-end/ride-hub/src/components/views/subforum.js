@@ -81,16 +81,48 @@ export default class SubForum extends Component {
       }
     }
   }
-
+  getDateTime(){
+    let currentdate = new Date(); 
+    let a =  currentdate.getFullYear()+ "-"+ (currentdate.getMonth()+1) + "-"+ currentdate.getDate() + " "+ currentdate.getHours() + ":"  + currentdate.getMinutes() + ":"  + currentdate.getSeconds();
+    return a;
+  }
   //Fucntion for handle follow button
   handleFollowBtn(){
+    let followState;
+    let followerNumber = Number(this.state.followerNumber)
     if(this.state.following){
       //Unfollow
-      this.setState({following:false})
+      this.setState({following:false,followerNumber:followerNumber-=1})
+      followState=false;
     }else{
       //Follow
-      this.setState({following:true})
+      this.setState({following:true,followerNumber:followerNumber+=1})
+      followState=true;
     }
+
+    //Push data
+    fetch('https://ride-hub.herokuapp.com/api/subforum/follow', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          is_follow:followState,
+          forum_id:this.state.id,
+          creation_date:this.getDateTime()
+      })
+      }).then(response=>{
+        if(!response.ok){
+            console.log('Error: '+response.status);
+            followState=!followState;
+            this.setState({following:followState,followerNumber:followerNumber-=1})
+            if(response.status===403){
+                alert('You must log in to use this function')
+            }
+        }
+      }
+      )
    
   }
 
