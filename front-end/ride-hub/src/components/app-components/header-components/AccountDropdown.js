@@ -362,20 +362,20 @@ class AccountDropDown extends Component {
             </div>
         )
         this.childcontent.push(
-            <button className="dropdown-item" type="button">
-                <ReactLink to={'/signup'}>
+            <ReactLink to={'/signup'}>
+                <button className="dropdown-item" type="button">
                     Sign up
-                </ReactLink>    
-            </button>
+                </button>
+            </ReactLink>
         );
     }else{
         this.childcontent = []
         if(cookie.get('role')==='Admin'){
-            this.childcontent.push(<button className="dropdown-item" type="button" > <ReactLink to={'/admin'}>Admin Page </ReactLink></button>)
+            this.childcontent.push(<ReactLink to={'/admin'}><button className="dropdown-item" type="button" > Admin Page </button></ReactLink>)
         }
         this.childcontent.push(
            
-            <button className="dropdown-item" type="button" > <ReactLink to={'/UserProfile/'} params={{ uid:cookie.get('userid') }}>My Account </ReactLink></button>
+            <ReactLink to={'/UserProfile/'} params={{ uid:cookie.get('userid') }}><button className="dropdown-item" type="button" > My Account </button></ReactLink>
            
         )
         this.childcontent.push(
