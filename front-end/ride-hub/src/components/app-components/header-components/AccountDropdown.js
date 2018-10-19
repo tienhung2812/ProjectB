@@ -371,7 +371,7 @@ class AccountDropDown extends Component {
     }else{
         this.childcontent = []
         if(cookie.get('role')==='Admin'){
-            this.childcontent.push(<button className="dropdown-item" type="button" > <ReactLink to={'/'}>Admin Page </ReactLink></button>)
+            this.childcontent.push(<button className="dropdown-item" type="button" > <ReactLink to={'/admin'}>Admin Page </ReactLink></button>)
         }
         this.childcontent.push(
            

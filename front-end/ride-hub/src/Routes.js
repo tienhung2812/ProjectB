@@ -9,6 +9,7 @@ import SignUp from './components/views/signup';
 import UserProfile from './components/views/UserProfile';
 import FilterSearchPage from './components/views/filterSearchPage';
 import ResetPassword from './components/views/resetpassword';
+import AdminPanel from './components/views/admin';
 import App from './components/App';
 
 export default (
@@ -19,6 +20,7 @@ export default (
     <HashRouter path={'/addthread/:subforumID'} component={AddThread}/>
     <HashRouter path={'/signup'} component={SignUp}/>
     <HashRouter path={'/UserProfile'} component={UserProfile}/>
+    <HashRouter path={'/admin'} component={AdminPanel}/>
     <HashRouter path={'/filterSearch/:data'} component={FilterSearchPage}/>
     <HashRouter path={'/resetpassword/:data'} component={ResetPassword}/>
     <HashRouter path={'*'} component={Home} />
