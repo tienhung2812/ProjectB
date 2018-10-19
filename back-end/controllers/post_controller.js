@@ -229,12 +229,12 @@ exports.post_vote = function(req, res) {
     var vote_query = ``;
     var values = [];
     if(is_vote){
-      values = [req.body.userid
+      values = [req.session.user.passport.id
         ,req.body.post_id
         ,req.body.creation_date];
       vote_query = `INSERT INTO post_votes VALUES($1,$2,$3);`;
     }else{
-      values = [req.body.userid
+      values = [req.session.user.passport.id
         ,req.body.post_id];
       vote_query = `DELETE FROM post_votes WHERE userid = $1 AND postid = $2;`;  
     }
@@ -243,7 +243,7 @@ exports.post_vote = function(req, res) {
       values,
       (err, data) => {
         try {
-          res.json(data.rows);
+          res.send("action success!");
         } catch (e) {
           console.log(e);
           res.status(400).send("action failed!");
