@@ -215,3 +215,41 @@ exports.forum_update = function(req, res) {
     }
   );
   }
+
+  // Follow existing forum
+exports.forum_follow = function(req, res) {
+  var values = [];
+  if (!req.isAuthenticated()) {
+    return res
+      .status(403)
+      .send({
+        message: "Guests are not allowed to follow forums. Please sign in"
+      });
+  } else {
+    var is_follow = req.body.is_follow;
+    var follow_query = ``;
+    var values = [];
+    if(is_follow){
+      values = [req.session.passport.user.id
+        ,req.body.forum_id
+        ,req.body.creation_date];
+      vote_query = `INSERT INTO forum_followers VALUES($1,$2,$3);`;
+    }else{
+      values = [req.session.passport.user.id
+        ,req.body.forum_id];
+      vote_query = `DELETE FROM forum_followers WHERE userid = $1 AND forumid = $2;`;  
+    }
+    db.query(
+      vote_query,
+      values,
+      (err, data) => {
+        try {
+          res.send("action success!");
+        } catch (e) {
+          console.log(e);
+          res.status(400).send("action failed!");
+        }
+      }
+    );
+  }
+};

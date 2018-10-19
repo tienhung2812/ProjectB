@@ -222,7 +222,7 @@ exports.post_vote = function(req, res) {
     return res
       .status(403)
       .send({
-        message: "Guests are not allowed to unvote posts. Please sign in"
+        message: "Guests are not allowed to vote posts. Please sign in"
       });
   } else {
     var is_vote = req.body.is_vote;
