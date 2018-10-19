@@ -162,3 +162,24 @@ exports.forum_update = function(req, res) {
       res.status(403).send({"message":"You are not allowed to create new forum"});
     }
   }
+
+  exports.getpath = function(req,res){
+    const values = [req.params.subforum_id];
+    db.query(
+      `SELECT  coalesce(f.title , '') || ' > ' ||coalesce(sf.title , '')  AS path
+      FROM forum f
+      LEFT JOIN forum sf
+      ON f.id = sf.pid
+      WHERE sf.id = $1;
+      `,
+    values,
+    (err, data) => {
+      try {
+         res.json(data.rows);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
+      }
+    }
+  );
+  }

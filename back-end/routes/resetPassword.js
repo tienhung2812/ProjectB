@@ -25,9 +25,9 @@ router.post("/:token", function(req, res) {
       );
     },
     function(user, done) {
-      console.log('axxx');
-      console.log(user);
-      console.log('/xxxx');
+      // console.log('axxx');
+      // console.log(user);
+      // console.log('/xxxx');
       if (user.rows.length == 0) {
         // token not found!
         res.status(400).send("Token not found!");

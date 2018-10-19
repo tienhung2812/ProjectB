@@ -74,7 +74,9 @@ module.exports = function(passport) {
   // strategy to signup new user
   passport.use(
     "signup",
-    new LocalStrategy({ passReqToCallback : true},function(req, username, password, done) {
+    new LocalStrategy({ passReqToCallback : true},function(req, username, password,  done) {
+      
+      
       // set up default value;
       var avatar = ".\front-enddesignSketchImagesdefault avatar.png";
       var role_id = 3;
@@ -90,8 +92,10 @@ module.exports = function(passport) {
         avatar,
         role_id,
         point,
-        creation_date
+        creation_date,
+        req.body.email
       ];
+      console.log(req.body.email);
       var params_2 = [username];
 
       // promise
@@ -107,8 +111,8 @@ module.exports = function(passport) {
           } else {
             // if Username is available, we can create new account
             db.query(
-              `INSERT INTO public.user (username, password, avatar, role_id, point, creation_date) 
-                          VALUES ($1, $2, $3, $4, $5, $6) 
+              `INSERT INTO public.user (username, password, avatar, role_id, point, creation_date, email) 
+                          VALUES ($1, $2, $3, $4, $5, $6, $7) 
                           RETURNING public.user.id;
               `,
               params_1
