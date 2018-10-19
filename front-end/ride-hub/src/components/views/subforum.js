@@ -153,7 +153,7 @@ export default class SubForum extends Component {
           //Generate some thread
           this.childcontent = []
           for(var i=0;i<this.state.child.length;i++){
-            console.log(this.state.child[i])
+            //console.log(this.state.child[i])
             this.childcontent.push(<Thread id={this.state.child[i]} url="home"/>)
           }
           //Sub forum do not have child

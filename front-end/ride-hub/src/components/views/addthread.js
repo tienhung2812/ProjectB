@@ -33,7 +33,7 @@ export default class AddThread extends Component {
         response.json().then(
           data=>{
             data=data[0]
-            console.log(data)
+            //console.log(data)
             this.path = 
             <div className="subforumpath-wrapper">
               <div>

@@ -12,15 +12,17 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import request from 'superagent';
+
+const CLOUDINARY_UPLOAD_PRESET = 'jvad47ey';
+const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dp9vfrkbu/image/upload';
+
 
 const theme = createMuiTheme({
   palette: {
     primary:{main: '#ff5722'},
   },
 });
-
-
-
 
 export default class TextEditor extends Component {
   constructor(props){
@@ -34,27 +36,33 @@ export default class TextEditor extends Component {
     this.handlePost = this.handlePost.bind(this);
     this.handleThread = this.handleThread.bind(this);
     this.handleTagChange = this.handleTagChange.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
     this.textInput = React.createRef();
     this.titleInput = React.createRef();
-    
   }
   componentDidMount() {
-    this.modules= {
-        toolbar: [
-          [{ 'header': [1, 2, false] }],
-          ['bold', 'italic', 'underline','strike', 'blockquote'],
-          [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-          [ 'image','video'],
-          ['clean']
-        ],
-      }
+    this.modules = {
+      toolbar: {
+        container: [
+        [{ 'header': [1, 2, false] }, { 'font': [] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}, 
+         {'indent': '-1'}, {'indent': '+1'}],
+        ['link', 'image', 'video'],
+        ['clean']
+          ],
+          handlers: {
+            'image':  this.imageHandler
+          }
+    }
+    }
     
-    this.formats= [
-        'header',
-        'bold', 'italic', 'underline', 'strike', 'blockquote',
-        'list', 'bullet', 'indent',
-        'link', 'image'
-      ]
+    this.formats = [
+      'header', 'font', 'size',
+      'bold', 'italic', 'underline', 'strike', 'blockquote',
+      'list', 'bullet', 'indent',
+      'link', 'image', 'video'
+    ]
 
       //Fetch tag
     fetch('https://ride-hub.herokuapp.com/api/thread/filter_data')
@@ -71,6 +79,59 @@ export default class TextEditor extends Component {
     })
   }
 
+  handleImageUpload(file,range) {
+    let upload = request.post(CLOUDINARY_UPLOAD_URL)
+                        .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+                        .field('file', file);
+
+    upload.end((err, response) => {
+      if (err) {
+        console.error(err);
+      }
+
+      if (response.body.secure_url !== '') {
+          // Remove placeholder image
+          this.textInput.current.getEditor().deleteText(range.index, 1);
+      
+          // Insert uploaded image
+          this.textInput.current.getEditor().insertEmbed(range.index, 'image', response.body.secure_url); 
+        return response.body.secure_url
+      }else{
+        return "";
+      }
+    });
+  }
+
+  imageHandler = () => {
+    const input = document.createElement('input');
+  
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+  
+    input.onchange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      // Save current cursor state
+      const range = this.textInput.current.getEditor().getSelection(true);
+  
+      // Insert temporary loading placeholder image
+      this.textInput.current.getEditor().insertEmbed(range.index, 'image', `${ window.location.origin }/images/loaders/placeholder.gif`); 
+  
+      // Move cursor to right side of image (easier to continue typing)
+      this.textInput.current.getEditor().setSelection(range.index + 1);
+  
+      const res = await this.handleImageUpload(file,range)// API post, returns image location as string e.g. 'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg'
+      
+    
+    }
+  }
+
+  cloundinaryPostNewsImage(data){
+    return 'https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg'
+  }
   handlePost(){
     this.setState({disabledBtn:true})
     var rawtext = this.textInput.current.getEditor().getContents();
