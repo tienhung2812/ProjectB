@@ -6,6 +6,9 @@ var express = require("express");
 var router = express.Router();
 var async = require("async");
 
+const emaiAddress = process.env.EMAIL;
+const emailPassword = process.env.EMAIL_PASSWORD;
+
 router.post("/", function(req, res, next) {
   // generate token
   async.waterfall([
@@ -65,8 +68,8 @@ function sendResetPasswordEmail(token, user, req) {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "ridehubteam@gmail.com",
-      pass: "rideHub123@"
+      user: emaiAddress,
+      pass: emailPassword
     }
   });
   var mailOptions = {
@@ -76,9 +79,9 @@ function sendResetPasswordEmail(token, user, req) {
     text:
       "We have received a request from you (or maybe someone else) to reset your password for RideHub Forum account.\n\n" +
       "If you really wish to reset your password. Follow the link below:\n\n" +
-      "http://" +
+      "https://" +
       req.headers.host +
-      "/api/reset-password/" +
+      "/resetpassword/" +
       token +
       "\n\n" +
       "If you don't wish to reset your password, disregard this email.\n\n" +

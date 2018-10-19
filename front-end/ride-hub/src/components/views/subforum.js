@@ -124,12 +124,12 @@ export default class SubForum extends Component {
       </div>
       //Add Post button
       if(this.state.type===1){
-        this.addThreadBtn =       
+        this.addThreadBtn = 
+        <ReactLink to={'/addthread/'+this.state.id}>
           <button type="button" className="btn btn-link btn-createThread">
-            <ReactLink to={'/addthread/'+this.state.id}>
-            create Thread
-            </ReactLink>
+            createThread
           </button>
+        </ReactLink>      
       }else{
         this.addThreadBtn = ""
       }

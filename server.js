@@ -21,6 +21,8 @@ var threadRouter = require("./back-end/routes/thread");
 var forumRouter = require("./back-end/routes/forum");
 var forgotPasswordRouter = require('./back-end/routes/forgotPassword');
 var resetPasswordRouter = require('./back-end/routes/resetPassword');
+var checkEmailRouter = require('./back-end/routes/checkEmail');
+
 require("./back-end/config/passport")(passport); // pass passport for configuration
 
 
@@ -57,7 +59,7 @@ app.use(
              expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
              secure: false,
-            //  domain: "ride-hub.herokuapp.com"
+             domain: "ride-hub.herokuapp.com"
             }
   })
 );
@@ -108,43 +110,36 @@ app.post('/api/login', function(req, res, next) {
   })(req, res, next);
 });
 
+app.use('/api/signup/checkemail', checkEmailRouter);
+
 app.post('/api/signup', function(req, res, next) {
   //res.send({"success": "true"});
   passport.authenticate('signup', function(err, user, info) {
     if (err) { return next(err); }
     if (!user) {
-      res.status(401);
+      // res.status(401);
       //console.log(info.message);
       return res.status(401).send({
           "message": "username already exists",
           "success": "false"
         });      
-    }         
-    req.login(user, function(err) {
+    }
+    return res.status(200).send({
+      "message": "new account is created successfully",
+      "success": "true"
+    });         
+/*     req.login(user, function(err) {
       if (err) { return next(err); }
       //else {                
-        return res.send({
+        return res.status(200).send({
           "message": "new account is created successfully",
           "success": "true"
         });
       //}
       
-    });
+    }); */
   })(req, res, next);
 });
-
-
-
- 
-// app.post(
-//   "/api/signup",  
-//   passport.authenticate("signup", {
-//     successRedirect: "/",
-//     failureRedirect: "/api/signup",
-//     //badRequestMessage : "error",
-//     failureFlash: true
-//   })
-// );
 
 
 app.post('/api/logout', function(req, res){
@@ -154,14 +149,6 @@ app.post('/api/logout', function(req, res){
   });
 });
 
-
-app.get("/api/authrequired", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.send("you hit the authentication endpoint\n");
-  } else {
-    res.redirect("/");
-  }
-});
 
 // serve built React files
 app.get("*", (req, res) => {

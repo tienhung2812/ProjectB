@@ -4,7 +4,12 @@ var router = express.Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
 var async = require("async");
-// $gt: Date.now()
+
+const emaiAddress = process.env.EMAIL;
+const emailPassword = process.env.EMAIL_PASSWORD;
+
+
+
 router.post("/:token", function(req, res) {
   async.waterfall([
     function(done) {
@@ -25,9 +30,9 @@ router.post("/:token", function(req, res) {
       );
     },
     function(user, done) {
-      console.log('axxx');
-      console.log(user);
-      console.log('/xxxx');
+      // console.log('axxx');
+      // console.log(user);
+      // console.log('/xxxx');
       if (user.rows.length == 0) {
         // token not found!
         res.status(400).send("Token not found!");
@@ -48,9 +53,9 @@ router.post("/:token", function(req, res) {
                 // Email
                 var transporter = nodemailer.createTransport({
                     service: "gmail",
-                    auth: {
-                      user: "ridehubteam@gmail.com",
-                      pass: "rideHub123@"
+                    auth: {                      
+                      user: emaiAddress,
+                      pass: emailPassword
                     }
                   });
                   var mailOptions = {
