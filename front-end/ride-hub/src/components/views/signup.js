@@ -130,6 +130,28 @@ class SignUp extends Component {
     open: false
   };
 
+  checkExistEmail(){
+    fetch('https://ride-hub.herokuapp.com/api/signup/checkemail', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.state.email
+      })
+    }).then(response =>{
+      if(response.status!==200){
+        //User already
+        alert("Email existed")
+        return false;
+      }else{
+        //Successful
+        return true;
+      }
+    })
+  }
+
   handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -163,9 +185,11 @@ class SignUp extends Component {
     //Check Correct Email on state 0
     if(this.state.activeStep===0){
       if(validateEmail(this.state.email)){
-        this.setState(state => ({
-          activeStep: state.activeStep + 1,
-        }));
+        if(this.checkExistEmail()){
+          this.setState(state => ({
+            activeStep: state.activeStep + 1,
+          }));
+        }
       }else{
         this.setState({ open: true, message: "Invalid Email" });
       }

@@ -6,46 +6,23 @@ import headimg from '../../../recentactivities-bg.jpg'
 export default class RecentActivities extends Component {
   constructor(props){
     super(props);
-    this.state = {threadID:null,postID:null,likeStatus:false}
+    this.state = {loaded:false,data:null}
     //Props url
 
   }
   componentDidMount() {
-
     this.content = [];
-
+    fetch('https://ride-hub.herokuapp.com/api/user/latestactivity')
+    .then(response=>{
+        if(response.status==200){
+            response.json().then(
+                data=>this.setState({data:data})
+            )
+        }else{
+            alert('Fetch recent activities fail')
+        }
+    })
     //sample
-    this.content.push(
-        <div className="child">
-            <ReactLink to={"/user/ablacuta"}>
-                @username1
-            </ReactLink>
-            voted <ReactLink to={"/post/330"}>
-                Thread 330
-            </ReactLink>
-        </div>
-    )
-    this.content.push(
-        <div className="child">
-            <ReactLink to={"/user/ablacuta"}>
-                @username2
-            </ReactLink>
-            comment on <ReactLink to={"/post/330"}>
-                Thread 330
-            </ReactLink>
-        </div>
-    )
-    this.content.push(
-        <div className="child">
-            <ReactLink to={"/user/ablacuta"}>
-                @username3
-            </ReactLink>
-            voted <ReactLink to={"/post/330"}>
-                Thread 330
-            </ReactLink>
-        </div>
-    )
-
     
   }
 
@@ -55,7 +32,21 @@ export default class RecentActivities extends Component {
     if(this.content===null){
         this.content = <Loader/>
     }
-
+    if(this.state.data!=null&&!this.state.loaded){
+        for(let i=0;i<this.state.data.length;i++){
+            this.content.push(
+                <div className="child">
+                    <ReactLink to={"/user/"+this.state.data[i].userid}>
+                        {'@'+this.state.data[i].username}
+                    </ReactLink>
+                    {' '+this.state.data[i].tag_activity+' '} <ReactLink to={"/thread/"+this.state.data[i].threadid}>
+                        {this.state.data[i].thread_title}
+                    </ReactLink>
+                </div>
+            )
+        }
+        this.setState({loaded:true})
+    }
     return(
     <div className="recentactivities wrapper">
         <div className="head-img">
