@@ -36,7 +36,7 @@ export default class NewestThread extends Component {
             this.content.push(
                 <div className="child">
                     <ReactLink to={'/thread/'+this.state.data[i].t_id}>
-                        {"Thread "+this.state.data[i].t_title}
+                        {this.state.data[i].t_title}
                     </ReactLink>
                 </div>
                 
