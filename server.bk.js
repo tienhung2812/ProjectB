@@ -1,5 +1,6 @@
 // src/server.js
-// import modules
+
+// initialize the server and configure support for ejs templates
 const path = require("path");
 var express = require("express");
 //var session = require('cookie-session')
@@ -7,12 +8,12 @@ var session = require("express-session");
 var bodyParser = require("body-parser");
 var cors = require("cors");
 var passport = require("passport");
-var flash = require("connect-flash"); 
+var flash = require("connect-flash");
 //const FileStore = require("session-file-store")(session);
 var pgSession = require('connect-pg-simple')(session);
 var cookieParser = require('cookie-parser');
 const uuid = require("uuid/v4");
-const helmet = require('helmet')
+
 // import custom modules
 var userRouter = require("./back-end/routes/user");
 var postRouter = require("./back-end/routes/post");
@@ -28,7 +29,6 @@ require("./back-end/config/passport")(passport); // pass passport for configurat
 // Create an Express application
 var app = express();
 // Congifure the Express application
-app.use(helmet())
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
