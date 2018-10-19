@@ -12,7 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import request from 'superagent';
+import axios from 'axios';
 
 const CLOUDINARY_UPLOAD_PRESET = 'jvad47ey';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dp9vfrkbu/image/upload';
@@ -80,26 +80,44 @@ export default class TextEditor extends Component {
   }
 
   handleImageUpload(file,range) {
-    let upload = request.post(CLOUDINARY_UPLOAD_URL)
-                        .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
-                        .field('file', file);
-
-    upload.end((err, response) => {
-      if (err) {
-        console.error(err);
-      }
-
-      if (response.body.secure_url !== '') {
+    const formData = new FormData();
+    formData.append("file",file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    axios.post(
+      CLOUDINARY_UPLOAD_URL,
+      formData, 
+      { headers: { "X-Requested-With": "XMLHttpRequest" }})
+      .then(response => {
+        if (response.data.secure_url !== '') {
           // Remove placeholder image
           this.textInput.current.getEditor().deleteText(range.index, 1);
-      
+          
           // Insert uploaded image
-          this.textInput.current.getEditor().insertEmbed(range.index, 'image', response.body.secure_url); 
-        return response.body.secure_url
-      }else{
-        return "";
-      }
-    });
+          this.textInput.current.getEditor().insertEmbed(range.index, 'image', response.data.secure_url); 
+        return response.data.secure_url
+        }else{
+          return "";
+        }
+      })
+    // let upload = request.post(CLOUDINARY_UPLOAD_URL)
+    //                     .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+    //                     .field('file', file);
+
+    // upload.end((err, response) => {
+    //   if (err) {
+    //     console.error(err);
+    //   }
+
+    //   if (response.body.secure_url !== '') {
+    //       // Remove placeholder image
+    //       this.textInput.current.getEditor().deleteText(range.index, 1);
+      
+    //       // Insert uploaded image
+    //       this.textInput.current.getEditor().insertEmbed(range.index, 'image', response.body.secure_url); 
+    //     return response.body.secure_url
+    //   }else{
+    //     return "";
+    //   }
   }
 
   imageHandler = () => {
