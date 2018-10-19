@@ -115,7 +115,7 @@ class AccountDropDown extends Component {
       })
     }
   handleLogOut(){
-      this.setState({isLogged:false,loggingin:false,open:false})
+      
       fetch('https://ride-hub.herokuapp.com/api/logout', {
         method: 'POST',
         headers: {
@@ -125,11 +125,18 @@ class AccountDropDown extends Component {
         body: JSON.stringify({
           username: this.state.username
         })
+      }).then(response=>{
+          if(response.status==200){
+            this.setState({isLogged:false,loggingin:false,open:false})
+            cookie.remove("role");
+            cookie.remove("userid");
+            cookie.remove('connect.sid');
+            browserHistory.push('/');
+          }else{
+              alert("Log out fail")
+          }
       })
-      cookie.remove("role");
-      cookie.remove("userid");
-      cookie.remove('connect.sid');
-      browserHistory.push('/');
+     
   }
 
   setCookie(data){
@@ -159,8 +166,40 @@ class AccountDropDown extends Component {
     }
 
     handleForgetPassword(){
+        if(this.state.email!=null&&this.validateEmail(this.state.email)){
+            fetch('https://ride-hub.herokuapp.com/api/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email:this.state.email
+                })
+                }).then(response =>{
+                if(response.status!==200){
+                    //User already
+                    if(response.status==400)
+                        alert("No email found")
+                    else
+                        alert("Error: "+response.status)
+                    return false;
+                }else{
+                    //Successful
+                   alert("Check your email");
+                   this.setState({forgotPW:false,forgotBtnTitle:"FORGOT PASSWORD",signinBtnTitle:"SIGN IN"})
+                }
+            })
+        }else{
+            alert("Invalid email")
+        }
 
     }
+
+    validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+      }
   componentDidMount(){
     this.childcontent=[];
     this.signin = 
@@ -310,7 +349,6 @@ class AccountDropDown extends Component {
                         </MuiThemeProvider>
                         </ReactLink>
                     </Grid>
-                    ,
                     <Grid item xs={5}  align="right">
                     <MuiThemeProvider theme={theme}>
                     <Button color="primary" onClick={this.handleBtnForgetPassword}>{this.state.forgotBtnTitle}</Button>
