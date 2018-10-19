@@ -10,6 +10,8 @@ router.get('/root', forum_controller.subforum_get);
 router.get('/:subforum_id', forum_controller.subsubforum_get);
 
 router.get('/path/:subforum_id',forum_controller.getpath);
+
+router.post('/follow',forum_controller.forum_follow);
 // create forum
 router.post('/', forum_controller.forum_create);
 
