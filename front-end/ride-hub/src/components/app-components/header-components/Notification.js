@@ -88,43 +88,43 @@ class Notification extends Component {
                               link = '/subforum/'+data[i].forumid
                           }
                           this.childcontent.push(
-                              <Noti has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date)} ></Noti>
+                              <Noti has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date) } handleReadNotification={this.handleReadNotification}> ></Noti>
                           )
                           if(!data[i].has_read){
                               not_read+=1;
                           }
+                          console.log(data[i].has_read)
                       }
                       this.setState({not_read_noti:not_read,loaded:true})
                   }
               )
           }
       })
-    //   var data = this.dummydata;
-    //   for(let i = 0;i<data.length;i++){
-    //     let not_read=0;
-    //     for(var i=0;i<data.length;i++){
-    //         let link;
-    //         if(data[i].threadid!=null){
-    //             link = '/thread/'+data[i].threadid
-    //         }else if(data[i].forumid!=null){
-    //             link = '/subforum/'+data[i].forumid
-    //         }
-    //         this.childcontent.push(
-    //             <Noti has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date)} ></Noti>
-    //         )
-    //         if(!data[i].has_read){
-    //             not_read+=1;
-    //         }
-    //     }
-    //     this.setState({not_read_noti:not_read,loaded:true})
-    //   }
+    //  var data = this.dummydata;
+    //  let not_read=0;
+    //  for(var i=0;i<data.length;i++){
+    //      let link;
+    //      if(data[i].threadid!=null){
+    //          link = '/thread/'+data[i].threadid
+    //      }else if(data[i].forumid!=null){
+    //          link = '/subforum/'+data[i].forumid
+    //      }
+    //      this.childcontent.push(
+    //          <Noti has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date) } handleReadNotification={this.handleReadNotification}> ></Noti>
+    //      )
+    //      if(!data[i].has_read){
+    //          not_read+=1;
+    //      }
+    //      console.log(data[i].has_read)
+    //  }
+    //  this.setState({not_read_noti:not_read,loaded:true})
   }
 
   componentDidUpdate(){
     let newref = window.location.href;
     if (this.currentref!=newref){
         this.currentref = newref
-        //this.fetchData();
+        this.fetchData();
     }
     if(this.state.not_read_noti<=0&&this.state.loaded){
         if(this.state.unread){
@@ -134,8 +134,8 @@ class Notification extends Component {
   }
   handleReadNotification(){
     let current = this.state.not_read_noti;
-
-    this.setState({not_read_noti:current-=1})
+    current-=1;
+    this.setState({not_read_noti:current})
   }
 
   render() {
@@ -158,16 +158,22 @@ export default Notification;
 class Noti extends Component{
     constructor(props){
         super(props);
-        this.state={has_read:false}
+        this.state={has_read:true}
         this.handleClick = this.handleClick.bind(this);
-        this.setState({has_read:this.props.has_read})
+        
     }
     handleClick = ()=>{
+        
         if(!this.state.has_read){
             this.setState({has_read:true});
             this.props.handleReadNotification();
         }
+        
        
+    }
+
+    componentDidMount(){
+        this.setState({has_read:this.props.has_read})
     }
 
     render(){
@@ -175,7 +181,7 @@ class Noti extends Component{
         return (
             <div className={classname}>
                 <ReactLink to={this.props.link} onClick={this.handleClick}>
-                    <div className="data">
+                    <div className="data" onClick={this.handleClick}>
                         {this.props.noti}
                     </div>
                     <div className="time">

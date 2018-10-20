@@ -120,7 +120,6 @@ export default class Post extends Component {
         'Nov',
         'Dec'
         ];
-    console.log(timeString)
     let year = Number(timeString.substring(0,4))
     let month = Number(timeString.substring(5,7))
     let date = Number(timeString.substring(8,10))
