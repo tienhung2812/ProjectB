@@ -399,17 +399,17 @@ exports.notification = function(req, res) {
      UNION ALL 
      SELECT cp.noti,cp.creation_date, cp.threadid,cp.forumid
      FROM (
-       -- comment post
-      SELECT '@'||coalesce(u.username::text, '') || ' comments on your post in ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, p.threadid::text, null as forumid
-      FROM post p
-      INNER JOIN post_votes pv
-      ON p.pid = pv.postid AND pv.userid = $1
-      INNER JOIN public.user u
-      ON p.userid = u.id
-      INNER JOIN thread t
-      ON t.id = p.threadid 
-      WHERE p.userid <> $1
-    )cp
+      -- comment post
+	    SELECT '@'||coalesce(u.username::text, '') || ' comments on your post in ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, p.threadid::text, null as forumid
+	    FROM post p
+	    INNER JOIN post pp
+	    ON p.pid = pp.id and pp.userid = $1
+	    INNER JOIN public.user u
+	    ON p.userid = u.id
+	    INNER JOIN thread t
+	    ON t.id = p.threadid 
+	    WHERE p.userid <> $1
+      )cp
     ORDER BY creation_date DESC;
     `,
     values,

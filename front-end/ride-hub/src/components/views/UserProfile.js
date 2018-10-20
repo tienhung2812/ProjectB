@@ -134,7 +134,6 @@ class UserProfile extends Component {
                   if(data[key]!=null){
                     a = data[key]
                   }
-                  console.log(key+":"+a)
                   this.setState({[key]: a})
                   defaultdata[key]=a;
                   if(i==Object.keys(data).length)
@@ -178,31 +177,111 @@ class UserProfile extends Component {
   }
 
   changeProfile = ()=>{
+    var check =true;
+    //Email
+    var email;
+    if(this.state.email == this.state.data.email){
+      email = this.state.data.email;
+    }else{
+      if(this.state.email!=null||this.state.email=="")
+        email = this.state.email;
+    }
+    //Gender
+    var gender;
+    if(this.state.gender == this.state.data.gender){
+      gender = this.state.data.gender;
+    }else{
+      if((this.state.gender!=null||this.state.gender!="")&&(this.state.gender=="Male"||this.state.gender=="Female")){
+        gender = this.state.gender;
+      }else{
+        alert("Invalid gender")
+        check = false;
+      }
+    }
+    //Address
+    var address;
+    if(this.state.address==this.state.data.address){
+      address = this.state.data.address;
+    }else{
+      if(this.state.address!=null){
+        address = this.state.address
+      }else{
+        alert("Invalid address")
+        check = false;
+      }
+    }
+
+    var phone;
+    if(this.state.phone==this.state.data.phone){
+      phone = this.state.data.phone;
+    }else{
+      if(this.state.phone!=null){
+        phone = this.state.phone
+      }else{
+        alert("Invalid phone")
+        check = false;
+      }
+    }
+    //Phone number must <10
+    if(phone.length>10){
+      alert("Phone number must smaller than 10")
+      check = false
+    }
+
+    var description;
+    if(this.state.description==this.state.data.description){
+      description = this.state.data.description;
+    }else{
+      if(this.state.description!=null){
+        description = this.state.description
+      }else{
+        alert("Invalid description")
+        check = false;
+      }
+    }
+
+    var birthday;
+    if(this.state.birthday==this.state.data.birthday){
+      birthday = this.state.data.birthday;
+    }else{
+      if(this.state.birthday!=null){
+        birthday = this.state.birthday
+      }else{
+        alert("Invalid birthday")
+        check = false;
+      }
+    }
+
     var body = 
     JSON.stringify({     
         avatar: this.state.data.avatar,
-        gender:this.state.gender,
-        address:this.state.address,
-        phone:this.state.phone,
-        desciption:this.state.desciption,
-        birthday:this.state.birthday,
-        email:this.state.email
+        gender:gender,
+        address:address,
+        phone:phone,
+        description:description,
+        birthday:birthday,
+        email:email
     })
-    fetch('https://ride-hub.herokuapp.com/api/user', {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: body
-    }).then(response=>{
-      if(!response.ok){
-        alert('Error: '+response.status)
-      }else{
-        alert('Update successfully')
-        browserHistory.push('/UserProfile/'+this.state.uid);
-      }
-    })
+
+    console.log(check+body);
+    if(check){
+      fetch('https://ride-hub.herokuapp.com/api/user', {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: body
+      }).then(response=>{
+        if(!response.ok){
+          alert('Error: '+response.status)
+        }else{
+          alert('Update successfully')
+          browserHistory.push('/UserProfile/'+this.state.uid);
+        }
+      })
+    }
+    
   }
 
   handleChangeProfile = ()=>{

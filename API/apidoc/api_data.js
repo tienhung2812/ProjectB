@@ -1505,5 +1505,65 @@ define({ "api": [
     "filename": "task-api/index.js",
     "groupTitle": "User",
     "name": "GetUserIdSummary"
+  },
+  {
+    "type": "get",
+    "url": "/user/notification",
+    "title": "[Get] User information notification",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "noti",
+            "description": "<p>Notification name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Date",
+            "optional": false,
+            "field": "creation_date",
+            "description": "<p>date of the notifiation</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "threadid",
+            "description": "<p>threadid for notification about vote, follow, new thread, new post</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "forumid",
+            "description": "<p>forum id for notification about new subforum</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n[\n\t\t{\n\t\t \t\"noti\": \"@john creates new thread sefse... on your followed forum SH Mode\",\n        \t\"creation_date\": \"2018-10-13T00:00:00.000Z\",\n        \t\"threadid\": \"22\",\n        \t\"forumid\": null\n\t\t},.....\n\t]",
+          "type": "json[]"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "User not found",
+          "content": "HTTP/1.1 404 Not Found",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "User",
+    "name": "GetUserNotification"
   }
 ] });
