@@ -1,33 +1,5 @@
 define({ "api": [
   {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "task-api/doc/main.js",
-    "group": "D__task_api_doc_main_js",
-    "groupTitle": "D__task_api_doc_main_js",
-    "name": ""
-  },
-  {
     "type": "delete",
     "url": "/subforum/:forumid",
     "title": "[DELETE] Delete Subforum",
@@ -464,6 +436,34 @@ define({ "api": [
     "filename": "task-api/index.js",
     "groupTitle": "Forum",
     "name": "PutSubforumForumid"
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "task-api/doc/main.js",
+    "group": "G__ride_hubtest_task_api_doc_main_js",
+    "groupTitle": "G__ride_hubtest_task_api_doc_main_js",
+    "name": ""
   },
   {
     "type": "delete",
@@ -948,13 +948,27 @@ define({ "api": [
             "optional": false,
             "field": "child",
             "description": "<p>List of posts belong to that thread</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "replies",
+            "description": "<p>Number of replies</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n\t  {\n\t\tid: 1,\n\t\ttitle: \"BMW thread1 \",\n\t\tthumbnail: null,\n\t\ttag: \"Help \",\n\t\tchild: \"1,11,12\"\n\t  }",
+          "content": "   HTTP/1.1 200 OK\n\t  {\n\t\tid: 1,\n\t\ttitle: \"BMW thread1 \",\n\t\tthumbnail: null,\n\t\ttag: \"Help \",\n\t\tchild: \"1,11,12\",\n\t\tusernam : \"\",\n\t\treplies: 2\n\t  }",
           "type": "json"
         }
       ]
@@ -1541,13 +1555,20 @@ define({ "api": [
             "optional": false,
             "field": "forumid",
             "description": "<p>forum id for notification about new subforum</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>notificationid</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n[\n\t\t{\n\t\t \t\"noti\": \"@john creates new thread sefse... on your followed forum SH Mode\",\n        \t\"creation_date\": \"2018-10-13T00:00:00.000Z\",\n        \t\"threadid\": \"22\",\n        \t\"forumid\": null\n\t\t},.....\n\t]",
+          "content": "   HTTP/1.1 200 OK\n[\n\t\t{\n\t\t \t\"noti\": \"@john creates new thread sefse... on your followed forum SH Mode\",\n        \t\"creation_date\": \"2018-10-13T00:00:00.000Z\",\n        \t\"threadid\": \"22\",\n\t\t\t\"forumid\": null\n\t\t\t\"id\": 1\n\t\t},.....\n\t]",
           "type": "json[]"
         }
       ]
@@ -1565,5 +1586,46 @@ define({ "api": [
     "filename": "task-api/index.js",
     "groupTitle": "User",
     "name": "GetUserNotification"
+  },
+  {
+    "type": "post",
+    "url": "/user/notification_read",
+    "title": "[POST] Mark that user read the notification",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "notification_id",
+            "description": "<p>notificationid</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n\n\t\"action success\"",
+          "type": "Message"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "HTTP/1.1 400 Action failed!",
+          "content": "HTTP/1.1 400 Action failed!",
+          "type": "Message"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "task-api/index.js",
+    "groupTitle": "User",
+    "name": "PostUserNotification_read"
   }
 ] });
