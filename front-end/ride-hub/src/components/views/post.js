@@ -91,7 +91,11 @@ export default class Post extends Component {
         if(!response.ok){
             console.log('Error: '+response.status);
             is_vote=!is_vote;
-            voteNum-=1;
+            if(is_vote){
+                voteNum+=1
+            }else{
+                voteNum-=1
+            }
             this.setState({likeStatus:is_vote,voteNumber:voteNum})
             if(response.status===403){
                 alert('You must log in to use this function')

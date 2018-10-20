@@ -14,6 +14,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
 
+import loadinganimation from '../../loading-animation.gif'
+
 const CLOUDINARY_UPLOAD_PRESET = 'jvad47ey';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dp9vfrkbu/image/upload';
 
@@ -62,6 +64,26 @@ export default class TextEditor extends Component {
       'bold', 'italic', 'underline', 'strike', 'blockquote',
       'list', 'bullet', 'indent',
       'link', 'image', 'video'
+    ]
+
+    this.commentmodules={
+      toolbar: {
+        container: [
+        [{ 'header': [1, 2, false] }, { 'font': [] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}, 
+         {'indent': '-1'}, {'indent': '+1'}],
+        ['link'],
+        ['clean']
+          ]
+      }
+    }
+
+    this.commentformat=[
+      'header', 'font', 'size',
+      'bold', 'italic', 'underline', 'strike', 'blockquote',
+      'list', 'bullet', 'indent',
+      'link'
     ]
 
       //Fetch tag
@@ -136,7 +158,7 @@ export default class TextEditor extends Component {
       const range = this.textInput.current.getEditor().getSelection(true);
   
       // Insert temporary loading placeholder image
-      this.textInput.current.getEditor().insertEmbed(range.index, 'image', `${ window.location.origin }/images/loaders/placeholder.gif`); 
+      this.textInput.current.getEditor().insertEmbed(range.index, 'image', loadinganimation); 
   
       // Move cursor to right side of image (easier to continue typing)
       this.textInput.current.getEditor().setSelection(range.index + 1);
@@ -260,8 +282,8 @@ export default class TextEditor extends Component {
           <Grid item xs={12}>
             <ReactQuill 
               theme="snow"
-              modules={this.modules}
-              formats={this.formats} 
+              modules={this.commentmodules}
+              formats={this.commentformat} 
               placeholder={'What are your thoughts ?'}
               ref={this.textInput}
             />

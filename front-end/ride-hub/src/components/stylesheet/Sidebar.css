@@ -58,6 +58,12 @@
     color: rgb(32, 32, 32);
 }
 
+.sidebar-content .wrapper.newestthread .content-wrapper .content .child{
+    border-bottom: 1px solid #cacaca;
+}
+.sidebar-content .wrapper.newestthread .content-wrapper .content .child:last-child{
+    border-bottom:none;
+}
 .sidebar-content .wrapper.recentactivities .content-wrapper .content a{
     padding: 0 2px;
     color: #BA5454;

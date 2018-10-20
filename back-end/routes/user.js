@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var user_controller = require('../controllers/user_controller');
 
+router.get('/notification',user_controller.notification);
 router.get('/latestactivity',user_controller.latest_activity);
 router.get('/billboard',user_controller.billboard);
 // GET user detail information
