@@ -107,3 +107,11 @@
     display:inline-block;
     font-size: 0.8rem;
 }
+
+.sidebar-content .wrapper.credit .content a{
+    color:rgb(61, 61, 61);
+}
+
+.sidebar-content .wrapper.credit .content a:hover{
+    color:rgb(128, 128, 128);
+}

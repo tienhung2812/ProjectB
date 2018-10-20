@@ -314,7 +314,37 @@ class UserProfile extends Component {
   }
 
   handleChangePassword = () =>{
-
+    let pw = this.state.password;
+    let cpw = this.state.confirmpassword;
+    if(pw==null||cpw==null){
+      alert("Password can't be null" );
+    }else if(pw!=cpw){
+      alert("Password not match")
+    }else if(!validatePassword(pw)){
+      alert("Password has at least 1 letter and 1 number, minimum 8 character")
+    }else{
+      fetch('https://ride-hub.herokuapp.com/api/user/modify/password', {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          password:pw
+        })
+      }).then(response=>{
+        if(!response.ok){
+          alert("Error: "+response.status)
+        }else{
+          alert('Update successfully')
+          this.setState({
+            password:null,
+            confirmpassword:null
+          })
+          browserHistory.push('/');
+        }
+      })
+    }
   }
 
   render() {
@@ -340,7 +370,7 @@ class UserProfile extends Component {
             </Tabs>
           </AppBar>
           {value === 0 && <TabContainer><Profile disabled={guest} changed={this.state.changed} uid={this.state.uid} data={this.state.data} handleFieldChange={this.handleFieldChange} handleChangeProfile={this.handleChangeProfile}/></TabContainer>}
-          {value === 1 && <TabContainer><Account disabled={guest} uid={this.state.uid} data={this.state.data} handleChangePassword={this.handleChangePassword} /></TabContainer>}
+          {value === 1 && <TabContainer><Account disabled={guest} uid={this.state.uid} data={this.state.data} handleChangePassword={this.handleChangePassword} handleFieldChange={this.handleFieldChange}/></TabContainer>}
           {/* {value === 2 && <TabContainer><Noti  disabled={guest}  uid={this.state.uid} data={this.state.data}/></TabContainer>} */}
           </Paper>
         </div>  

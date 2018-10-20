@@ -10,6 +10,8 @@ import UserProfile from './components/views/UserProfile';
 import FilterSearchPage from './components/views/filterSearchPage';
 import ResetPassword from './components/views/resetpassword';
 import AdminPanel from './components/views/admin';
+import TermsAndPolicies from './components/views/termsAndPolicies';
+import AboutUs from './components/views/aboutus';
 import App from './components/App';
 
 export default (
@@ -23,6 +25,8 @@ export default (
     <HashRouter path={'/admin'} component={AdminPanel}/>
     <HashRouter path={'/filterSearch/:data'} component={FilterSearchPage}/>
     <HashRouter path={'/resetpassword/:data'} component={ResetPassword}/>
+    <HashRouter path={'/termsandpolicies'} component={TermsAndPolicies}/>
+    <HashRouter path={'/aboutus'} component={AboutUs}/>
     <HashRouter path={'*'} component={Home} />
   </HashRouter>
 );

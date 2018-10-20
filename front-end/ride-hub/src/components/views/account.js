@@ -26,11 +26,14 @@ function Account (props) {
         </Typography>
         <Divider/>
         <br/>
-        <TextField
-                    label="Current password (required for editing)"
-                    variant="outlined"
-                    fullWidth
-        />
+        {/* <TextField
+          name="currentpassword"
+          type="password"
+          label="Current password (required for editing)"
+          variant="outlined"
+          onChange={props.handleFieldChange}
+          fullWidth
+        /> */}
         <br/>
         <br/>
         <Divider/>
@@ -43,14 +46,20 @@ function Account (props) {
             </Typography>
             <TextField
             fullWidth
+            type="password"
+            name="password"
             label="New password" 
+            onChange={props.handleFieldChange}
             />
             </Grid>
             <Grid item xs={6}>
             <TextField
-                    fullWidth
-                    label="Verify password" 
-                    />
+              fullWidth
+              type="password"
+              name="confirmpassword"
+              label="Verify password" 
+              onChange={props.handleFieldChange}
+              />
             </Grid>
             <Grid item xs={12} align="right">
             <Button variant="contained" color="primary" disabled={props.disabled} className={classes.button} onClick={props.handleChangePassword}>

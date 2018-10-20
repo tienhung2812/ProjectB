@@ -165,7 +165,7 @@
     padding : 0;
 }
 
-.header-container .functionButtons .notification-button .dropdown-menu .child{
+.header-container .functionButtons .notification-button .dropdown-menu .child.true{
     padding: 10px 10px;
     border-bottom: 1px solid #cacacad0;
     transition: all 0.3s ease-out;
@@ -178,6 +178,24 @@
     transition: all 0.3s ease-out;
     -webkit-transition: all 0.3s ease-out;
     -moz-transition: all 0.3s ease-out;
+}
+
+.header-container .functionButtons .notification-button .dropdown-menu .child.false{
+    padding: 10px 10px;
+    background-color: #e9f7ff;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+}
+
+.header-container .functionButtons .notification-button .dropdown-menu .child a{
+    color:black;
+}
+
+.header-container .functionButtons .notification-button .dropdown-menu .child a .time{
+    text-align:right;
+    font-size:0.5rem;
+    color: #797979;
 }
 
 .header-container .account{

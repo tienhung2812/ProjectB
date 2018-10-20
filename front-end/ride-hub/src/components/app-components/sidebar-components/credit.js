@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import {Link as ReactLink} from 'react-router';
 
 export default class Credit extends Component {
   constructor(props){
@@ -18,8 +18,11 @@ export default class Credit extends Component {
   render() {
     return(<div className="credit wrapper"> 
       <div className="content">
-        Designed and Developed <br/>
-        by Ridehub © 2018.
+      <ReactLink to={'/termsandpolicies'}>Terms and Policies</ReactLink>
+      <br/>
+      © 2018 <ReactLink to={'/aboutus'}>RideHub, Inc. </ReactLink>
+      <br/>
+      All rights reserved
         {/* © 2018 Ridehub. All Rights Reserved. */}
       </div>
       
