@@ -267,7 +267,6 @@ exports.latest_activity = function(req, res) {
   );
 };
 
-<<<<<<< HEAD
 // Delete User Account
 exports.user_modify_password = function(req, res) {
   if (!req.isAuthenticated()) {
@@ -328,7 +327,6 @@ exports.user_modify_password = function(req, res) {
     // end modify password account
   }
 };
-=======
 exports.notification = function(req, res) {
   values = [req.session.passport.user.id];
   db.query(
@@ -426,4 +424,3 @@ exports.notification = function(req, res) {
   );
 };
 
->>>>>>> 23c2760ffa4a4a0a9e26c779f0862dc44e1b7f39
