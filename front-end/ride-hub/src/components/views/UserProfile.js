@@ -22,7 +22,14 @@ function TabContainer(props) {
   );
 }
 
-
+function validateEmail(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+function validatePassword(password){
+  var re = /^\S(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+  return re.test(password);
+}
 
 const styles = theme => ({
   root: {
@@ -32,13 +39,23 @@ const styles = theme => ({
   },
 });
 
-
+var guest;
 
 class UserProfile extends Component {
   state = {
     value: 0,
     data:{"username":"anonymous","avatar":{"type":"Buffer","data":null},"point":0,"gender":"Female","address":null,"phone":null,"description":null,"birthday":null},
-    loadDone:false
+    loadDone:false,
+    username:null,
+    gender:null,
+    address:null,
+    phone:null,
+    desciption:null,
+    birthday:null,
+    email:null,
+    changed:false,
+    uid:null,
+    disallowSaveChange:false
   };
 
   handleChange = (event, value) => {
@@ -48,16 +65,57 @@ class UserProfile extends Component {
   constructor(props){
     super(props);
   }
-  componentDidMount() {
-    browserHistory.push('/UserProfile');
+  componentDidMount() { 
     this.uid = cookie.get('userid');
-    this.child;
-    if(this.uid==null){
-      //alert("You must log in to use this function");
+    this.paramsid = this.props.params.guestid;
+    if(this.uid==null&&this.paramsid==null){
       browserHistory.push('/');
     }else{
-      console.log(this.uid)
-      fetch('https://ride-hub.herokuapp.com/api/user/'+this.uid+'/details')
+      if(this.uid==this.paramsid){
+        guest = false;
+        this.fetchData(this.uid)
+      }else{
+        guest=true;
+        this.fetchData(this.paramsid)
+      }
+    }
+}
+  componentDidUpdate(prevProps){
+    if(prevProps.params.guestid!= this.props.params.guestid){
+      this.setState({
+        value: 0,
+        data:{"username":"anonymous","avatar":{"type":"Buffer","data":null},"point":0,"gender":"Female","address":null,"phone":null,"description":null,"birthday":null},
+        loadDone:false,
+        username:null,
+        gender:null,
+        address:null,
+        phone:null,
+        desciption:null,
+        birthday:null,
+        email:null,
+        changed:false,
+        uid:null
+      })
+      this.child = ""
+      this.uid = cookie.get('userid');
+      this.paramsid = this.props.params.guestid;
+      if(this.uid==null&&this.paramsid==null){
+        browserHistory.push('/');
+      }else{
+        if(this.uid==this.paramsid){
+          guest = false;
+          this.fetchData(this.uid)
+        }else{
+          guest=true;
+          this.fetchData(this.paramsid)
+        }
+      }
+    }
+    
+  }
+
+  fetchData(uid){
+    fetch('https://ride-hub.herokuapp.com/api/user/'+uid+'/details')
     .then(response=>{
         if(response.status!==200){
             //User fault
@@ -67,52 +125,245 @@ class UserProfile extends Component {
             cookie.remove('role');
         }else{
             //Correct user
-            let samepleData = {"username":"user1","avatar":{"type":"Buffer","data":[68,58,92,83,111,102,116,119,97,114,101,92,78,111,100,101,74,83,92,82,105,100,101,72,117,98,92,102,114,111,110,116,45,101,110,100,92,100,101,115,105,103,110,92,83,107,101,116,99,104,92,73,109,97,103,101,115,92,100,101,102,97,117,108,116,32,97,118,97,116,97,114,46,112,110,103]},"point":0,"gender":"Female","address":null,"phone":null,"description":null,"birthday":null}
-            // const contentType = response.headers.get("content-type");
-            // if (contentType && contentType.indexOf("application/json") !== -1) {
-            //   return response.json().then(data => {
-            //     this.setState({
-            //       data:data
-            //   })
-            //   });
-            // } else {
-            //   return response.text().then(text => {
-            //     console.log(text);
-            //     alert('User not found')
-            //   });
-            // }
-            this.setState({data:samepleData,loadDone:true})
+            response.json().then(
+              data=>{
+                var defaultdata={};
+                var i = 0;
+                for( var key in data){
+                  i++;
+                  let a ="";
+                  if(data[key]!=null){
+                    a = data[key]
+                  }
+                  this.setState({[key]: a})
+                  defaultdata[key]=a;
+                  if(i==Object.keys(data).length)
+                    this.setState({uid:uid,data:defaultdata,loadDone:true})
+                }
+                
+              }
+              
+            )
+            // this.setState({data:samepleData,loadDone:true})
           
         }
     })
+  }
+
+  handleFieldChange=(event)=>{
+    this.setState({ [event.target.name]: event.target.value ,changed:true});
+  }
+  checkExistEmail(callback){
+    if(this.state.email!=this.state.data.email)
+    fetch('https://ride-hub.herokuapp.com/api/signup/checkemail', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.state.email
+      })
+    }).then(response =>{
+      if(response.ok){
+        console.log("ok")
+        callback();
+        return true;
+      }else{
+        //User already
+        alert("Email existed")
+        return false;
+      }
+    })
+  }
+
+  changeProfile = ()=>{
+    var check =true;
+    //Email
+    var email;
+    if(this.state.email == this.state.data.email){
+      email = this.state.data.email;
+    }else{
+      if(this.state.email!=null||this.state.email=="")
+        email = this.state.email;
+      else{
+        email = this.state.data.email;
+      }
     }
+    //Gender
+    var gender;
+    if(this.state.gender == this.state.data.gender){
+      gender = this.state.data.gender;
+    }else{
+      if((this.state.gender!=null||this.state.gender!="")&&(this.state.gender=="Male"||this.state.gender=="Female")){
+        gender = this.state.gender;
+      }else{
+        alert("Invalid gender")
+        check = false;
+      }
+    }
+    //Address
+    var address;
+    if(this.state.address==this.state.data.address){
+      address = this.state.data.address;
+    }else{
+      if(this.state.address!=null){
+        address = this.state.address
+      }else{
+        alert("Invalid address")
+        check = false;
+      }
+    }
+
+    var phone;
+    if(this.state.phone==this.state.data.phone){
+      phone = this.state.data.phone;
+    }else{
+      if(this.state.phone!=null){
+        phone = this.state.phone
+      }else{
+        alert("Invalid phone")
+        check = false;
+      }
+    }
+    //Phone number must <10
+    if(phone.length>10){
+      alert("Phone number must smaller than 10")
+      check = false
+    }
+
+    var description;
+    if(this.state.description==this.state.data.description){
+      description = this.state.data.description;
+    }else{
+      if(this.state.description!=null){
+        description = this.state.description
+      }else{
+        alert("Invalid description")
+        check = false;
+      }
+    }
+
+    var birthday;
+    if(this.state.birthday==this.state.data.birthday){
+      birthday = this.state.data.birthday;
+    }else{
+      if(this.state.birthday!=null){
+        birthday = this.state.birthday
+      }else{
+        alert("Invalid birthday")
+        check = false;
+      }
+    }
+
+    const body = 
+    JSON.stringify({     
+        email:email,
+        avatar: this.state.data.avatar,
+        gender:gender,
+        address:address,
+        phone:phone,
+        description:description,
+        birthday:birthday,
+        
+    })
+
+    //console.log(check+body);
+    if(check){
+      this.setState({changed:false})
+      fetch('https://ride-hub.herokuapp.com/api/user', {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: body
+      }).then(response=>{
+        if(!response.ok){
+          alert('Error: '+response.status)
+          this.setState({changed:true})
+        }else{
+          alert('Update successfully')
+          this.setState({changed:false})
+          browserHistory.push('/UserProfile/'+this.state.uid);
+        }
+      })
+    }
+    
+  }
+
+  handleChangeProfile = ()=>{
+    //Check All
+    if(this.uid===this.paramsid)
+      if((this.state.email!=this.state.data.email)){
+        if((this.state.email!=="")){
+          if(validateEmail(this.state.email)){
+            this.checkExistEmail(this.changeProfile)
+          }else{
+            alert("Invalid email")
+          }
+        }
+      }else{
+        this.changeProfile();
+      }
+        
+    else{
+      alert('Can not change other profile')
+    }
+    
+  }
+
+  handleChangePassword = () =>{
+
   }
 
   render() {
     const { classes } = this.props;
     const { value } = this.state;
+
     if(this.state.loadDone){
-      this.child = <div>
-      <Paper className={classes.root} elevation={1}>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={this.handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          scrollable
-          scrollButtons="auto"
-        >
-          <Tab label="Profile" />
-          <Tab label="Account" />
-          <Tab label="Notifications" />
-        </Tabs>
-      </AppBar>
-      {value === 0 && <TabContainer><Profile uid={this.uid} data={this.state.data}/></TabContainer>}
-      {value === 1 && <TabContainer><Account  uid={this.uid} data={this.state.data}/></TabContainer>}
-      {value === 2 && <TabContainer><Noti  uid={this.uid} data={this.state.data}/></TabContainer>}
-      </Paper>
-    </div>  
+      if(!guest){
+        this.child = <div>
+          <Paper className={classes.root} elevation={1}>
+          <AppBar position="static" color="default">
+            <Tabs
+              value={value}
+              onChange={this.handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              scrollable
+              scrollButtons="auto"
+            >
+              <Tab label="Profile" />
+              <Tab label="Account" />
+              {/* <Tab label="Notifications" /> */}
+            </Tabs>
+          </AppBar>
+          {value === 0 && <TabContainer><Profile disabled={guest} changed={this.state.changed} uid={this.state.uid} data={this.state.data} handleFieldChange={this.handleFieldChange} handleChangeProfile={this.handleChangeProfile}/></TabContainer>}
+          {value === 1 && <TabContainer><Account disabled={guest} uid={this.state.uid} data={this.state.data} handleChangePassword={this.handleChangePassword} /></TabContainer>}
+          {/* {value === 2 && <TabContainer><Noti  disabled={guest}  uid={this.state.uid} data={this.state.data}/></TabContainer>} */}
+          </Paper>
+        </div>  
+      }else{
+        this.child = <div>
+          <Paper className={classes.root} elevation={1}>
+          <AppBar position="static" color="default">
+            <Tabs
+              value={value}
+              onChange={this.handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              scrollable
+              scrollButtons="auto"
+            >
+              <Tab label="Profile" />
+            </Tabs>
+          </AppBar>
+          {value === 0 && <TabContainer><Profile disabled={guest} uid={this.state.uid} data={this.state.data} /></TabContainer>}
+          </Paper>
+        </div>  
+      }
+      
     }
     return (
     <React.Fragment>

@@ -116,26 +116,27 @@ class AccountDropDown extends Component {
     }
   handleLogOut(){
       
-      fetch('https://ride-hub.herokuapp.com/api/logout', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: this.state.username
-        })
-      }).then(response=>{
-          if(response.status==200){
-            this.setState({isLogged:false,loggingin:false,open:false})
-            cookie.remove("role");
-            cookie.remove("userid");
-            cookie.remove('connect.sid');
-            browserHistory.push('/');
-          }else{
-              alert("Log out fail")
-          }
-      })
+    fetch('https://ride-hub.herokuapp.com/api/logout', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        username: this.state.username
+    })
+    }).then(response=>{
+        if(response.status==200){
+        
+        }else{
+            alert("Log out fail")
+        }
+    })
+    this.setState({isLogged:false,loggingin:false,open:false})
+    cookie.remove("role");
+    cookie.remove("userid");
+    cookie.remove('connect.sid');
+    browserHistory.push('/');
      
   }
 
@@ -362,20 +363,20 @@ class AccountDropDown extends Component {
             </div>
         )
         this.childcontent.push(
-            <button className="dropdown-item" type="button">
-                <ReactLink to={'/signup'}>
+            <ReactLink to={'/signup'}>
+                <button className="dropdown-item" type="button">
                     Sign up
-                </ReactLink>    
-            </button>
+                </button>
+            </ReactLink>
         );
     }else{
         this.childcontent = []
         if(cookie.get('role')==='Admin'){
-            this.childcontent.push(<button className="dropdown-item" type="button" > <ReactLink to={'/admin'}>Admin Page </ReactLink></button>)
+            this.childcontent.push(<ReactLink to={'/admin'}><button className="dropdown-item" type="button" > Admin Page </button></ReactLink>)
         }
         this.childcontent.push(
            
-            <button className="dropdown-item" type="button" > <ReactLink to={'/UserProfile/'} params={{ uid:cookie.get('userid') }}>My Account </ReactLink></button>
+            <ReactLink to={'/UserProfile/'+cookie.get('userid')}><button className="dropdown-item" type="button" > My Account </button></ReactLink>
            
         )
         this.childcontent.push(

@@ -79,6 +79,32 @@ app.get('user/:id/summary',function(req,res){
 });
 
 /**
+ * @api {get} /user/notification [Get] User information notification
+ * @apiGroup User
+ * @apiSuccess {String} noti Notification name
+ * @apiSuccess {Date} creation_date date of the notifiation
+ * @apiSuccess {Number} threadid threadid for notification about vote, follow, new thread, new post
+ * @apiSuccess {Number} forumid forum id for notification about new subforum
+ * @apiSuccessExample {json[]} Success
+ *    HTTP/1.1 200 OK
+ * [
+		{
+		 	"noti": "@john creates new thread sefse... on your followed forum SH Mode",
+        	"creation_date": "2018-10-13T00:00:00.000Z",
+        	"threadid": "22",
+        	"forumid": null
+		},.....
+	]
+ *  
+ * @apiErrorExample {json} User not found
+ *    HTTP/1.1 404 Not Found
+ *
+ */
+app.get('user/notification',function(req,res){
+
+});
+
+/**
  * @api {get} /subforum/root [Get] List of Subforums
  * @apiGroup Forum
  * @apiParam {Number} userid userid

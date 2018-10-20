@@ -1,6 +1,5 @@
 // src/server.js
-
-// initialize the server and configure support for ejs templates
+// import modules
 const path = require("path");
 var express = require("express");
 //var session = require('cookie-session')
@@ -8,12 +7,12 @@ var session = require("express-session");
 var bodyParser = require("body-parser");
 var cors = require("cors");
 var passport = require("passport");
-var flash = require("connect-flash");
+var flash = require("connect-flash"); 
 //const FileStore = require("session-file-store")(session);
 var pgSession = require('connect-pg-simple')(session);
 var cookieParser = require('cookie-parser');
 const uuid = require("uuid/v4");
-
+const helmet = require('helmet')
 // import custom modules
 var userRouter = require("./back-end/routes/user");
 var postRouter = require("./back-end/routes/post");
@@ -29,6 +28,7 @@ require("./back-end/config/passport")(passport); // pass passport for configurat
 // Create an Express application
 var app = express();
 // Congifure the Express application
+app.use(helmet())
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -53,13 +53,13 @@ app.use(
       tableName : 'session'   // Use another table-name than the default "session" one
     }),
     secret: "JeNX5lMRkF3DAkXc65oboQWk0z6pCE00", //a random value for hashing  session id
-    resave: false,
-    saveUninitialized: true,
+    resave: false, // Dont' force the session to be saved back to the session store, as specified by connect-pg-simple
+    saveUninitialized: false, // must make it false, otherwise, every request to website without login will make a new session
     cookie: {maxAge: cookieTimeLife, 
              expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
-             secure: false,
-             domain: "ride-hub.herokuapp.com"
+             secure: false,  // make cookie only available on  HTTPS site, for production!
+            //  domain: "ride-hub.herokuapp.com"
             }
   })
 );
@@ -117,23 +117,27 @@ app.post('/api/signup', function(req, res, next) {
   passport.authenticate('signup', function(err, user, info) {
     if (err) { return next(err); }
     if (!user) {
-      res.status(401);
+      // res.status(401);
       //console.log(info.message);
       return res.status(401).send({
           "message": "username already exists",
           "success": "false"
         });      
-    }         
-    req.login(user, function(err) {
+    }
+    return res.status(200).send({
+      "message": "new account is created successfully",
+      "success": "true"
+    });         
+/*     req.login(user, function(err) {
       if (err) { return next(err); }
       //else {                
-        return res.send({
+        return res.status(200).send({
           "message": "new account is created successfully",
           "success": "true"
         });
       //}
       
-    });
+    }); */
   })(req, res, next);
 });
 

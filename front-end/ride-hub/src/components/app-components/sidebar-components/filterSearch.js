@@ -244,11 +244,12 @@ export default class FilterSearch extends Component {
                             {this.issues}
                         </Select>
                     </FormControl>
-                    <Button variant="contained"  className="searchbtn" disabled={this.state.disable}>
-                        <ReactLink to={ '/filterSearch/'+JSON.stringify(this.state.searchData)}>
+                    <ReactLink to={ '/filterSearch/'+JSON.stringify(this.state.searchData)}>
+                        <Button variant="contained"  className="searchbtn" disabled={this.state.disable}>
                             SEARCH
-                        </ReactLink>
-                    </Button>
+                        </Button>
+                    </ReactLink>
+                    
                 </form>
             </div>
         </div>

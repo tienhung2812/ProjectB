@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import CreateIcon from '@material-ui/icons/Create';
 import TextField from '@material-ui/core/TextField';
+import {Link as ReactLink} from 'react-router';
 import './view-stylesheet/addthread.css';
 import { withStyles, MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
 
@@ -19,18 +20,44 @@ const theme = createMuiTheme({
 export default class AddThread extends Component {
   constructor(props){
     super(props);
-    this.state = {subforumID:0,title:''}
+    this.state = {subforumID:0,title:'',pathloaded:false}
     this.handleTitle = this.handleTitle.bind(this);
   }
   componentDidMount() {
+    this.path = null
     browserHistory.push('/addthread/'+this.props.params.subforumID);
     this.setState({subforumID:this.props.params.subforumID})
+    fetch('http://ride-hub.herokuapp.com/api/subforum/path/'+this.props.params.subforumID)
+    .then(response=>{
+      if(response.ok){
+        response.json().then(
+          data=>{
+            data=data[0]
+            //console.log(data)
+            this.path = 
+            <div className="subforumpath-wrapper">
+              <div>
+                <p> Subforum: </p>
+                <ReactLink to={'/subforum/'+data.parent_id} className="subforum-link">{data.parent_title}</ReactLink>
+                  <p> > </p>
+                <ReactLink to={'/subforum/'+data.child_id} className="subforum-link">{data.child_title}</ReactLink>
+              </div>
+            </div>
+            this.setState({pathloaded:true})
+            
+          }
+        )
+      }
+    })
   }
   handleTitle=(event)=>{
     this.setState({title:event.target.value})
   }
 
   render() {
+    if(this.state.pathloaded){
+      this.pathcontent=this.path
+    }
     return (
     <React.Fragment>
     <CssBaseline />
@@ -53,13 +80,7 @@ export default class AddThread extends Component {
       </MuiThemeProvider>
       </Grid>
       <Grid item xs>
-      <TextField
-          disabled
-          fullWidth
-          label="Forum:"
-          defaultValue="SubForum > SubSubForum"
-          variant="outlined"
-        />
+        {this.pathcontent}
       </Grid>
       
       <Grid item xs={12}>
