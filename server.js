@@ -59,7 +59,7 @@ app.use(
              expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
              secure: false,  // make cookie only available on  HTTPS site, for production!
-             domain: "ride-hub.herokuapp.com"
+            //  domain: "ride-hub.herokuapp.com"
             }
   })
 );

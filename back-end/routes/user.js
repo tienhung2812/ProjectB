@@ -17,7 +17,7 @@ router.delete('/:username', user_controller.user_delete)
 
 router.put('/modify/role', user_controller.user_modify_role);
 
-
+router.put('/modify/password', user_controller.user_modify_password);
 
 
 
