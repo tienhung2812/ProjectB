@@ -54,7 +54,8 @@ class UserProfile extends Component {
     birthday:null,
     email:null,
     changed:false,
-    uid:null
+    uid:null,
+    disallowSaveChange:false
   };
 
   handleChange = (event, value) => {
@@ -185,6 +186,9 @@ class UserProfile extends Component {
     }else{
       if(this.state.email!=null||this.state.email=="")
         email = this.state.email;
+      else{
+        email = this.state.data.email;
+      }
     }
     //Gender
     var gender;
@@ -252,19 +256,21 @@ class UserProfile extends Component {
       }
     }
 
-    var body = 
+    const body = 
     JSON.stringify({     
+        email:email,
         avatar: this.state.data.avatar,
         gender:gender,
         address:address,
         phone:phone,
         description:description,
         birthday:birthday,
-        email:email
+        
     })
 
-    console.log(check+body);
+    //console.log(check+body);
     if(check){
+      this.setState({changed:false})
       fetch('https://ride-hub.herokuapp.com/api/user', {
         method: 'PUT',
         headers: {
@@ -275,8 +281,10 @@ class UserProfile extends Component {
       }).then(response=>{
         if(!response.ok){
           alert('Error: '+response.status)
+          this.setState({changed:true})
         }else{
           alert('Update successfully')
+          this.setState({changed:false})
           browserHistory.push('/UserProfile/'+this.state.uid);
         }
       })
@@ -332,7 +340,7 @@ class UserProfile extends Component {
             </Tabs>
           </AppBar>
           {value === 0 && <TabContainer><Profile disabled={guest} changed={this.state.changed} uid={this.state.uid} data={this.state.data} handleFieldChange={this.handleFieldChange} handleChangeProfile={this.handleChangeProfile}/></TabContainer>}
-          {value === 1 && <TabContainer><Account  disabled={guest} uid={this.state.uid} data={this.state.data} handleChangePassword={this.handleChangePassword} /></TabContainer>}
+          {value === 1 && <TabContainer><Account disabled={guest} uid={this.state.uid} data={this.state.data} handleChangePassword={this.handleChangePassword} /></TabContainer>}
           {/* {value === 2 && <TabContainer><Noti  disabled={guest}  uid={this.state.uid} data={this.state.data}/></TabContainer>} */}
           </Paper>
         </div>  
