@@ -126,18 +126,21 @@ class UserProfile extends Component {
             //Correct user
             response.json().then(
               data=>{
-                this.setState({
-                  uid:uid,
-                  username:data.username,
-                  gender:data.gender,
-                  address:data.address,
-                  phone:data.phone,
-                  desciption:data.desciption,
-                  birthday:data.birthday,
-                  email:data.email,
-                  data:data,
-                  loadDone:true
-                })
+                var defaultdata={};
+                var i = 0;
+                for( var key in data){
+                  i++;
+                  let a ="";
+                  if(data[key]!=null){
+                    a = data[key]
+                  }
+                  console.log(key+":"+a)
+                  this.setState({[key]: a})
+                  defaultdata[key]=a;
+                  if(i==Object.keys(data).length)
+                    this.setState({uid:uid,data:defaultdata,loadDone:true})
+                }
+                
               }
               
             )
@@ -185,18 +188,13 @@ class UserProfile extends Component {
         birthday:this.state.birthday,
         email:this.state.email
     })
-    console.log(body)
-    const url = 'https"//ride-hub.herokuapp.com/api/user/';
-    console.log(url)
     fetch('https://ride-hub.herokuapp.com/api/user', {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email: this.state.email
-      })
+      body: body
     }).then(response=>{
       if(!response.ok){
         alert('Error: '+response.status)
@@ -210,11 +208,13 @@ class UserProfile extends Component {
   handleChangeProfile = ()=>{
     //Check All
     if(this.uid===this.paramsid)
-      if(this.state.email!=this.state.data.email){
-        if(validateEmail(this.state.email)){
-          this.checkExistEmail(this.changeProfile)
-        }else{
-          alert("Invalid email")
+      if((this.state.email!=this.state.data.email)){
+        if((this.state.email!=="")){
+          if(validateEmail(this.state.email)){
+            this.checkExistEmail(this.changeProfile)
+          }else{
+            alert("Invalid email")
+          }
         }
       }else{
         this.changeProfile();

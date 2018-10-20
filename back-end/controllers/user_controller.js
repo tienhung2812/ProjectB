@@ -1,67 +1,71 @@
-// user_controller.js 
+// user_controller.js
 const db = require("../db");
+const emaiAddress = process.env.EMAIL;
+const emailPassword = process.env.EMAIL_PASSWORD;
+const bcrypt = require("bcrypt");
+var nodemailer = require("nodemailer");
 
 exports.user_details_get = function(req, res) {
-    var user_id = req.params.user_id;
-    var values = [user_id];
-    db.query(
-        `SELECT u.username, u.avatar, u.point, r.name as role, g.type AS gender, u.address,phone, u.description, u.birthday
+  var user_id = req.params.user_id;
+  var values = [user_id];
+  db.query(
+    `SELECT u.username, u.avatar, u.point, r.name as role, g.type AS gender, u.address,phone, u.description, u.birthday
         FROM public.user u
         LEFT JOIN gender g
         ON u.gender_id = g.id        
         inner join public.user_role r 
         ON u.role_id = r.id 
-        WHERE u.id = $1`, 
-        values,
-        (err, data) => {
-          try {
-            res.json(data.rows[0]);
-          } catch (e) {
-            console.log(e);
-            res.status(400).send("Data is not available");
-          }
-        }
-      );
-   
+        WHERE u.id = $1`,
+    values,
+    (err, data) => {
+      try {
+        res.json(data.rows[0]);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
+      }
+    }
+  );
 };
 
 exports.user_summary_get = function(req, res) {
-    var user_id = req.params.user_id;
-    var values = [user_id];
-    db.query(
-        `SELECT avatar, username, point, r.name 
+  var user_id = req.params.user_id;
+  var values = [user_id];
+  db.query(
+    `SELECT avatar, username, point, r.name 
         AS role FROM public.user u 
         INNER JOIN user_role r 
         ON u.role_id = r.id 
         WHERE u.id = $1`,
-        values,
-        (err, data) => {
-          try {
-            res.json(data.rows[0]);
-          } catch (e) {
-            console.log(e);
-            res.status(400).send("Data is not available");
-          }
-        }
-      );
-   
+    values,
+    (err, data) => {
+      try {
+        res.json(data.rows[0]);
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("Data is not available");
+      }
+    }
+  );
 };
 
 // Delete User Account
 exports.user_delete = function(req, res) {
   if (!req.isAuthenticated()) {
     // guest cannot delete account
-    res.status(403).send({"message":"Guest cannot delete user account"});
-  } 
-  else if (req.session.passport.user.role == "Admin"){
+    res.status(403).send({ message: "Guest cannot delete user account" });
+  } else if (req.session.passport.user.role == "Admin") {
     deleteAccount(req, res);
-  } else if (req.session.passport.user.role == "User" && req.session.passport.user.username == req.params.username){
+  } else if (
+    req.session.passport.user.role == "User" &&
+    req.session.passport.user.username == req.params.username
+  ) {
     // Moderator is not allowed to delete user account
-    // Role User. 
+    // Role User.
     // Only the owner can delete!
     deleteAccount(req, res);
   } else {
-    res.status(403).send({"message":"You cannot delete this user account"});
+    res.status(403).send({ message: "You cannot delete this user account" });
   }
 };
 
@@ -69,19 +73,18 @@ exports.user_delete = function(req, res) {
 exports.user_update = function(req, res) {
   if (!req.isAuthenticated()) {
     // guest cannot update threads
-    res.status(403).send({"message":"Guest cannot update user account"});
-  } 
-  else /* if (req.session.passport.user.role == "User") */{ //&& req.session.passport.user.username == req.params.username){
+    res.status(403).send({ message: "Guest cannot update user account" });
+  } /* if (req.session.passport.user.role == "User") */ else {
+    //&& req.session.passport.user.username == req.params.username){
     // Moderator is not allowed to update user account
-    // Role User. 
+    // Role User.
     // Only the owner can update!
     updateAccount(req, res);
-  } 
-/*     else {
+  }
+  /*     else {
     res.status(403).send({"message":"You cannot update this user account"});
   } */
 };
-
 
 // Modify user role - Admin only
 exports.user_modify_role = function(req, res) {
@@ -89,33 +92,42 @@ exports.user_modify_role = function(req, res) {
     let role = req.body.role;
     var role_id;
     switch (role) {
-      case 'Admin':
-        role_id = '1';
+      case "Admin":
+        role_id = "1";
         break;
-      case 'Moderator':
-        role_id = '2';
+      case "Moderator":
+        role_id = "2";
         break;
-      case 'User':
-        role_id = '3';
+      case "User":
+        role_id = "3";
         break;
       default:
-        role_id = '0';
+        role_id = "0";
     }
-    if (role_id ==0) {
-      res.status(400).send({"message":"Role doest not exists"});
+    if (role_id == 0) {
+      res.status(400).send({ message: "Role doest not exists" });
     } else {
       let username = req.body.username;
       // Must check if username really exists!
-      db.query(`UPDATE public.user SET role_id=$2 WHERE username=$1`, [username, role_id], function(err, result){
-        if (err) res.status(400).send({"Message":"Error occured during modifying user role"});
-        else res.status(200).send({"Message":"Modify user role successfully"});
-      });      
+      db.query(
+        `UPDATE public.user SET role_id=$2 WHERE username=$1`,
+        [username, role_id],
+        function(err, result) {
+          if (err)
+            res
+              .status(400)
+              .send({ Message: "Error occured during modifying user role" });
+          else
+            res.status(200).send({ Message: "Modify user role successfully" });
+        }
+      );
     }
   } else {
-    res.status(403).send({"message":"You are not authourized to modify role of any users"});
+    res
+      .status(403)
+      .send({ message: "You are not authourized to modify role of any users" });
   }
-}
-
+};
 
 function deleteAccount(req, res) {
   var username = req.params.username;
@@ -124,11 +136,11 @@ function deleteAccount(req, res) {
     DELETE FROM public.user where username= $1;
     `,
     [username],
-    (err) => {
+    err => {
       if (err) {
-        res.status(400).send({"message":"Error occured during deletion"});
+        res.status(400).send({ message: "Error occured during deletion" });
       } else {
-        res.status(200).send({"message":"Delete user successfully"});
+        res.status(200).send({ message: "Delete user successfully" });
       }
     }
   );
@@ -136,9 +148,9 @@ function deleteAccount(req, res) {
 
 function updateAccount(req, res) {
   var id = req.session.passport.user.id;
-  let gender_id = req.body.gender == "Male"? "1":"2";
-  console.log(req.body);
-  console.log(gender_id); 
+  let gender_id = req.body.gender == "Male" ? "1" : "2";
+  // console.log(req.body);
+  // console.log(gender_id);
   db.query(
     `
     UPDATE public.user SET avatar = $1, 
@@ -150,13 +162,24 @@ function updateAccount(req, res) {
                            email=$7
       WHERE public.user.id = $8;
     `,
-    [req.body.avatar, gender_id, req.body.address, req.body.phone, req.body.description, req.body.birthday, req.body.email, id],
-    (err) => {
+    [
+      req.body.avatar,
+      gender_id,
+      req.body.address,
+      req.body.phone,
+      req.body.description,
+      req.body.birthday,
+      req.body.email,
+      id
+    ],
+    err => {
       if (err) {
         console.log(err);
-        res.status(400).send({"message":"Error occured during update account"});
+        res
+          .status(400)
+          .send({ message: "Error occured during update account" });
       } else {
-        res.status(200).send({"message":"Update user successfully"});
+        res.status(200).send({ message: "Update user successfully" });
       }
     }
   );
@@ -167,7 +190,7 @@ exports.billboard = function(req, res) {
     `SELECT id,username,point FROM public.user ORDER BY point DESC LIMIT 3`,
     (err, data) => {
       try {
-         res.json(data.rows);
+        res.json(data.rows);
       } catch (e) {
         console.log(e);
         res.status(400).send("Data is not available");
@@ -235,7 +258,7 @@ exports.latest_activity = function(req, res) {
     `,
     (err, data) => {
       try {
-         res.json(data.rows);
+        res.json(data.rows);
       } catch (e) {
         console.log(e);
         res.status(400).send("Data is not available");
@@ -244,6 +267,66 @@ exports.latest_activity = function(req, res) {
   );
 };
 
+// Delete User Account
+exports.user_modify_password = function(req, res) {
+  if (!req.isAuthenticated()) {
+    // guest cannot delete account
+    res
+      .status(403)
+      .send({ message: "Guest cannot modify user account's password" });
+  } else {
+    // Role User.
+    // Only the owner can modify his password!!
+    console.log(req.session.passport);
+    const saltRounds = 10;
+    let hashpassword = bcrypt.hashSync(req.body.password, saltRounds);
+    db.query(
+      `UPDATE public.user SET password = $1 WHERE id=$2`,
+      [hashpassword, req.session.passport.user.id],
+      function(err) {
+        // console.log(hashpassword);
+        // console.log(user.rows[0].id);
+        if (err) res.status(400).send("Error");
+        else {
+          db.query(
+            `SELECT email FROM public.user WHERE id=$1`,
+            [req.session.passport.user.id],
+            function(err, user) {
+              // Email
+              var transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                  user: emaiAddress,
+                  pass: emailPassword
+                }
+              });
+              var mailOptions = {
+                from: "ridehubteam@gmail.com",
+                to: user.rows[0].email,
+                subject: "Your password has changed",
+                text:
+                  "This is a confirmation that the password for your account has just changed.\n\n" +
+                  "The RideHub Team,\n" +
+                  "https://ride-hub.herokuapp.com"
+              };
+
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                  
+                }
+              });
+              // Email end
+            }
+          );
+          res.status(200).send("Success");
+          // done(user);
+        }
+      }
+    );
+    // end modify password account
+  }
+};
 exports.notification = function(req, res) {
   values = [req.session.passport.user.id];
   db.query(
