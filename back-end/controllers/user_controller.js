@@ -223,7 +223,15 @@ exports.latest_activity = function(req, res) {
       LEFT JOIN forum f
       ON ff.forumid = f.id
     )ff
-    ORDER BY creation_date DESC LIMIT 3;
+	UNION ALL 
+	SELECT f.creation_date,f.userid,f.username, null as threadid, null as thread_title, f.id::text as forumid,f.title as forum_title, ' create forum ' as tag_activity
+    FROM (
+		SELECT f.creation_date,f.userid,u.username,f.id,f.title
+		FROM forum f
+		LEFT JOIN public.user u
+		ON f.userid = u.id
+	)f
+	ORDER BY creation_date DESC LIMIT 3;
     `,
     (err, data) => {
       try {
