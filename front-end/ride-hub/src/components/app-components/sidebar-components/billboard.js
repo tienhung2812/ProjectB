@@ -37,7 +37,7 @@ export default class Billboard extends Component {
                         {"#"+(i+1)}
                     </div>
                     <div className="username">
-                        <ReactLink to={"/user/"+this.state.data[i].id}>
+                        <ReactLink to={"/UserProfile/"+this.state.data[i].id}>
                             {'@'+this.state.data[i].username}
                         </ReactLink>
                     </div>

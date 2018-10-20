@@ -29,6 +29,46 @@ const styles = {
   };
 function Profile (props) {
   const { classes } = props;
+  if(!props.disabled){
+    //Not guest
+    var secretcontent = [
+      <Grid item xs={6}>
+                    <TextField
+                    fullWidth
+                    disabled={props.disabled}
+                    onChange={props.handleFieldChange}
+                    defaultValue={props.data.email}
+                    name="email"
+                    label="Email" 
+                    />
+            </Grid>,
+            <Grid item xs={6}>
+            <TextField
+            fullWidth
+            disabled={props.disabled}
+            onChange={props.handleFieldChange}
+            defaultValue={props.data.address}
+            label="Address" 
+            name="address"
+            />
+          </Grid>,  
+          <Grid item xs={6}>
+            <TextField
+            fullWidth
+            disabled={props.disabled}
+            onChange={props.handleFieldChange}
+            defaultValue={props.data.phone}
+            label="Phone number"
+            name="phone" 
+            />
+          </Grid>
+    ]
+    var saveChangeBtn = <Button variant="contained"  disabled={!props.changed} color="primary" className={classes.button} onClick={props.handleChangeProfile}>
+    SAVE CHANGES
+  </Button>
+  }else{
+    var secretcontent = "";
+  }
   return (
     <React.Fragment>
         <Typography variant="h6" gutterBottom>
@@ -49,13 +89,15 @@ function Profile (props) {
             <Grid item xs={6}>
                     <TextField
                     fullWidth
+                    disabled={true}
                     defaultValue={props.data.username}
                     label="User name"
+                    name="username"
                     />
             </Grid>
             <Grid item xs={6}>
             <TextField
-            defaultValue={cookie.get('userid')}
+            defaultValue={props.uid}
             disabled={true}
             label="ID"
             variant="outlined"
@@ -64,10 +106,13 @@ function Profile (props) {
             <Grid item xs={6}>
                     <TextField
                     fullWidth
-                    defaultValue={cookie.get('role')}
+                    disabled={true}
+                    defaultValue={props.data.role}
                     label="Role" 
+                    name="role"
                     />
             </Grid>
+            {secretcontent}
             {/* <Grid item xs={6}>
                     <TextField
                     fullWidth
@@ -92,38 +137,30 @@ function Profile (props) {
             <Grid item xs={6}>
                     <TextField
                     fullWidth
+                    
+                    disabled={props.disabled}
+                    onChange={props.handleFieldChange}
                     defaultValue={props.data.gender}
                     label="Gender" 
+                    name="gender"
                     />
             </Grid>
             <Grid item xs={6}>
                     <TextField
                     fullWidth
+                    disabled={props.disabled}
+                    onChange={props.handleFieldChange}
                     defaultValue={props.data.birthday}
                     label="Birth date" 
+                    name="birthday"
                     />
             </Grid>
-            <Grid item xs={6}>
-                    <TextField
-                    fullWidth
-                    defaultValue={props.data.address}
-                    label="Address" 
-                    />
-            </Grid>
-            <Grid item xs={6}>
-                    <TextField
-                    fullWidth
-                    defaultValue={props.data.phone}
-                    label="Phone number" 
-                    />
-            </Grid>
+            
             <Grid item xs={12} align="right">
-            <Button variant="outlined" color="primary" className={classes.button}>
+            {/* <Button variant="outlined" color="primary" className={classes.button}>
               UNDO
-            </Button>
-            <Button variant="contained" color="primary" className={classes.button}>
-              SAVE CHANGES
-            </Button>
+            </Button> */}
+            {saveChangeBtn}
             </Grid>
          </Grid>
     </React.Fragment>

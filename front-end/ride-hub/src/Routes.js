@@ -19,7 +19,7 @@ export default (
     <HashRouter path={'/thread/:id'} component={Thread}/>
     <HashRouter path={'/addthread/:subforumID'} component={AddThread}/>
     <HashRouter path={'/signup'} component={SignUp}/>
-    <HashRouter path={'/UserProfile'} component={UserProfile}/>
+    <HashRouter path={'/UserProfile/:guestid'} component={UserProfile}/>
     <HashRouter path={'/admin'} component={AdminPanel}/>
     <HashRouter path={'/filterSearch/:data'} component={FilterSearchPage}/>
     <HashRouter path={'/resetpassword/:data'} component={ResetPassword}/>

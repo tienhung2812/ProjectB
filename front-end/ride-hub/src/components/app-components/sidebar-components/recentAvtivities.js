@@ -36,7 +36,7 @@ export default class RecentActivities extends Component {
         for(let i=0;i<this.state.data.length;i++){
             this.content.push(
                 <div className="child">
-                    <ReactLink to={"/user/"+this.state.data[i].userid}>
+                    <ReactLink to={"/UserProfile/"+this.state.data[i].userid}>
                         {'@'+this.state.data[i].username}
                     </ReactLink>
                     {' '+this.state.data[i].tag_activity+' '} <ReactLink to={"/thread/"+this.state.data[i].threadid}>
