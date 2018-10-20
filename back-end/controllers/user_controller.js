@@ -328,108 +328,115 @@ exports.user_modify_password = function(req, res) {
   }
 };
 exports.notification = function(req, res) {
-  values = [req.session.passport.user.id];
-  db.query(
-    `with user_noti as (
-      SELECT cnt.noti, cnt.creation_date, cnt.threadid,cnt.forumid,$1 as userid
-          FROM(
-            -- create new thread
-            SELECT '@'||coalesce(u.username::text, '') || ' creates new thread '||  coalesce(concat(substring(t.title from 1 for 10),'...'), '')|| ' on your followed forum '||  coalesce(f.title, '') as noti,t.creation_date, t.id::text as threadid, null as forumid
-            FROM thread t
-            INNER JOIN forum_followers ff
-            ON t.forumid = ff.forumid AND ff.userid =  $1
-            INNER JOIN forum f
-            ON t.forumid = f.id 
-            INNER JOIN public.user u
-            ON t.userid = u.id AND t.userid <> $1
-          )cnt
-          UNION ALL
-          SELECT vp.noti, vp.creation_date, vp.threadid,vp.forumid,$1 as userid
-          FROM(
-            -- vote post
-            SELECT '@'||coalesce(u.username::text, '') || ' votes your post in thread ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, t.id::text as threadid,null as forumid
-            FROM post p
-            INNER JOIN post_votes pv
-            ON p.id = pv.postid 
-            INNER JOIN thread t
-            ON p.threadid = t.id
-            INNER JOIN public.user u
-            ON pv.userid = u.id
-            WHERE p.userid = $1 AND pv.userid <> $1 AND p.pid IS NULL
-          ) vp
-          UNION ALL
-          SELECT vc.noti, vc.creation_date, vc.threadid,vc.forumid , $1 as userid
-          FROM(
-            -- vote comment
-            SELECT '@'||coalesce(u.username::text, '') || ' votes your comment in thread ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, t.id::text as threadid,null as forumid
-            FROM post p
-            INNER JOIN post_votes pv
-            ON p.id = pv.postid 
-            INNER JOIN thread t
-            ON p.threadid = t.id
-            INNER JOIN public.user u
-            ON pv.userid = u.id
-            WHERE p.userid = $1 AND pv.userid <> $1 AND p.pid IS NOT NULL
-          ) vc
-          UNION ALL 
-          SELECT cnsf.noti, cnsf.creation_date, cnsf.threadid,cnsf.forumid,$1 as userid
-          FROM(
-            -- creat new subforum
-            SELECT '@'||coalesce(u.username::text, '') || ' creates new subforum '|| coalesce(f2.title, '')|| ' on your followed forum '|| coalesce(f.title, '') as noti,f2.creation_date, null as threadid,f.id::text as forumid
-            FROM forum f
-            INNER JOIN forum_followers ff
-            ON f.id = ff.forumid AND ff.userid =  $1
-            INNER JOIN forum f2
-            ON f2.pid = f.id
-            INNER JOIN public.user u
-            ON f.userid = u.id
-          )cnsf
-           UNION ALL 
-           SELECT cvp.noti,cvp.creation_date, cvp.threadid,cvp.forumid,$1 as userid
-           FROM (
-            SELECT '@'||coalesce(u.username::text, '') || ' comments on a thread ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') || ' that you voted' as noti, p.creation_date, p.threadid::text, null as forumid
-            FROM post p
-            INNER JOIN post_votes pv
-            ON p.pid = pv.postid AND pv.userid = $1
-            INNER JOIN public.user u
-            ON p.userid = u.id
-            INNER JOIN thread t
-            ON t.id = p.threadid 
-            WHERE p.userid <> $1
-          )cvp
-           UNION ALL 
-           SELECT cp.noti,cp.creation_date, cp.threadid,cp.forumid,$1 as userid
-           FROM (
-            -- comment post
-            SELECT '@'||coalesce(u.username::text, '') || ' comments on your post in ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, p.threadid::text, null as forumid
-            FROM post p
-            INNER JOIN post pp
-            ON p.pid = pp.id and pp.userid = $1
-            INNER JOIN public.user u
-            ON p.userid = u.id
-            INNER JOIN thread t
-            ON t.id = p.threadid 
-            WHERE p.userid <> $1
-            )cp
-          ORDER BY creation_date DESC
-    ) , insert_user_noti as (
-    insert into user_notification(noti,userid,has_read) 
-      select user_noti.noti,user_noti.userid,false from user_noti on conflict (noti,userid) do nothing
-    ) select user_noti.*,user_notification.has_read 
-    from user_noti 
-    left join user_notification
-    on user_noti.noti = user_notification.noti and user_noti.userid = user_notification.userid;    
-    `,
-    values,
-    (err, data) => {
-      try {
-         res.json(data.rows);
-      } catch (e) {
-        console.log(e);
-        res.status(400).send("Data is not available");
+  if (!req.isAuthenticated()) {
+    // guest cannot delete account
+    res
+      .status(403)
+      .send({ message: "Guest cannot get notification" });
+  }else{
+    values = [req.session.passport.user.id];
+    db.query(
+      `with user_noti as (
+        SELECT cnt.noti, cnt.creation_date, cnt.threadid,cnt.forumid,$1 as userid
+            FROM(
+              -- create new thread
+              SELECT '@'||coalesce(u.username::text, '') || ' creates new thread '||  coalesce(concat(substring(t.title from 1 for 10),'...'), '')|| ' on your followed forum '||  coalesce(f.title, '') as noti,t.creation_date, t.id::text as threadid, null as forumid
+              FROM thread t
+              INNER JOIN forum_followers ff
+              ON t.forumid = ff.forumid AND ff.userid =  $1
+              INNER JOIN forum f
+              ON t.forumid = f.id 
+              INNER JOIN public.user u
+              ON t.userid = u.id AND t.userid <> $1
+            )cnt
+            UNION ALL
+            SELECT vp.noti, vp.creation_date, vp.threadid,vp.forumid,$1 as userid
+            FROM(
+              -- vote post
+              SELECT '@'||coalesce(u.username::text, '') || ' votes your post in thread ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, t.id::text as threadid,null as forumid
+              FROM post p
+              INNER JOIN post_votes pv
+              ON p.id = pv.postid 
+              INNER JOIN thread t
+              ON p.threadid = t.id
+              INNER JOIN public.user u
+              ON pv.userid = u.id
+              WHERE p.userid = $1 AND pv.userid <> $1 AND p.pid IS NULL
+            ) vp
+            UNION ALL
+            SELECT vc.noti, vc.creation_date, vc.threadid,vc.forumid , $1 as userid
+            FROM(
+              -- vote comment
+              SELECT '@'||coalesce(u.username::text, '') || ' votes your comment in thread ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, t.id::text as threadid,null as forumid
+              FROM post p
+              INNER JOIN post_votes pv
+              ON p.id = pv.postid 
+              INNER JOIN thread t
+              ON p.threadid = t.id
+              INNER JOIN public.user u
+              ON pv.userid = u.id
+              WHERE p.userid = $1 AND pv.userid <> $1 AND p.pid IS NOT NULL
+            ) vc
+            UNION ALL 
+            SELECT cnsf.noti, cnsf.creation_date, cnsf.threadid,cnsf.forumid,$1 as userid
+            FROM(
+              -- creat new subforum
+              SELECT '@'||coalesce(u.username::text, '') || ' creates new subforum '|| coalesce(f2.title, '')|| ' on your followed forum '|| coalesce(f.title, '') as noti,f2.creation_date, null as threadid,f.id::text as forumid
+              FROM forum f
+              INNER JOIN forum_followers ff
+              ON f.id = ff.forumid AND ff.userid =  $1
+              INNER JOIN forum f2
+              ON f2.pid = f.id
+              INNER JOIN public.user u
+              ON f.userid = u.id
+            )cnsf
+            UNION ALL 
+            SELECT cvp.noti,cvp.creation_date, cvp.threadid,cvp.forumid,$1 as userid
+            FROM (
+              SELECT '@'||coalesce(u.username::text, '') || ' comments on a thread ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') || ' that you voted' as noti, p.creation_date, p.threadid::text, null as forumid
+              FROM post p
+              INNER JOIN post_votes pv
+              ON p.pid = pv.postid AND pv.userid = $1
+              INNER JOIN public.user u
+              ON p.userid = u.id
+              INNER JOIN thread t
+              ON t.id = p.threadid 
+              WHERE p.userid <> $1
+            )cvp
+            UNION ALL 
+            SELECT cp.noti,cp.creation_date, cp.threadid,cp.forumid,$1 as userid
+            FROM (
+              -- comment post
+              SELECT '@'||coalesce(u.username::text, '') || ' comments on your post in ' || coalesce(concat(substring(t.title from 1 for 10),'...'), '') as noti, p.creation_date, p.threadid::text, null as forumid
+              FROM post p
+              INNER JOIN post pp
+              ON p.pid = pp.id and pp.userid = $1
+              INNER JOIN public.user u
+              ON p.userid = u.id
+              INNER JOIN thread t
+              ON t.id = p.threadid 
+              WHERE p.userid <> $1
+              )cp
+            ORDER BY creation_date DESC
+      ) , insert_user_noti as (
+      insert into user_notification(noti,userid,has_read) 
+        select user_noti.noti,user_noti.userid,false from user_noti on conflict (noti,userid) do nothing
+      ) select user_noti.*,user_notification.has_read 
+      from user_noti 
+      left join user_notification
+      on user_noti.noti = user_notification.noti and user_noti.userid = user_notification.userid;    
+      `,
+      values,
+      (err, data) => {
+        try {
+          res.json(data.rows);
+        } catch (e) {
+          console.log(e);
+          res.status(400).send("Data is not available");
+        }
       }
-    }
-  );
+    );
+  }
 };
 
 
