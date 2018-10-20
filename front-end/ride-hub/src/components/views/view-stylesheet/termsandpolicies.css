@@ -1,0 +1,15 @@
+.tp-main{
+    padding:20px
+}
+
+.tp-main .title{
+    text-align: center;
+    font-size: 2rem;
+    padding: 30px;
+    border-bottom: 1px solid #c9c9c9
+}
+
+.tp-main .tp-content{
+    display: inline-block ;
+    padding:30px;
+}
