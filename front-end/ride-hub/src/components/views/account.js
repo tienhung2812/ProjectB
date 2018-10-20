@@ -36,17 +36,7 @@ function Account (props) {
         <Divider/>
         <br/>
         <Grid container spacing={40} justify="flex-start" alignItems="flex-end">
-            <Grid item xs={6}>
-            <Typography variant="subtitle2" gutterBottom>
-              Update your email
-            </Typography>
-                    <TextField
-                    fullWidth
-                    label="Email" 
-                    />
-            </Grid>
-            <Grid item xs={6}>
-            </Grid>
+            
             <Grid item xs={6}>
             <Typography variant="subtitle2" gutterBottom>
               Update your password
@@ -63,7 +53,7 @@ function Account (props) {
                     />
             </Grid>
             <Grid item xs={12} align="right">
-            <Button variant="contained" color="primary" className={classes.button}>
+            <Button variant="contained" color="primary" disabled={props.disabled} className={classes.button} onClick={props.handleChangePassword}>
               SAVE CHANGES
             </Button>
             </Grid>

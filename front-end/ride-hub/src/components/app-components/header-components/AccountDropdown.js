@@ -376,7 +376,7 @@ class AccountDropDown extends Component {
         }
         this.childcontent.push(
            
-            <ReactLink to={'/UserProfile/'} params={{ uid:cookie.get('userid') }}><button className="dropdown-item" type="button" > My Account </button></ReactLink>
+            <ReactLink to={'/UserProfile/'+cookie.get('userid')}><button className="dropdown-item" type="button" > My Account </button></ReactLink>
            
         )
         this.childcontent.push(
