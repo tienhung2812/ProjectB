@@ -432,3 +432,21 @@ exports.notification = function(req, res) {
   );
 };
 
+
+exports.notification_read = function(req, res) {
+  values = [req.session.passport.user.id
+    ,req.body.notification];
+  db.query(
+    `UPDATE user_notification set has_read = true WHERE noti = $2 AND userid = $1;`,
+    values,
+    (err, data) => {
+      try {
+         res.send("action success!")
+      } catch (e) {
+        console.log(e);
+        res.status(400).send("action failed!");
+      }
+    }
+  );
+};
+

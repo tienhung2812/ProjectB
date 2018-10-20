@@ -20,6 +20,8 @@ router.put('/modify/role', user_controller.user_modify_role);
 
 router.put('/modify/password', user_controller.user_modify_password);
 
+router.post('/notification_read',user_controller.notification_read);
+
 
 
 module.exports = router;
