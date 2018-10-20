@@ -166,8 +166,16 @@
     max-height: 500px;
     overflow: auto;
 }
+.header-container .functionButtons .notification-button .dropdown-menu .child.fail{
+    padding: 10px 10px;
+    background-color: #ffe9e9;
+    border-bottom: 1px solid #cacacad0;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+}
 
-.header-container .functionButtons .notification-button .dropdown-menu .child.true{
+.header-container .functionButtons .notification-button .dropdown-menu .child{
     padding: 10px 10px;
     border-bottom: 1px solid #cacacad0;
     transition: all 0.3s ease-out;
@@ -185,6 +193,7 @@
 .header-container .functionButtons .notification-button .dropdown-menu .child.false{
     padding: 10px 10px;
     background-color: #e9f7ff;
+    border-bottom: 1px solid #cacacad0;
     transition: all 0.3s ease-out;
     -webkit-transition: all 0.3s ease-out;
     -moz-transition: all 0.3s ease-out;
