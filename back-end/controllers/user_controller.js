@@ -9,7 +9,7 @@ exports.user_details_get = function(req, res) {
   var user_id = req.params.user_id;
   var values = [user_id];
   db.query(
-    `SELECT u.username, u.avatar, u.point, r.name as role, g.type AS gender, u.address,phone, u.description, u.birthday
+    `SELECT u.username, u.avatar, u.point, r.name as role, g.type AS gender,u.email,u.address,phone, u.description, u.birthday
         FROM public.user u
         LEFT JOIN gender g
         ON u.gender_id = g.id        
