@@ -81,6 +81,7 @@ class AdminPanel extends Component {
       })
     }
     ChangeRole(){
+      if (this.state.role!='')
       fetch('https://ride-hub.herokuapp.com/api/user/modify/role', {
         method: 'PUT',
         headers: {
@@ -198,9 +199,9 @@ class AdminPanel extends Component {
             }}
           >
             <option value="" />
-            <option value={10}>Admin</option>
-            <option value={20}>Moderator</option>
-            <option value={30}>User</option>
+            <option value={'Admin'}>Admin</option>
+            <option value={'Moderator'}>Moderator</option>
+            <option value={'User'}>User</option>
           </Select>
         </FormControl>
       
