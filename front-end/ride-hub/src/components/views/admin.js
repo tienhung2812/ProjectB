@@ -62,18 +62,59 @@ const styles = theme => ({
 
 
 class AdminPanel extends Component {
-  state = {
-    value: 0,
-  };
 
-
-
+  DeleteUser(){
+    let uid = this.state.username;
+    if(uid!=null)
+    fetch('https://ride-hub.herokuapp.com/api/user/'+uid, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(response => {
+          if(response.ok){
+            alert("ok role");
+            
+          }else{
+            alert(response.status);
+          }
+      })
+    }
+    ChangeRole(){
+      fetch('https://ride-hub.herokuapp.com/api/user/modify/role', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username:this.state.username,
+          role:this.state.role,
+        })
+      }).then(response => {
+          if(response.ok){
+            alert("role");
+            
+          }else{
+            alert(response.status);
+          }
+        })
+      }
   handleChange = (event, value) => {
     this.setState({ value });
   };
+  handleChangeRole = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+  handleUsername = (event) => {
+    this.setState({username:event.target.value})
+  }
 
   constructor(props){
     super(props);
+    this.state = { username:null,value:0,role:''}
+    this.DeleteUser = this.DeleteUser.bind(this)
+    this.ChangeRole = this.ChangeRole.bind(this)
+    
   }
   componentDidMount() {
     browserHistory.push('/admin');
@@ -141,24 +182,34 @@ class AdminPanel extends Component {
             fullWidth 
             variant="outlined"
             label="Username"
+            onChange={this.handleUsername}
             />
         </Grid>
         <Grid item xs={6}>
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="uncontrolled-native">Role</InputLabel>
-          <NativeSelect defaultValue={10} input={<Input name="role" id="uncontrolled-native" />}>
-            <option value={10}>User</option>
+          <InputLabel htmlFor="role-native-simple">Role</InputLabel>
+          <Select
+            native
+            value={this.state.role}
+            onChange={this.handleChangeRole('role')}
+            inputProps={{
+              name: 'role',
+              id: 'role-native-simple',
+            }}
+          >
+            <option value="" />
+            <option value={10}>Admin</option>
             <option value={20}>Moderator</option>
-            <option value={30}>Admin</option>
-          </NativeSelect>
+            <option value={30}>User</option>
+          </Select>
         </FormControl>
       
         </Grid>
         <Grid item xs={12} align="right">
-        <Button variant="outlined" color="primary" className={classes.button}>
+        <Button variant="outlined" color="primary" onClick={this.DeleteUser}  className={classes.button}>
           DELETE USER
         </Button>
-        <Button variant="contained" color="primary" className={classes.button}>
+        <Button variant="contained" color="primary" onClick={this.ChangeRole} className={classes.button}>
           SAVE CHANGES
         </Button>
         
