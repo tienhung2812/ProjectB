@@ -71,13 +71,18 @@ class Notification extends Component {
                 //Correct user
                 response.json().then(
                     data=>{
+                        console.log(data);
+                        alert(data.length)
+                        console.log(data.length);
                         for(var i;i<data.length;i++){
+                            console.log(i)
                             let link;
                             if(data[i].threadid!=null){
                                 link = '/thread/'+data[i].threadid
                             }else if(data[i].forumid!=null){
                                 link = '/subforum/'+data[i].forumid
                             }
+                            console.log(data[i].noti)
                             this.childcontent.push(
                                 <div className={"child "+data[i].has_read}>
                                     <ReactLink to={link}>
