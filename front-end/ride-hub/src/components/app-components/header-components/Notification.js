@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {Link as ReactLink} from 'react-router';
 import '../../stylesheet/Header.css';
+import Cookies from "universal-cookie";
+import { unwatchFile } from 'fs';
+
+const cookie = new Cookies();
 
 class Notification extends Component {
     constructor(props){
@@ -13,44 +17,44 @@ class Notification extends Component {
         this.parseDateTime = this.parseDateTime.bind(this);
     }
     
-      parseDateTime(timeString){
-        let months = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec'
-            ];
-        let year = Number(timeString.substring(0,4))
-        let month = Number(timeString.substring(5,7))
-        let date = Number(timeString.substring(8,10))
-        let h = Number(timeString.substring(11,13))
-        let m = timeString.substring(14,16); 
-        let od;
-        if(date>3)
-            od="th"
-        else if(date===3)
-            od = "rd"
-        else if(date===2)
-            od = "nd"
-        else if(date===1)
-            od = "st"
-        let result = h+":"+m+ " "+months[month-1]+" "+date+od+" "+year;
-        return result;
-      }
-  componentDidMount(){
-      //API for push button notificiation_read //body 
-      this.fetchData()
-  }
+    parseDateTime(timeString){
+    let months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+        ];
+    let year = Number(timeString.substring(0,4))
+    let month = Number(timeString.substring(5,7))
+    let date = Number(timeString.substring(8,10))
+    let h = Number(timeString.substring(11,13))
+    let m = timeString.substring(14,16); 
+    let od;
+    if(date>3)
+        od="th"
+    else if(date===3)
+        od = "rd"
+    else if(date===2)
+        od = "nd"
+    else if(date===1)
+        od = "st"
+    let result = h+":"+m+ " "+months[month-1]+" "+date+od+" "+year;
+    return result;
+    }
+    componentDidMount(){
+        //API for push button notificiation_read //body 
+        this.fetchData()
+    }
 
-  fetchData(){
+    fetchData(){
     this.childcontent=[];
     this.setState({loaded:false})
     fetch('https://ride-hub.herokuapp.com/api/user/notification')
@@ -69,11 +73,11 @@ class Notification extends Component {
               else{
                   this.childcontent.push(
                       <div className="child fail">
-                              <div className="data">
+                              <div className="data fail">
                                   You must log in to have notification
                               </div>                
                       </div>
-                  )
+                     )
               }
           }else{
               //Correct user
@@ -88,18 +92,17 @@ class Notification extends Component {
                               link = '/subforum/'+data[i].forumid
                           }
                           this.childcontent.push(
-                              <Noti has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date) } handleReadNotification={this.handleReadNotification}> ></Noti>
+                              <Noti id={data[i].id} has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date) } handleReadNotification={this.handleReadNotification}> ></Noti>
                           )
                           if(!data[i].has_read){
                               not_read+=1;
                           }
-                          console.log(data[i].has_read)
                       }
                       this.setState({not_read_noti:not_read,loaded:true})
                   }
               )
           }
-      })
+      })    
     //  var data = this.dummydata;
     //  let not_read=0;
     //  for(var i=0;i<data.length;i++){
@@ -121,11 +124,32 @@ class Notification extends Component {
   }
 
   componentDidUpdate(){
-    let newref = window.location.href;
-    if (this.currentref!=newref){
-        this.currentref = newref
-        this.fetchData();
+    //For log out
+    let shouldFetchData = false;
+    let uid = cookie.get('userid');
+    if(uid==null){
+        this.childcontent=[];
+        this.childcontent.push(
+            <div className="child fail">
+                    <div className="data fail">
+                        You must log in to have notification
+                    </div>                
+            </div>
+        )
     }
+    else 
+        shouldFetchData = true
+
+    //Fecht data in new thread
+    if(shouldFetchData){
+        let newref = window.location.href;
+        if (this.currentref!=newref){
+            this.currentref = newref
+            this.fetchData();
+        }
+    }
+
+    //For read all notification
     if(this.state.not_read_noti<=0&&this.state.loaded){
         if(this.state.unread){
             this.setState({unread:false})
@@ -160,20 +184,41 @@ class Noti extends Component{
         super(props);
         this.state={has_read:true}
         this.handleClick = this.handleClick.bind(this);
-        
+        this.readNotification = this.readNotification.bind(this)
     }
     handleClick = ()=>{
-        
         if(!this.state.has_read){
-            this.setState({has_read:true});
+            this.readNotification()
             this.props.handleReadNotification();
         }
-        
-       
     }
 
     componentDidMount(){
         this.setState({has_read:this.props.has_read})
+        this.id = this.props.id;
+    }
+
+    readNotification(){
+        fetch('https://ride-hub.herokuapp.com/api/user/notification_read', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                notification_id:this.id
+            })
+            }).then(response =>{
+            if(response.ok){
+                this.setState({has_read:true});
+                return true;
+            }else{
+                //User already
+                this.setState({has_read:false});
+                console.log("Read notification error:"+response.status)
+                return false;
+            }
+            })
     }
 
     render(){
