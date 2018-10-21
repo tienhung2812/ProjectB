@@ -103,24 +103,24 @@ class Notification extends Component {
               )
           }
       })    
-     var data = this.dummydata;
-     let not_read=0;
-     for(var i=0;i<data.length;i++){
-         let link;
-         if(data[i].threadid!=null){
-             link = '/thread/'+data[i].threadid
-         }else if(data[i].forumid!=null){
-             link = '/subforum/'+data[i].forumid
-         }
-         this.childcontent.push(
-             <Noti has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date) } handleReadNotification={this.handleReadNotification}> ></Noti>
-         )
-         if(!data[i].has_read){
-             not_read+=1;
-         }
-         console.log(data[i].has_read)
-     }
-     this.setState({not_read_noti:not_read,loaded:true})
+    //  var data = this.dummydata;
+    //  let not_read=0;
+    //  for(var i=0;i<data.length;i++){
+    //      let link;
+    //      if(data[i].threadid!=null){
+    //          link = '/thread/'+data[i].threadid
+    //      }else if(data[i].forumid!=null){
+    //          link = '/subforum/'+data[i].forumid
+    //      }
+    //      this.childcontent.push(
+    //          <Noti has_read={data[i].has_read} link={link} noti={data[i].noti} creation_date={this.parseDateTime(data[i].creation_date) } handleReadNotification={this.handleReadNotification}> ></Noti>
+    //      )
+    //      if(!data[i].has_read){
+    //          not_read+=1;
+    //      }
+    //      console.log(data[i].has_read)
+    //  }
+    //  this.setState({not_read_noti:not_read,loaded:true})
   }
 
   componentDidUpdate(){
