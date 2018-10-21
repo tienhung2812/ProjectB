@@ -327,6 +327,7 @@ exports.user_modify_password = function(req, res) {
     // end modify password account
   }
 };
+
 exports.notification = function(req, res) {
   if (!req.isAuthenticated()) {
     // guest cannot delete account
@@ -455,4 +456,3 @@ exports.notification_read = function(req, res) {
     }
   );
 };
-
