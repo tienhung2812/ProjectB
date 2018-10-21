@@ -421,7 +421,7 @@ exports.notification = function(req, res) {
       ) , insert_user_noti as (
       insert into user_notification(noti,userid,has_read) 
         select user_noti.noti,user_noti.userid,false from user_noti on conflict (noti,userid) do nothing
-      ) select user_noti.*,user_notification.has_read 
+      ) select user_noti.*,user_notification.has_read , user_notification.id
       from user_noti 
       left join user_notification
       on user_noti.noti = user_notification.noti and user_noti.userid = user_notification.userid;    
@@ -441,10 +441,9 @@ exports.notification = function(req, res) {
 
 
 exports.notification_read = function(req, res) {
-  values = [req.session.passport.user.id
-    ,req.body.notification];
+  values = [req.body.notification_id];
   db.query(
-    `UPDATE user_notification set has_read = true WHERE noti = $2 AND userid = $1;`,
+    `UPDATE user_notification set has_read = true WHERE id = $1;`,
     values,
     (err, data) => {
       try {

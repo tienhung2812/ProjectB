@@ -85,6 +85,7 @@ app.get('user/:id/summary',function(req,res){
  * @apiSuccess {Date} creation_date date of the notifiation
  * @apiSuccess {Number} threadid threadid for notification about vote, follow, new thread, new post
  * @apiSuccess {Number} forumid forum id for notification about new subforum
+ * @apiSuccess {Number} id notificationid
  * @apiSuccessExample {json[]} Success
  *    HTTP/1.1 200 OK
  * [
@@ -92,7 +93,8 @@ app.get('user/:id/summary',function(req,res){
 		 	"noti": "@john creates new thread sefse... on your followed forum SH Mode",
         	"creation_date": "2018-10-13T00:00:00.000Z",
         	"threadid": "22",
-        	"forumid": null
+			"forumid": null
+			"id": 1
 		},.....
 	]
  *  
@@ -103,6 +105,26 @@ app.get('user/:id/summary',function(req,res){
 app.get('user/notification',function(req,res){
 
 });
+
+/**
+ * @api {post} /user/notification_read [POST] Mark that user read the notification
+ * @apiGroup User
+ * @apiParam {Number} notification_id notificationid
+ * @apiSuccessExample {Message} Success
+ *    HTTP/1.1 200 OK
+ * 
+	"action success"
+	
+ *  
+ * @apiErrorExample {Message} 
+ *    HTTP/1.1 400 Action failed!
+ *
+ */
+app.post('user/notification_read',function(req,res){
+
+});
+
+
 
 /**
  * @api {get} /subforum/root [Get] List of Subforums
@@ -284,6 +306,8 @@ app.put('/subforum/:forumid', function(req, res) {
  * @apiSuccess {json} thumbnail thread thumbnail
  * @apiSuccess {String} tag thread tag
  * @apiSuccess {String} child List of posts belong to that thread
+ * @apiSuccess {String} username 
+ * @apiSuccess {Number} replies Number of replies
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
 	  {
@@ -291,7 +315,9 @@ app.put('/subforum/:forumid', function(req, res) {
 		title: "BMW thread1 ",
 		thumbnail: null,
 		tag: "Help ",
-		child: "1,11,12"
+		child: "1,11,12",
+		usernam : "",
+		replies: 2
 	  }
  *  
  * @apiErrorExample {json} Thread not found
