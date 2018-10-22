@@ -101,9 +101,7 @@ class AdminPanel extends Component {
     }
   CreateForum(){
     var tempDate = new Date();
-    var date = tempDate.getFullYear() + '-' + (tempDate.getMonth()+1) + '-' + tempDate.getDate() +' '+ tempDate.getHours()+':'+ tempDate.getMinutes()+':'+ tempDate.getSeconds();
-    let uid = this.state.username;
-
+    var date = tempDate.getFullYear() + '-' + (tempDate.getMonth()+1) + '-' + tempDate.getDate() +' '+ tempDate.getHours()+':'+ tempDate.getMinutes()+':'+ tempDate.getSeconds();  
     fetch('https://ride-hub.herokuapp.com/api/subforum/', {
         method: 'POST',
         headers: {
@@ -124,8 +122,7 @@ class AdminPanel extends Component {
       })    
   }
   UpdateForum(){
-    let pid = this.state.pid;
-    fetch('https://ride-hub.herokuapp.com//api/subforum/'+pid, {
+    fetch('https://ride-hub.herokuapp.com//api/subforum/'+this.state.pid, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -143,8 +140,7 @@ class AdminPanel extends Component {
       })
     }
   DeleteForum(){
-    let pid = this.state.pid;
-    fetch('https://ride-hub.herokuapp.com/api/subforum/'+pid, {
+    fetch('https://ride-hub.herokuapp.com/api/subforum/'+this.state.pid, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -171,6 +167,8 @@ class AdminPanel extends Component {
     this.DeleteUser = this.DeleteUser.bind(this)
     this.ChangeRole = this.ChangeRole.bind(this)
     this.CreateForum = this.CreateForum.bind(this)
+    this.UpdateForum = this.UpdateForum.bind(this)
+    this.DeleteForum = this.DeleteForum.bind(this)
     
   }
   componentDidMount() {
