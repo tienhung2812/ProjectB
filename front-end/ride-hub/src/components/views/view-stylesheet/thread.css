@@ -76,6 +76,7 @@
 
 .home .thread .btn-thread .status .reply{
     display:flex;
+
 }
 
 /* For SUBFORUM PAGE */
@@ -190,7 +191,9 @@ a{
     width: 100%;
     height: 10px;
 }
-
+.thread .btn-thread .status .reply{
+    padding: 10px 0;
+}
 
 .needhelp-tag{
     background-color: #F3943E;

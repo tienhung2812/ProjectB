@@ -10,7 +10,7 @@ import defaultimage from '../../defaultimage72x40.jpg'
 export default class Thread extends Component {
   constructor(props){
     super(props);
-    this.state = {id:null,title:"",child:[],thumbnail:null,tag:null,text:""}
+    this.state = {id:null,title:"",child:[],thumbnail:null,tag:null,text:"",username:"anonymous",replies:0}
     //Props url
     //home: display in HOMEPAGE
     //subforum: display in SUB-FORUM PAGE
@@ -27,8 +27,9 @@ export default class Thread extends Component {
         title:data.title,
         child: JSON.parse("[" + data.child + "]"),
         thumbnail:data.thumbnail,
-        tag:data.tag
-
+        tag:data.tag,
+        username:data.username,
+        replies:data.replies
       })
     });
   }
@@ -80,14 +81,14 @@ export default class Thread extends Component {
           </div>
           <div className="status">
             <div className="username">
-              username
+              {this.state.username}
             </div>
             <div className="view-reply-wrapper">
-              <div className="view">
+              {/* <div className="view">
                 100 views
-              </div>
+              </div> */}
               <div className="reply">
-                1000 replies
+                {this.state.replies+ ' replies'}
               </div>
             </div>
           </div>

@@ -107,6 +107,8 @@ class AccountDropDown extends Component {
                     this.setCookie(json);
                     this.fetchUserSummaryInfo(json.userid)
                     this.setState({isLogged:true,loggingin:false,pw:null,loginSucess:true,open:false})
+                    //window.location.reload();
+                    window.location.href = window.location.href;
                   }
               );
           }else{
@@ -127,7 +129,8 @@ class AccountDropDown extends Component {
     })
     }).then(response=>{
         if(response.status==200){
-        
+            //window.location.reload();
+            window.location.href = window.location.href;
         }else{
             alert("Log out fail")
         }
