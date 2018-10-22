@@ -52,7 +52,7 @@ exports.thread_get_by_id = function(req, res) {
         WHERE t.id = $1
         GROUP BY (t.id,t.title,t.thumbnail,tag.name,u.username)
     )
-    SELECT td.*, string_agg(p.id::character varying, ',' order by p.id desc) AS child, count(p.*) - 1 as replies
+    SELECT td.*, string_agg(p.id::character varying, ',' order by p.id asc) AS child, count(p.*) - 1 as replies
     FROM thread_details td
     LEFT JOIN post p
     ON td.id = p.threadid 
