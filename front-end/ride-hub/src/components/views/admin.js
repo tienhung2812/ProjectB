@@ -109,7 +109,7 @@ class AdminPanel extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pid:this.state.username,
+          pid:this.state.pid,
           title:this.state.title,
           description:this.state.description,
           creation_date:date
