@@ -80,41 +80,95 @@ class AdminPanel extends Component {
           }
       })
     }
-    ChangeRole(){
-      if (this.state.role!='')
-      fetch('https://ride-hub.herokuapp.com/api/user/modify/role', {
-        method: 'PUT',
+  ChangeRole(){
+    fetch('https://ride-hub.herokuapp.com/api/user/modify/role', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username:this.state.username,
+        role:this.state.role,
+      })
+    }).then(response => {
+        if(response.ok){
+          alert("role");
+          
+        }else{
+          alert(response.status);
+        }
+      })
+    }
+  CreateForum(){
+    var tempDate = new Date();
+    var date = tempDate.getFullYear() + '-' + (tempDate.getMonth()+1) + '-' + tempDate.getDate() +' '+ tempDate.getHours()+':'+ tempDate.getMinutes()+':'+ tempDate.getSeconds();  
+    fetch('https://ride-hub.herokuapp.com/api/subforum/', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username:this.state.username,
-          role:this.state.role,
+          pid:this.state.pid,
+          title:this.state.title,
+          description:this.state.description,
+          creation_date:date
         })
       }).then(response => {
           if(response.ok){
-            alert("role");
-            
+            alert("created");
           }else{
             alert(response.status);
           }
-        })
+      })    
+  }
+  UpdateForum(){
+    fetch('https://ride-hub.herokuapp.com//api/subforum/'+this.state.pid, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title:this.state.title,
+        description:this.state.description,
+      })
+    }).then(response => {
+        if(response.ok){
+          alert("updated");       
+        }else{
+          alert(response.status);
+        }
+      })
+    }
+  DeleteForum(){
+    fetch('https://ride-hub.herokuapp.com/api/subforum/'+this.state.pid, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
       }
+    }).then(response => {
+        if(response.ok){
+          alert("Deleted");       
+        }else{
+          alert(response.status);
+        }
+      })
+    }
   handleChange = (event, value) => {
     this.setState({ value });
   };
-  handleChangeRole = name => event => {
+  handleChangeFlex = name => event => {
     this.setState({ [name]: event.target.value });
   };
-  handleUsername = (event) => {
-    this.setState({username:event.target.value})
-  }
 
   constructor(props){
     super(props);
-    this.state = { username:null,value:0,role:''}
+    
+    this.state = { username:null,value:0,role:'',pid:'',title:'',description:''}
     this.DeleteUser = this.DeleteUser.bind(this)
     this.ChangeRole = this.ChangeRole.bind(this)
+    this.CreateForum = this.CreateForum.bind(this)
+    this.UpdateForum = this.UpdateForum.bind(this)
+    this.DeleteForum = this.DeleteForum.bind(this)
     
   }
   componentDidMount() {
@@ -124,7 +178,7 @@ class AdminPanel extends Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-
+    
     return (
     <React.Fragment>
     <CssBaseline />
@@ -183,7 +237,7 @@ class AdminPanel extends Component {
             fullWidth 
             variant="outlined"
             label="Username"
-            onChange={this.handleUsername}
+            onChange={this.handleChangeFlex('username')}
             />
         </Grid>
         <Grid item xs={6}>
@@ -192,7 +246,7 @@ class AdminPanel extends Component {
           <Select
             native
             value={this.state.role}
-            onChange={this.handleChangeRole('role')}
+            onChange={this.handleChangeFlex('role')}
             inputProps={{
               name: 'role',
               id: 'role-native-simple',
@@ -230,6 +284,7 @@ class AdminPanel extends Component {
           label="pid"
           variant="outlined"
           fullWidth
+          onChange={this.handleChangeFlex('pid')}
         />
         </Grid>
         <Grid item xs={6}>
@@ -237,6 +292,7 @@ class AdminPanel extends Component {
           label="title"
           variant="outlined"
           fullWidth
+          onChange={this.handleChangeFlex('title')}
         />
         </Grid>
         <Grid item xs={6}>
@@ -244,25 +300,18 @@ class AdminPanel extends Component {
           label="description"
           variant="outlined"
           fullWidth
-        />
-        </Grid>
-        <Grid item xs={6}>
-        <TextField
-          label="creation_date"
-          variant="outlined"
-          fullWidth
-        />
-        </Grid>
-        <Grid item xs={6}>
-        <TextField
-          label="userid"
-          variant="outlined"
-          fullWidth
+          onChange={this.handleChangeFlex('description')}
         />
         </Grid>
         <Grid item xs={12} align="right">
-        <Button variant="contained" color="primary" className={classes.button}>
-          SAVE CHANGES
+        <Button variant="contained" color="primary" onClick={this.CreateForum} className={classes.button}>
+          CREATE
+        </Button>
+        <Button variant="contained" color="primary" onClick={this.UpdateForum} className={classes.button}>
+          UPDATE
+        </Button>
+        <Button variant="contained" color="primary" onClick={this.DeleteForum} className={classes.button}>
+          DELETE
         </Button>
         
         </Grid>

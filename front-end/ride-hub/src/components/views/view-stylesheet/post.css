@@ -35,7 +35,9 @@
     text-align: center
 }
 
-
+.post-info-wrapper .like-btn.true{
+    padding: 10px 0;
+}
  .post-info-wrapper .like-btn .btn{
     font-size: 1.2rem;
 }
@@ -48,6 +50,11 @@
 /* For not liked yet button */
  .post-info-wrapper .like-btn .btn.false{
     color:black;
+}
+
+.post-info-wrapper .delete-btn{
+    padding-top:0
+
 }
 
  .post-content-wrapper{

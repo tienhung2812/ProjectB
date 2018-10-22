@@ -103,7 +103,7 @@ export default class Thread extends Component {
       this.childcontent = <Loader/>
     }else{
       //OP 
-      var originalPost = <Post type = "original-post" postID={this.state.child[0]}/>
+      var originalPost = <Post type = "original-post" threadID={this.state.id} postID={this.state.child[0]}/>
       //Comment
       var comments = []
       for(var i = 1; i<this.state.child.length;i++){
