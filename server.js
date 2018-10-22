@@ -56,7 +56,7 @@ app.use(
     resave: false, // Dont' force the session to be saved back to the session store, as specified by connect-pg-simple
     saveUninitialized: false, // must make it false, otherwise, every request to website without login will make a new session
     cookie: {maxAge: cookieTimeLife, 
-             expires: new Date(Date.now() + cookieTimeLife),
+            //  expires: new Date(Date.now() + cookieTimeLife),
              httpOnly: false,
              secure: false,  // make cookie only available on  HTTPS site, for production!
              domain: "ride-hub.herokuapp.com"
