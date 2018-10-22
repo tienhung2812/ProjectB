@@ -27,7 +27,7 @@ export default class AddThread extends Component {
     this.path = null
     browserHistory.push('/addthread/'+this.props.params.subforumID);
     this.setState({subforumID:this.props.params.subforumID})
-    fetch('http://ride-hub.herokuapp.com/api/subforum/path/'+this.props.params.subforumID)
+    fetch('https://ride-hub.herokuapp.com/api/subforum/path/'+this.props.params.subforumID)
     .then(response=>{
       if(response.ok){
         response.json().then(

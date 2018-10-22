@@ -240,6 +240,11 @@ export default class TextEditor extends Component {
       alert("Content can't be null");
       return null;
     }
+
+    if(tag==0){
+      alert("You should choose a tag");
+      return null;
+    }
     fetch('https://ride-hub.herokuapp.com/api/thread', {
       method: 'POST',
       headers: {
