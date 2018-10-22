@@ -32,11 +32,26 @@ exports.user_summary_get = function(req, res) {
   var user_id = req.params.user_id;
   var values = [user_id];
   db.query(
-    `SELECT avatar, username, point, r.name 
-        AS role FROM public.user u 
-        INNER JOIN user_role r 
-        ON u.role_id = r.id 
-        WHERE u.id = $1`,
+    `WITH point_post AS(
+      SELECT u.id,u.username, count (p.*) * 3 as point_post 
+      FROM public.user u
+      LEFT JOIN post p 
+      ON p.userid = u.id and p.pid is null
+      GROUP BY (u.id,u.username)
+    ), total_point AS(
+      SELECT pp.id, pp.username, count(p.*) + pp.point_post as point
+      FROM point_post pp
+      LEFT JOIN post p 
+      ON pp.id = p.userid and p.pid is not null
+      WHERE pp.id = $1
+      GROUP BY (pp.id,pp.username,pp.point_post)
+    ), update_point AS(
+      UPDATE public.user u set point = total_point.point FROM total_point WHERE u.id = $1 returning u.avatar, u.username, u.point,u.role_id
+    ) 
+    SELECT u.avatar, u.username, u.point, r.name AS role 
+	FROM update_point u
+    INNER JOIN user_role r 
+    ON u.role_id = r.id;`,
     values,
     (err, data) => {
       try {
@@ -187,7 +202,19 @@ function updateAccount(req, res) {
 
 exports.billboard = function(req, res) {
   db.query(
-    `SELECT id,username,point FROM public.user ORDER BY point DESC LIMIT 3`,
+    `WITH point_post AS(
+      SELECT u.id,u.username, count (p.*) * 3 as point_post 
+      FROM public.user u
+      LEFT JOIN post p 
+      ON p.userid = u.id and p.pid is null
+      GROUP BY (u.id,u.username)
+    ) 
+    SELECT pp.id, pp.username, count(p.*) + pp.point_post as point
+    FROM point_post pp
+    LEFT JOIN post p 
+    ON pp.id = p.userid and p.pid is not null
+    GROUP BY (pp.id,pp.username,pp.point_post)
+    ORDER BY point DESC LIMIT 3;`,
     (err, data) => {
       try {
         res.json(data.rows);
