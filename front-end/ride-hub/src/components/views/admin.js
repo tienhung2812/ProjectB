@@ -122,7 +122,7 @@ class AdminPanel extends Component {
       })    
   }
   UpdateForum(){
-    fetch('https://ride-hub.herokuapp.com//api/subforum/'+this.state.pid, {
+    fetch('https://ride-hub.herokuapp.com/api/subforum/'+this.state.pid, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
