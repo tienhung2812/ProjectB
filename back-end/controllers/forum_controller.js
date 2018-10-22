@@ -132,7 +132,7 @@ exports.subsubforum_get = function(req, res) {
         query.title,
         query.description,
         query.creation_date,
-        query.req.session.passport.user.role
+        req.session.passport.user.id
       ];
       db.query(text, values, (err, data) => {
         if (err) {
