@@ -426,7 +426,7 @@ exports.notification = function(req, res) {
       from user_noti 
       left join user_notification
       on user_noti.noti = user_notification.noti and user_noti.userid = user_notification.userid
-      ORDER BY user_noti.creation_date DESC;       
+      ORDER BY user_noti.creation_date DESC;   
       `,
       values,
       (err, data) => {
