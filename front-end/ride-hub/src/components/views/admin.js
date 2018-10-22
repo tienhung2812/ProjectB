@@ -103,6 +103,7 @@ class AdminPanel extends Component {
     var tempDate = new Date();
     var date = tempDate.getFullYear() + '-' + (tempDate.getMonth()+1) + '-' + tempDate.getDate() +' '+ tempDate.getHours()+':'+ tempDate.getMinutes()+':'+ tempDate.getSeconds();
     let uid = this.state.username;
+
     fetch('https://ride-hub.herokuapp.com/api/subforum/', {
         method: 'POST',
         headers: {
